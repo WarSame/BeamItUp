@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">BeamItUp</string>
+    <string name="title_activity_transfer_money">Transfer Money</string>
+    <string name="text_button_transfer_money">Transfer Money</string>
+    <string name="text_button_set_amount">Ready Transfer</string>
+    <string name="text_button_past_transfers">Transfer History</string>
+    <string name="hint_transfer_money_amount">Amount</string>
+    <string name="hint_transfer_money_reason">Reason</string>
+    <string name="title_activity_ready_transfer">ReadyTransfer</string>
+</resources>
