@@ -8,8 +8,6 @@ import android.app.Activity;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.nio.charset.StandardCharsets;
-
 public class ReadyTransfer extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +32,12 @@ public class ReadyTransfer extends Activity {
             return;
         }
 
-        NdefRecord rec = NdefRecord.createMime("application/" + getApplicationContext().getPackageName(),
-                tran.toString().getBytes());
+        NdefRecord rec = NdefRecord.createMime("application/" + getApplicationContext().getPackageName() + "/transfer",
+                Transfer.toBytes(tran));
         NdefMessage msg = new NdefMessage(rec);
 
-        String str = new String(msg.getRecords()[0].getPayload(), StandardCharsets.UTF_8);
-        Toast.makeText(this, str, Toast.LENGTH_LONG).show();
+
+        Toast.makeText(this, Transfer.fromBytes(msg.getRecords()[0].getPayload()).toString(), Toast.LENGTH_LONG).show();
 
         mNfcAdapter.setNdefPushMessage(msg, this);
     }

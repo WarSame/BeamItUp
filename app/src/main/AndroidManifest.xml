@@ -42,7 +42,7 @@
                 android:value="com.example.graeme.beamitup.LandingPage" />
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-                <data android:mimeType="application/com.example.graeme.beamitup"/>
+                <data android:mimeType="application/com.example.graeme.beamitup/transfer"/>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
