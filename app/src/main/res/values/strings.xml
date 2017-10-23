@@ -7,4 +7,5 @@
     <string name="hint_transfer_money_amount">Amount</string>
     <string name="hint_transfer_money_reason">Reason</string>
     <string name="title_activity_ready_transfer">ReadyTransfer</string>
+    <string name="title_activity_reply_transfer">ReplyTransfer</string>
 </resources>

@@ -1,16 +1,11 @@
 package com.example.graeme.beamitup;
 
 import android.content.Intent;
-import android.nfc.FormatException;
-import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.app.Activity;
-import android.nfc.NdefMessage;
-import android.nfc.NfcAdapter;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 public class CreateTransfer extends Activity{
     Intent readyTransferIntent;

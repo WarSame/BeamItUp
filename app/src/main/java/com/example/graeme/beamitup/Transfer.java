@@ -1,10 +1,6 @@
 package com.example.graeme.beamitup;
 
-/**
- * Created by graeme on 2017-10-05.
- */
-
-public class Transfer {
+class Transfer {
     private String amount;
     private String reason;
 
