@@ -9,7 +9,7 @@ import android.app.Activity;
 import android.provider.Settings;
 import android.widget.Toast;
 
-public class ReplyTransfer extends Activity {
+public class ReplyTransferActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

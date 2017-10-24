@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class CreateTransfer extends Activity{
+public class CreateTransferActivity extends Activity{
     Intent readyTransferIntent;
 
     @Override
@@ -16,7 +16,7 @@ public class CreateTransfer extends Activity{
         setContentView(R.layout.activity_transfer_money);
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        readyTransferIntent = new Intent(this, ReadyTransfer.class);
+        readyTransferIntent = new Intent(this, ReadyTransferActivity.class);
 
         final Button btn_ready_transfer = (Button) findViewById(R.id.btn_ready_transfer);
         btn_ready_transfer.setOnClickListener(new View.OnClickListener(){

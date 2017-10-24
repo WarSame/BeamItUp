@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.graeme.beamitup.ReadyTransfer">
+    tools:context="com.example.graeme.beamitup.ReadyTransferActivity">
 
     <TextView
         android:id="@+id/tv_amount_label"
