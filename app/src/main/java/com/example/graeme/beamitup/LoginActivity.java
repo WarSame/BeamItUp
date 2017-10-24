@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class LoginActivity extends Activity {
+    private static final int REQUEST_SIGNUP = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,9 +31,19 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent createAccountIntent = new Intent(getApplicationContext(), CreateAccountActivity.class);
-                //startActivityForResult(createAccountIntent, REQUEST_SIGNUP);
+                startActivityForResult(createAccountIntent, REQUEST_SIGNUP);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (requestCode == REQUEST_SIGNUP){
+            if (resultCode == RESULT_OK){
+                //Finish activity and log them in
+                onLoginSuccess();
+            }
+        }
     }
 
     private void login() {
