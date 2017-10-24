@@ -8,20 +8,23 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.io.StreamCorruptedException;
 
 class Transfer implements Serializable {
     private String amount;
     private String reason;
+    private String senderPublicKey;
+    private String receiverPublicKey;
 
-    Transfer(String amount, String reason){
+    Transfer(String amount, String reason, String senderPublicKey){
         this.amount = amount;
         this.reason = reason;
+        this.senderPublicKey = senderPublicKey;
+        this.receiverPublicKey = null;
     }
 
     static byte[] toBytes(Transfer tran){
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutput out = null;
+        ObjectOutput out;
         byte[] bytes = null;
         try {
             out = new ObjectOutputStream(bos);
@@ -47,11 +50,7 @@ class Transfer implements Serializable {
         try {
             in = new ObjectInputStream(bis);
             o = in.readObject();
-        } catch (StreamCorruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
             try {
@@ -65,23 +64,34 @@ class Transfer implements Serializable {
         return (Transfer)o;
     }
 
-    public String getReason() {
+    private String getReason() {
         return reason;
     }
 
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    public String getAmount() {
+    private String getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
-        this.amount = amount;
+    public String toString (){
+        return "Amount: " + amount + "\n"
+                + "reason: " + reason + "\n"
+                + "sender public key: " + senderPublicKey + "\n"
+                + "receiver public key: " + receiverPublicKey;
     }
 
-    public String toString (){
-        return "Amount: " + amount + " " + "reason: " + reason;
+    private String getSenderPublicKey() {
+        return senderPublicKey;
+    }
+
+    private void setSenderPublicKey(String senderPublicKey) {
+        this.senderPublicKey = senderPublicKey;
+    }
+
+    private String getReceiverPublicKey() {
+        return receiverPublicKey;
+    }
+
+    void setReceiverPublicKey(String receiverPublicKey) {
+        this.receiverPublicKey = receiverPublicKey;
     }
 }
