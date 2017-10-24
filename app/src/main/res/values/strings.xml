@@ -10,4 +10,12 @@
     <string name="title_activity_reply_transfer">ReplyTransfer</string>
     <string name="title_activity_finish_transfer">FinishTransfer</string>
 
+    <!-- Signin -->
+    <string name="text_button_sign_in">Sign In</string>
+    <string name="text_button_register">Register</string>
+    <string name="text_button_create_account">Create Account</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+
+
 </resources>
