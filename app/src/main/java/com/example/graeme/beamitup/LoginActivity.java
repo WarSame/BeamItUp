@@ -56,27 +56,19 @@ public class LoginActivity extends Activity {
         String password = et_password.getText().toString();
         StringBuilder errors = new StringBuilder();
 
-        if (!Account.isValidLogin(email, password, errors)){
+        if (!LoginAccount.isValid(email, password, errors)){
             Toast.makeText(this, errors, Toast.LENGTH_LONG).show();
             onLoginFail();
             return;
         }
 
-        if (isAuthenticLogin(email, password)){
+        if (LoginAccount.isAuthentic(email, password)){
             onLoginSuccess();
         }
         else {
+            Toast.makeText(this, "Username and password combination not found.", Toast.LENGTH_LONG).show();
             onLoginFail();
         }
-    }
-
-    private boolean isAuthenticLogin(String email, String password) {
-        //Implement authentication logic - dummy for now
-        boolean authentic = false;
-        if (email.equals("foo@t.ca") && password.equals("barr")){
-            authentic = true;
-        }
-        return authentic;
     }
 
     private void onLoginSuccess(){
@@ -90,7 +82,5 @@ public class LoginActivity extends Activity {
     private void onLoginFail() {
         Button btn_sign_in = (Button)findViewById(R.id.btn_sign_in);
         btn_sign_in.setEnabled(true);
-
-        Toast.makeText(this, "Login failed", Toast.LENGTH_LONG).show();
     }
 }

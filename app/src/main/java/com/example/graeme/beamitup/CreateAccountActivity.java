@@ -37,7 +37,8 @@ public class CreateAccountActivity extends Activity {
         String confirmPassword = et_confirm_password.getText().toString();
         StringBuilder errors = new StringBuilder();
 
-        if (!Account.isValidCreateAccount(email, password, confirmPassword, errors)){
+        if (!CreateAccount.isValid(email, password, confirmPassword, errors)){
+            Toast.makeText(this, errors, Toast.LENGTH_LONG).show();
             onCreateAccountFail();
             return;
         }
@@ -56,7 +57,7 @@ public class CreateAccountActivity extends Activity {
         Button btn_create_account = (Button) findViewById(R.id.btn_create_account);
         btn_create_account.setEnabled(true);
 
-        Toast.makeText(this, "Create account failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Create account failed.", Toast.LENGTH_LONG).show();
     }
 
 }
