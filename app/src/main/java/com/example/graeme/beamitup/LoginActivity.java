@@ -3,7 +3,6 @@ package com.example.graeme.beamitup;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -55,19 +54,29 @@ public class LoginActivity extends Activity {
 
         String email = et_email.getText().toString();
         String password = et_password.getText().toString();
+        StringBuilder errors = new StringBuilder();
 
-        if (!validate(email, password)){
+        if (!Account.isValidLogin(email, password, errors)){
+            Toast.makeText(this, errors, Toast.LENGTH_LONG).show();
             onLoginFail();
             return;
         }
 
-        //Implement authentication logic - dummy for now
-        if (et_email.getText().toString().equals("foo@t.ca") && et_password.getText().toString().equals("barr")){
+        if (isAuthenticLogin(email, password)){
             onLoginSuccess();
         }
         else {
             onLoginFail();
         }
+    }
+
+    private boolean isAuthenticLogin(String email, String password) {
+        //Implement authentication logic - dummy for now
+        boolean authentic = false;
+        if (email.equals("foo@t.ca") && password.equals("barr")){
+            authentic = true;
+        }
+        return authentic;
     }
 
     private void onLoginSuccess(){
@@ -80,21 +89,8 @@ public class LoginActivity extends Activity {
 
     private void onLoginFail() {
         Button btn_sign_in = (Button)findViewById(R.id.btn_sign_in);
-        Toast.makeText(this, "Login failed", Toast.LENGTH_LONG).show();
         btn_sign_in.setEnabled(true);
-    }
 
-    private boolean validate(String email, String password) {
-        boolean valid = true;
-
-        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            Toast.makeText(this, "Enter a valid email", Toast.LENGTH_LONG).show();
-            valid = false;
-        }
-        if (password.isEmpty() || password.length() < 4 || password.length() > 16){
-            Toast.makeText(this, "Enter a password between 4 and 16 characters", Toast.LENGTH_LONG).show();
-            valid = false;
-        }
-        return valid;
+        Toast.makeText(this, "Login failed", Toast.LENGTH_LONG).show();
     }
 }

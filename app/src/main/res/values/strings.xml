@@ -18,6 +18,7 @@
     <string name="text_et_password">Password</string>
     <string name="title_activity_create_account">CreateAccount</string>
     <string name="title_activity_landing_page">LandingPageActivity</string>
+    <string name="et_confirm_password">Confirm Password</string>
 
 
 </resources>
