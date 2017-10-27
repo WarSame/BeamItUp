@@ -55,8 +55,7 @@ public class CreateAccountActivity extends Activity {
         btn_create_account.setEnabled(true);
 
         BeamItUpDbHelper db = new BeamItUpDbHelper(this);
-        Account account = new Account(email, password);
-        db.insertAccount(account);
+        db.insertAccount(email, password);
         db.close();
 
         Log.v(TAG, "Successfully created account.");

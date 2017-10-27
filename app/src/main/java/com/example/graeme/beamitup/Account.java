@@ -7,20 +7,16 @@ class Account {
     private String email;
     private String passwordHash;
 
-    Account(String email, String password){
+    Account(String email, String passwordHash){
         this.email = email;
-        this.passwordHash = password;
+        this.passwordHash = passwordHash;
     }
 
     String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-   String getPassword() {
+   String getPasswordHash() {
         return passwordHash;
     }
 
