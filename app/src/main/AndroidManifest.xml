@@ -8,47 +8,41 @@
 
     <uses-permission android:name="android.permission.NFC" />
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LandingPage">
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".CreateTransfer"
+            android:name=".CreateTransferActivity"
             android:label="@string/title_activity_transfer_money"
-            android:parentActivityName=".LandingPage">
+            android:parentActivityName=".LandingPageActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.graeme.beamitup.LandingPage" />
+                android:value="com.example.graeme.beamitup.LandingPageActivity" />
         </activity>
         <activity
-            android:name=".ReadyTransfer"
+            android:name=".ReadyTransferActivity"
             android:label="@string/title_activity_ready_transfer"
-            android:parentActivityName=".CreateTransfer">
+            android:parentActivityName=".CreateTransferActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.graeme.beamitup.CreateTransfer" />
+                android:value="com.example.graeme.beamitup.CreateTransferActivity" />
         </activity>
         <activity
-            android:name=".ReplyTransfer"
+            android:name=".ReplyTransferActivity"
             android:label="@string/title_activity_reply_transfer"
-            android:parentActivityName=".LandingPage">
+            android:parentActivityName=".LandingPageActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.graeme.beamitup.LandingPage" />
+                android:value="com.example.graeme.beamitup.LandingPageActivity" />
 
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
@@ -59,20 +53,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FinishTransfer"
+            android:name=".FinishTransferActivity"
             android:label="@string/title_activity_finish_transfer"
-            android:parentActivityName=".LandingPage">
+            android:parentActivityName=".LandingPageActivity">
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-
                 <data android:mimeType="application/com.example.graeme.beamitup/reply_transfer" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.graeme.beamitup.LandingPage" />
+                android:value="com.example.graeme.beamitup.LandingPageActivity" />
+        </activity>
+        <activity
+            android:name=".CreateAccountActivity"
+            android:label="@string/title_activity_create_account"
+            android:parentActivityName=".LoginActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.graeme.beamitup.LoginActivity" />
+        </activity>
+        <activity
+            android:name=".LandingPageActivity"
+            android:label="@string/title_activity_landing_page">
+
         </activity>
     </application>
 

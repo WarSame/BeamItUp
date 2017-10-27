@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.widget.Toast;
 
-public class FinishTransfer extends Activity {
+public class FinishTransferActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

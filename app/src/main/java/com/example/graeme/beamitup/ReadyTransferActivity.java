@@ -9,7 +9,7 @@ import android.provider.Settings;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ReadyTransfer extends Activity {
+public class ReadyTransferActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
