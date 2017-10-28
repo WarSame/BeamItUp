@@ -1,5 +1,6 @@
 package com.example.graeme.beamitup;
 
+import android.database.SQLException;
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
@@ -8,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.security.NoSuchAlgorithmException;
 
 import static com.example.graeme.beamitup.Account.startNewLine;
 
@@ -47,21 +50,37 @@ public class CreateAccountActivity extends Activity {
             onCreateAccountFail();
             return;
         }
-        onCreateAccountSuccess(email, password);
+
+        Account account;
+        try {
+            account = new Account(this, email, password);
+        } catch (NoSuchAlgorithmException e) {
+            Log.e(TAG, "No such algorithm.");
+            e.printStackTrace();
+            onCreateAccountFail();
+            return;
+        }
+        onCreateAccountSuccess(account);
     }
 
-    private void onCreateAccountSuccess(String email, String password){
+    private void onCreateAccountSuccess(Account account){
         Button btn_create_account = (Button) findViewById(R.id.btn_create_account);
         btn_create_account.setEnabled(true);
 
         BeamItUpDbHelper db = new BeamItUpDbHelper(this);
-        db.insertAccount(email, password);
-        db.close();
-
-        Log.v(TAG, "Successfully created account.");
-
-        setResult(RESULT_OK);
-        finish();
+        try {
+            db.createAccount(account);
+            Log.v(TAG, "Successfully created account.");
+            setResult(RESULT_OK);
+        } catch (SQLException e){
+            Log.e(TAG, "Account creation error.");
+            e.printStackTrace();
+            setResult(RESULT_CANCELED);
+        }
+        finally {
+            db.close();
+            finish();
+        }
     }
 
     private void onCreateAccountFail(){
