@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.security.NoSuchAlgorithmException;
+
 import static com.example.graeme.beamitup.Account.startNewLine;
 
 public class LoginActivity extends Activity {
@@ -43,9 +45,11 @@ public class LoginActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if (requestCode == REQUEST_SIGNUP){
-            if (resultCode == RESULT_OK){
-                //Finish activity and log them in
-                onLoginSuccess();
+            switch (resultCode){
+                case RESULT_OK:
+                    //Finish activity and log them in
+                    onLoginSuccess();
+                    break;
             }
         }
     }
@@ -67,10 +71,21 @@ public class LoginActivity extends Activity {
             return;
         }
 
-        if (isAuthentic(email, password)){
+        Account account;
+        try {
+            account = new Account(this, email, password);
+        } catch (NoSuchAlgorithmException e) {
+            Log.e(TAG, "No such algorithm.");
+            e.printStackTrace();
+            onLoginFail();
+            return;
+        }
+
+        if (isAuthentic(account)){
             onLoginSuccess();
         }
         else {
+            Log.v(TAG, "Authentication failed.");
             Toast.makeText(this, "Username and password combination not found.", Toast.LENGTH_LONG).show();
             onLoginFail();
         }
@@ -89,6 +104,8 @@ public class LoginActivity extends Activity {
     private void onLoginFail() {
         Button btn_sign_in = (Button)findViewById(R.id.btn_sign_in);
         btn_sign_in.setEnabled(true);
+
+        Toast.makeText(this, "Login failed.", Toast.LENGTH_SHORT).show();
     }
     boolean isValid(String email, String password, StringBuilder errors){
         return emailValid(email, errors) && passwordValid(password, errors);
@@ -123,9 +140,9 @@ public class LoginActivity extends Activity {
         return valid;
     }
 
-    boolean isAuthentic(String email, String password) {
+    boolean isAuthentic(Account account) {
         BeamItUpDbHelper db = new BeamItUpDbHelper(this);
-        boolean isAuthentic = db.isAuthentic(email, password);
+        boolean isAuthentic = db.isAuthentic(account);
         db.close();
 
         return isAuthentic;

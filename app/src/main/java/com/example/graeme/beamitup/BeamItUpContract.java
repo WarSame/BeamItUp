@@ -13,10 +13,11 @@ final class BeamItUpContract {
         static final String ACCOUNT_TABLE_NAME = "account";
         static final String ACCOUNT_COLUMN_EMAIL = "email";
         static final String ACCOUNT_COLUMN_PASSWORD_HASH = "password";
+        static final String ACCOUNT_COLUMN_SALT = "salt";
 
         static final String SQL_CREATE_TABLE = "CREATE TABLE " + ACCOUNT_TABLE_NAME +
                 " (" + _ID + " INTEGER PRIMARY KEY," + ACCOUNT_COLUMN_EMAIL + " TEXT," +
-                ACCOUNT_COLUMN_PASSWORD_HASH + " BLOB)";
+                ACCOUNT_COLUMN_PASSWORD_HASH + " BLOB," + ACCOUNT_COLUMN_SALT + " BLOB)";
 
         static final String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " + ACCOUNT_TABLE_NAME;
     }

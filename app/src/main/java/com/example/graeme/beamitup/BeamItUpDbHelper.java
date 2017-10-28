@@ -3,11 +3,11 @@ package com.example.graeme.beamitup;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 public class BeamItUpDbHelper extends SQLiteOpenHelper {
@@ -30,28 +30,50 @@ public class BeamItUpDbHelper extends SQLiteOpenHelper {
         onUpgrade(db, oldVersion, newVersion);
     }
 
-    void insertAccount(String email, String password){
+    void createAccount(Account account) throws SQLException {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(BeamItUpContract.Account.ACCOUNT_COLUMN_EMAIL, email);
-        contentValues.put(BeamItUpContract.Account.ACCOUNT_COLUMN_PASSWORD_HASH, convertPasswordToHash(password));
-        db.insert(BeamItUpContract.Account.ACCOUNT_TABLE_NAME, null, contentValues);
+        contentValues.put(BeamItUpContract.Account.ACCOUNT_COLUMN_EMAIL,
+                account.getEmail());
+        contentValues.put(BeamItUpContract.Account.ACCOUNT_COLUMN_PASSWORD_HASH,
+                account.getPasswordHash());
+        contentValues.put(BeamItUpContract.Account.ACCOUNT_COLUMN_SALT,
+                account.getSalt());
+        if (db.insert(BeamItUpContract.Account.ACCOUNT_TABLE_NAME, null, contentValues) == -1){
+            throw new SQLException();
+        }
         db.close();
     }
 
-    boolean isAuthentic(String email, String password){
+    boolean isAuthentic(Account account){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.query(BeamItUpContract.Account.ACCOUNT_TABLE_NAME,
                 new String[]{
                         BeamItUpContract.Account.ACCOUNT_COLUMN_EMAIL,
                         BeamItUpContract.Account.ACCOUNT_COLUMN_PASSWORD_HASH
                 },
-                BeamItUpContract.Account.ACCOUNT_COLUMN_EMAIL + " like ?", new String[]{email},
+                BeamItUpContract.Account.ACCOUNT_COLUMN_EMAIL + " like ?", new String[]{account.getEmail()},
                 null, null, null);
         res.moveToFirst();
         byte[] storedHash = (res.getBlob(res.getColumnIndex(BeamItUpContract.Account.ACCOUNT_COLUMN_PASSWORD_HASH)));
         res.close();
-        return Arrays.equals(storedHash, convertPasswordToHash(password));
+        return Arrays.equals(storedHash, account.getPasswordHash());
+    }
+
+    byte[] retrieveSalt(String email){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.query(BeamItUpContract.Account.ACCOUNT_TABLE_NAME,
+                new String[]{
+                        BeamItUpContract.Account.ACCOUNT_COLUMN_EMAIL,
+                        BeamItUpContract.Account.ACCOUNT_COLUMN_SALT
+                },
+                BeamItUpContract.Account.ACCOUNT_COLUMN_EMAIL + " like ?", new String[]{email},
+                null, null, null);
+        res.moveToFirst();
+        byte[] storedSalt = (res.getBlob(res.getColumnIndex(BeamItUpContract.Account.ACCOUNT_COLUMN_SALT)));
+        res.close();
+
+        return storedSalt;
     }
 
     boolean isEmailInUse(String email){
@@ -68,24 +90,5 @@ public class BeamItUpDbHelper extends SQLiteOpenHelper {
         }
         res.close();
         return false;
-    }
-
-    private byte[] convertPasswordToHash(String password){
-        MessageDigest md;
-        byte[] passwordHash = null;
-
-        try {
-            md = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return null;
-        }
-        if (md != null) {
-            passwordHash = md.digest(password.getBytes());
-        }
-        if (passwordHash == null){
-            return null;
-        }
-        return passwordHash;
     }
 }
