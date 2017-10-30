@@ -48,7 +48,11 @@ public class LoginActivity extends Activity {
             switch (resultCode){
                 case RESULT_OK:
                     //Finish activity and log them in
-                    onLoginSuccess();
+                    Account account = (Account) data.getSerializableExtra("account");
+                    onLoginSuccess(account);
+                    break;
+                case RESULT_CANCELED:
+                    onLoginFail();
                     break;
             }
         }
@@ -82,7 +86,7 @@ public class LoginActivity extends Activity {
         }
 
         if (isAuthentic(account)){
-            onLoginSuccess();
+            onLoginSuccess(account);
         }
         else {
             Log.v(TAG, "Authentication failed.");
@@ -91,13 +95,14 @@ public class LoginActivity extends Activity {
         }
     }
 
-    private void onLoginSuccess(){
+    private void onLoginSuccess(Account account){
         Button btn_sign_in = (Button)findViewById(R.id.btn_sign_in);
         btn_sign_in.setEnabled(true);
 
         Log.v(TAG, "Successfully logged in.");
 
         final Intent landingPageIntent = new Intent(this, LandingPageActivity.class);
+        landingPageIntent.putExtra("account", account);
         startActivity(landingPageIntent);
     }
 
@@ -141,7 +146,7 @@ public class LoginActivity extends Activity {
     }
 
     boolean isAuthentic(Account account) {
-        BeamItUpDbHelper db = new BeamItUpDbHelper(this);
+        AccountDbAdapter db = new AccountDbAdapter(this);
         boolean isAuthentic = db.isAuthentic(account);
         db.close();
 
@@ -149,7 +154,7 @@ public class LoginActivity extends Activity {
     }
 
     boolean isEmailInUse(String email) {
-        BeamItUpDbHelper db = new BeamItUpDbHelper(this);
+        AccountDbAdapter db = new AccountDbAdapter(this);
         boolean inUse = db.isEmailInUse(email);
         db.close();
         return inUse;

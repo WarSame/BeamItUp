@@ -1,5 +1,6 @@
 package com.example.graeme.beamitup;
 
+import android.content.Intent;
 import android.database.SQLException;
 import android.os.Bundle;
 import android.app.Activity;
@@ -67,15 +68,17 @@ public class CreateAccountActivity extends Activity {
         Button btn_create_account = (Button) findViewById(R.id.btn_create_account);
         btn_create_account.setEnabled(true);
 
-        BeamItUpDbHelper db = new BeamItUpDbHelper(this);
+        AccountDbAdapter db = new AccountDbAdapter(this);
+        Intent resultIntent = new Intent();
         try {
             db.createAccount(account);
             Log.v(TAG, "Successfully created account.");
-            setResult(RESULT_OK);
+            resultIntent.putExtra("account", account);
+            setResult(RESULT_OK, resultIntent);
         } catch (SQLException e){
             Log.e(TAG, "Account creation error.");
             e.printStackTrace();
-            setResult(RESULT_CANCELED);
+            setResult(RESULT_CANCELED, resultIntent);
         }
         finally {
             db.close();
@@ -131,7 +134,7 @@ public class CreateAccountActivity extends Activity {
     }
 
     boolean isEmailInUse(String email) {
-        BeamItUpDbHelper db = new BeamItUpDbHelper(this);
+        AccountDbAdapter db = new AccountDbAdapter(this);
         boolean inUse = db.isEmailInUse(email);
         db.close();
         return inUse;

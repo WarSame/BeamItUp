@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.graeme.beamitup.CreateTransferActivity">
+
+
+    <LinearLayout
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:weightSum="4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ListView
+            android:id="@+id/lv_transfer_money_account"
+            android:choiceMode="singleChoice"
+            android:listSelector="@color/colorAccent"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="16dp"
+            android:layout_height="0dp" />
+
+        <EditText
+            android:id="@+id/edittext_transfer_money_reason"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/hint_transfer_money_reason"
+            android:layout_gravity="center_horizontal"
+            android:inputType="textMultiLine"
+            android:layout_weight="1" />
+
+        <EditText
+            android:id="@+id/edittext_transfer_money_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/hint_transfer_money_amount"
+            android:layout_gravity="center_horizontal"
+            android:inputType="numberDecimal"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/btn_ready_transfer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/text_button_set_amount"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

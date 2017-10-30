@@ -5,12 +5,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 class Encryption {
-    private static final String ENCRYPTION_ALGORITHM = "SHA-256";
+    private static final String HASHING_ALGORITHM = "SHA-256";
     static byte[] hashPassword(String password, byte[] salt) throws NoSuchAlgorithmException{
         MessageDigest md;
         byte[] passwordHash;
 
-        md = MessageDigest.getInstance(ENCRYPTION_ALGORITHM);
+        md = MessageDigest.getInstance(HASHING_ALGORITHM);
         md.reset();
         md.update(salt);
         passwordHash = md.digest(password.getBytes());

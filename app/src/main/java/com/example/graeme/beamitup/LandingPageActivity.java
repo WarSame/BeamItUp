@@ -16,13 +16,14 @@ public class LandingPageActivity extends Activity {
         Button btn_transfer_money = (Button)findViewById(R.id.btn_transfer_money);
         Button btn_transfer_history = (Button)findViewById(R.id.btn_transfer_history);
 
-        final Intent transferMoneyIntent = new Intent(this, CreateTransferActivity.class);
-        //final Intent transferHistoryIntent = new Intent();
+        final Intent createTransferIntent = new Intent(this, CreateTransferActivity.class);
+        Account account = (Account) getIntent().getSerializableExtra("account");
+        createTransferIntent.putExtra("account", account);
 
         btn_transfer_money.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                startActivity(transferMoneyIntent);
+                startActivity(createTransferIntent);
             }
         });
 
