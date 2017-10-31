@@ -4,16 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
 
 import java.util.Arrays;
 
 class AccountDbAdapter extends DbAdapter {
     private static final String TAG = "AccountDbAdapter";
 
-    private DatabaseHelper dbHelper;
-    private SQLiteDatabase db;
-    private Context context;
+
 
     AccountDbAdapter(Context context) {
         super(context);
@@ -58,7 +55,7 @@ class AccountDbAdapter extends DbAdapter {
     }
 
     boolean isAuthentic(Account account){
-        Cursor res = db.query(AccountTable.ACCOUNT_TABLE_NAME,
+        Cursor res = this.db.query(AccountTable.ACCOUNT_TABLE_NAME,
                 new String[]{
                         AccountTable.ACCOUNT_COLUMN_EMAIL,
                         AccountTable.ACCOUNT_COLUMN_PASSWORD_HASH
@@ -72,7 +69,7 @@ class AccountDbAdapter extends DbAdapter {
     }
 
     byte[] retrieveSalt(String email){
-        Cursor res = db.query(AccountTable.ACCOUNT_TABLE_NAME,
+        Cursor res = this.db.query(AccountTable.ACCOUNT_TABLE_NAME,
                 new String[]{
                         AccountTable.ACCOUNT_COLUMN_EMAIL,
                         AccountTable.ACCOUNT_COLUMN_SALT
@@ -87,7 +84,7 @@ class AccountDbAdapter extends DbAdapter {
     }
 
     boolean isEmailInUse(String email){
-        Cursor res = db.query(AccountTable.ACCOUNT_TABLE_NAME,
+        Cursor res = this.db.query(AccountTable.ACCOUNT_TABLE_NAME,
                 new String[]{
                         AccountTable.ACCOUNT_COLUMN_EMAIL
                 },

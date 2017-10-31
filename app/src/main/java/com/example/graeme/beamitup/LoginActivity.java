@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 
 import static com.example.graeme.beamitup.Account.startNewLine;
 

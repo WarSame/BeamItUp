@@ -4,17 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-
-import com.example.graeme.beamitup.DbAdapter.AccountEthTable;
 
 class AccountEthDbAdapter extends DbAdapter {
     private static final String TAG = "AccountEthDbAdapter";
-
-    private DatabaseHelper dbHelper;
-    private SQLiteDatabase db;
-    private Context context;
 
     AccountEthDbAdapter(Context context){
         super(context);

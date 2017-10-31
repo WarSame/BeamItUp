@@ -12,11 +12,16 @@ class DbAdapter {
     static final int DATABASE_VERSION = 2;
     static final String DATABASE_NAME = "BeamItUp.db";
 
-    DatabaseHelper DbHelper;
+    private DatabaseHelper DbHelper;
     SQLiteDatabase db;
 
     DbAdapter(Context context){
         this.DbHelper = new DatabaseHelper(context);
+        try {
+            open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     static class DatabaseHelper extends SQLiteOpenHelper
