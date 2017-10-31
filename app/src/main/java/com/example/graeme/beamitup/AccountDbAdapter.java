@@ -5,47 +5,18 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-
-import com.example.graeme.beamitup.BeamItUpContract.AccountTable;
 
 import java.util.Arrays;
 
-class AccountDbAdapter {
+class AccountDbAdapter extends DbAdapter {
     private static final String TAG = "AccountDbAdapter";
 
     private DatabaseHelper dbHelper;
     private SQLiteDatabase db;
     private Context context;
 
-    private static class DatabaseHelper extends SQLiteOpenHelper {
-        DatabaseHelper(Context context){
-            super(context, AccountTable.ACCOUNT_TABLE_NAME, null, BeamItUpContract.DATABASE_VERSION);
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-        }
-    }
-
-    AccountDbAdapter(Context context){
-        this.context = context;
-    }
-
-    AccountDbAdapter open() {
-        this.dbHelper = new DatabaseHelper(this.context);
-        this.db = this.dbHelper.getWritableDatabase();
-        return this;
-    }
-
-    void close(){
-        this.dbHelper.close();
+    AccountDbAdapter(Context context) {
+        super(context);
     }
 
     long createAccount(Account account) throws SQLException {
@@ -74,7 +45,7 @@ class AccountDbAdapter {
         return res;
     }
 
-    boolean updateAccount(int id, Account account){
+    boolean updateAccount(long id, Account account){
         ContentValues contentValues = new ContentValues();
         contentValues.put(AccountTable.ACCOUNT_COLUMN_EMAIL, account.getEmail());
         contentValues.put(AccountTable.ACCOUNT_COLUMN_PASSWORD_HASH, account.getPasswordHash());
@@ -83,7 +54,7 @@ class AccountDbAdapter {
     }
 
     boolean deleteAccount(long id){
-        return this.db.delete(AccountTable.ACCOUNT_TABLE_NAME, AccountTable._ID + "=" + id, null) > 0;
+        return this.db.delete(EthTable.ETH_TABLE_NAME, EthTable._ID + "=" + id, null) > 0;
     }
 
     boolean isAuthentic(Account account){
@@ -128,18 +99,5 @@ class AccountDbAdapter {
         }
         res.close();
         return false;
-    }
-
-    int getAccountId(Account account){
-        Cursor res = db.query(AccountTable.ACCOUNT_TABLE_NAME,
-                new String[]{
-                        AccountTable.ACCOUNT_COLUMN_EMAIL
-                },
-                AccountTable.ACCOUNT_COLUMN_EMAIL + " like ?", new String[]{account.getEmail()},
-                null, null, null);
-        res.moveToFirst();
-        int id = res.getInt(res.getColumnIndex("_ID"));
-        res.close();
-        return id;
     }
 }

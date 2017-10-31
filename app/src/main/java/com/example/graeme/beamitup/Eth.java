@@ -13,10 +13,6 @@ class Eth {
         return address;
     }
 
-    void setAddress(String address) {
-        this.address = address;
-    }
-
     byte[] getEncPrivateKey() {
         return encPrivateKey;
     }

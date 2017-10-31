@@ -8,19 +8,19 @@ public class BeamItUpDbHelper extends SQLiteOpenHelper {
     private static final String TAG = "BeamItUpDbHelper";
 
     BeamItUpDbHelper(Context context){
-        super(context, BeamItUpContract.DATABASE_NAME, null, BeamItUpContract.DATABASE_VERSION);
+        super(context, DbAdapter.DATABASE_NAME, null, DbAdapter.DATABASE_VERSION);
     }
 
     public void onCreate(SQLiteDatabase db){
-        db.execSQL(BeamItUpContract.AccountTable.SQL_CREATE_TABLE);
-        db.execSQL(BeamItUpContract.EthTable.SQL_CREATE_TABLE);
-        db.execSQL(BeamItUpContract.AccountEthTable.SQL_CREATE_TABLE);
+        db.execSQL(DbAdapter.AccountTable.SQL_CREATE_TABLE);
+        db.execSQL(DbAdapter.EthTable.SQL_CREATE_TABLE);
+        db.execSQL(DbAdapter.AccountEthTable.SQL_CREATE_TABLE);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
-        db.execSQL(BeamItUpContract.AccountTable.SQL_DELETE_TABLE);
-        db.execSQL(BeamItUpContract.EthTable.SQL_DELETE_TABLE);
-        db.execSQL(BeamItUpContract.AccountEthTable.SQL_DELETE_TABLE);
+        db.execSQL(DbAdapter.AccountTable.SQL_DELETE_TABLE);
+        db.execSQL(DbAdapter.EthTable.SQL_DELETE_TABLE);
+        db.execSQL(DbAdapter.AccountEthTable.SQL_DELETE_TABLE);
         onCreate(db);
     }
 

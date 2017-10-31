@@ -7,56 +7,50 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import static com.example.graeme.beamitup.BeamItUpContract.EthTable;
+import static com.example.graeme.beamitup.DbAdapter.EthTable;
 
-public class EthDbAdapter extends SQLiteOpenHelper{
+public class EthDbAdapter extends DbAdapter{
     private static final String TAG = "EthDbAdapter";
-    private static final String CREATE_TABLE = EthTable.SQL_CREATE_TABLE;
-    private static final String DELETE_TABLE = EthTable.SQL_DELETE_TABLE;
 
-    EthDbAdapter(Context context){
-        super(context, BeamItUpContract.DATABASE_NAME, null, BeamItUpContract.DATABASE_VERSION);
+    private DatabaseHelper dbHelper;
+    private SQLiteDatabase db;
+    private Context context;
+
+    EthDbAdapter(Context context) {
+        super(context);
     }
 
-    public void onCreate(SQLiteDatabase db){
-        db.execSQL(CREATE_TABLE);
-    }
-
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
-        db.execSQL(DELETE_TABLE);
-        onCreate(db);
-    }
-
-    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion){
-        onUpgrade(db, oldVersion, newVersion);
-    }
-
-    void createEth(Eth eth){
-        SQLiteDatabase db = getWritableDatabase();
+    long createEth(Eth eth) throws SQLException {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(EthTable.ETH_PUBLIC_KEY,
+        contentValues.put(EthTable.ETH_ADDRESS,
                 eth.getAddress());
-        contentValues.put(EthTable.ETH_ENC_PRIVATE_KEY,
-                eth.getEncPrivateKey());
-        if (db.insert(EthTable.ETH_TABLE_NAME, null, contentValues) == -1){
-            throw new SQLException();
-        }
-        db.close();
+        contentValues.put(EthTable.ETH_ENC_PRIVATE_KEY, eth.getEncPrivateKey());
+        return this.db.insert(EthTable.ETH_TABLE_NAME, null, contentValues);
     }
 
-    Eth retrieveEth(String address){
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.query(EthTable.ETH_TABLE_NAME,
+    Cursor retrieveEth(long id){
+        Cursor res = this.db.query(EthTable.ETH_TABLE_NAME,
                 new String[]{
-                        EthTable.ETH_PUBLIC_KEY,
+                        EthTable.ETH_ADDRESS,
                         EthTable.ETH_ENC_PRIVATE_KEY
                 },
-                EthTable.ETH_PUBLIC_KEY + " like ?", new String[]{address},
+                EthTable._ID + "=?", new String[]{Long.toString(id)},
                 null, null, null);
-        res.moveToFirst();
-        byte[] encPrivateKey = res.getBlob(res.getColumnIndex(EthTable.ETH_ENC_PRIVATE_KEY));
-        res.close();
-        return new Eth(address, encPrivateKey);
+        if (res != null){
+            res.moveToFirst();
+        }
+        return res;
+    }
+
+    boolean updateEth(long id, Eth eth){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(EthTable.ETH_ADDRESS, eth.getAddress());
+        contentValues.put(EthTable.ETH_ENC_PRIVATE_KEY, eth.getEncPrivateKey());
+        return this.db.update(EthTable.ETH_TABLE_NAME, contentValues, EthTable._ID + "=" + id, null) > 0;
+    }
+
+    boolean deleteAccount(long id){
+        return this.db.delete(AccountTable.ACCOUNT_TABLE_NAME, AccountTable._ID + "=" + id, null) > 0;
     }
 
     void updateEth(int id, Eth eth){
