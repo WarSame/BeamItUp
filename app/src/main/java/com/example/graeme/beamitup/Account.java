@@ -14,18 +14,13 @@ class Account implements Serializable {
     private byte[] salt;
     private byte[] passwordHash;
     private ArrayList<Eth> eths;
+    private long id;
 
     Account(Context context, String email, String password) throws NoSuchAlgorithmException {
         this.email = email;
         obtainSaltAndHash(context, email, password);
         this.eths = new ArrayList<>();
-    }
-
-    Account(String email, byte[] passwordHash, byte[] salt){
-        this.email = email;
-        this.passwordHash = passwordHash;
-        this.salt = salt;
-        this.eths = new ArrayList<>();
+        this.id = -1;
     }
 
     static void startNewLine(StringBuilder errors) {
@@ -70,5 +65,13 @@ class Account implements Serializable {
 
     void removeEthereumAccount(Eth eth){
         this.eths.remove(eth);
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

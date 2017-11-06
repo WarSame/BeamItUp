@@ -10,8 +10,6 @@ import java.util.Arrays;
 class AccountDbAdapter extends DbAdapter {
     private static final String TAG = "AccountDbAdapter";
 
-
-
     AccountDbAdapter(Context context) {
         super(context);
     }

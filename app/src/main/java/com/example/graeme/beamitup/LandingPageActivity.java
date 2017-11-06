@@ -14,11 +14,13 @@ public class LandingPageActivity extends Activity {
         setContentView(R.layout.activity_landing_page);
 
         Button btn_transfer_money = (Button)findViewById(R.id.btn_transfer_money);
-        Button btn_transfer_history = (Button)findViewById(R.id.btn_transfer_history);
+        Button btn_add_eth = (Button)findViewById(R.id.btn_add_eth);
 
         final Intent createTransferIntent = new Intent(this, CreateTransferActivity.class);
+        final Intent addEthIntent = new Intent(this, AddEthActivity.class);
         Account account = (Account) getIntent().getSerializableExtra("account");
         createTransferIntent.putExtra("account", account);
+        addEthIntent.putExtra("account", account);
 
         btn_transfer_money.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -27,9 +29,10 @@ public class LandingPageActivity extends Activity {
             }
         });
 
-        btn_transfer_history.setOnClickListener(new View.OnClickListener(){
+        btn_add_eth.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                startActivity(addEthIntent);
             }
         });
     }

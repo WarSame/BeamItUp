@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:orientation="vertical"
+    tools:context="com.example.graeme.beamitup.AddEthActivity">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inputType="text"
+        android:id="@+id/et_eth_address"
+        android:hint="@string/et_eth_address"
+        android:layout_margin="16dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inputType="textPassword"
+        android:id="@+id/et_private_key"
+        android:hint="@string/et_private_key"
+        android:layout_margin="16dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="@string/text_button_create_account"
+        android:id="@+id/btn_add_eth"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="16dp"/>
+
+</LinearLayout>

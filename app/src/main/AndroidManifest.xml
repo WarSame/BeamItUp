@@ -17,6 +17,7 @@
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -58,7 +59,9 @@
             android:parentActivityName=".LandingPageActivity">
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
                 <data android:mimeType="application/com.example.graeme.beamitup/reply_transfer" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
@@ -76,9 +79,10 @@
         </activity>
         <activity
             android:name=".LandingPageActivity"
-            android:label="@string/title_activity_landing_page">
-
-        </activity>
+            android:label="@string/title_activity_landing_page"></activity>
+        <activity
+            android:name=".AddEthActivity"
+            android:label="@string/title_activity_add_eth"></activity>
     </application>
 
 </manifest>

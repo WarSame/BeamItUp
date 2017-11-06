@@ -21,11 +21,11 @@
             android:layout_gravity="center_horizontal"/>
 
         <Button
-            android:id="@+id/btn_transfer_history"
+            android:id="@+id/btn_add_eth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:text="@string/text_button_past_transfers"
+            android:text="@string/text_button_add_eth"
             android:layout_margin="16dp"
             android:layout_gravity="center_horizontal"/>
 

@@ -23,27 +23,29 @@ public class CreateTransferActivity extends Activity{
 
         readyTransferIntent = new Intent(this, ReadyTransferActivity.class);
         ListView lv_select_account = (ListView)findViewById(R.id.lv_transfer_money_account);
+        final Button btn_ready_transfer = (Button) findViewById(R.id.btn_ready_transfer);
+        btn_ready_transfer.setEnabled(false);
 
         Account account = (Account) getIntent().getSerializableExtra("account");
-        //account.addEthereumAccount(new Eth("publickey", "privatekey"));
-        //account.addEthereumAccount(new Eth("publickey2", "privatekey2"));
+        account.addEthereumAccount(new Eth("publickey", "privatekey".getBytes()));
+        account.addEthereumAccount(new Eth("publickey2", "privatekey2".getBytes()));
         ArrayList<Eth> eths = account.getEths();
 
-        ArrayAdapter<Eth> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, eths);
-        lv_select_account.setAdapter(adapter);
+        EthAdapter ethAdapter = new EthAdapter(this, eths);
+        lv_select_account.setAdapter(ethAdapter);
 
         lv_select_account.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 view.setSelected(true);
+                btn_ready_transfer.setEnabled(true);
             }
         });
 
-        final Button btn_ready_transfer = (Button) findViewById(R.id.btn_ready_transfer);
         btn_ready_transfer.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                readyTransferIntent.putExtra("senderPublicKey", "empty");
+                readyTransferIntent.putExtra("senderPublicKey", "");
                 readyTransferIntent.putExtra("amount", ((EditText)findViewById(R.id.edittext_transfer_money_amount)).getText().toString());
                 readyTransferIntent.putExtra("reason", ((EditText)findViewById(R.id.edittext_transfer_money_reason)).getText().toString());
                 startActivity(readyTransferIntent);
