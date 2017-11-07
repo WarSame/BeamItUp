@@ -42,25 +42,12 @@ public class AddEthActivity extends Activity {
         String ethAddress = et_eth_address.getText().toString();
         String privateKeyString = et_private_key.getText().toString();
 
-        Encryption.Encryptor encryptor = new Encryption.Encryptor();
-        byte[] privateKeyEnc = new byte[0];
-        try {
-            privateKeyEnc = encryptor.encryptText(ethAddress, privateKeyString);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this, "failed", Toast.LENGTH_LONG).show();
-            onCreateEthFail();
-        }
+        Encryption.Encryptor encryptor = encryptPrivateKey(ethAddress, privateKeyString);
 
-        Encryption.Decryptor decryptor;
-        try {
-            decryptor = new Encryption.Decryptor();
-            Toast.makeText(this, decryptor.decryptText(ethAddress, encryptor.getEncryption(), encryptor.getIv()), Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String decryptedText = decryptPrivateKey(ethAddress, encryptor.getIv(), encryptor.getEncryption());
+        Toast.makeText(this, decryptedText, Toast.LENGTH_LONG).show();
 
-        Eth eth = new Eth(ethAddress, privateKeyEnc);
+        Eth eth = new Eth(ethAddress, encryptor.getEncryption());
 
         Account account = (Account) getIntent().getSerializableExtra("account");
         account.addEthereumAccount(eth);
@@ -69,20 +56,44 @@ public class AddEthActivity extends Activity {
         onCreateEthSuccess(account);
     }
 
+    private String decryptPrivateKey(String ethAddress, byte[] encryption, byte[] iv) {
+        Encryption.Decryptor decryptor = null;
+        String decryptedText = null;
+        try {
+            decryptor = new Encryption.Decryptor();
+            decryptedText = decryptor.decryptText(ethAddress, encryption, iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return decryptedText;
+    }
+
+    private Encryption.Encryptor encryptPrivateKey(String ethAddress, String privateKeyString) {
+        Encryption.Encryptor encryptor = new Encryption.Encryptor();
+        try {
+            encryptor.encryptText(ethAddress, privateKeyString);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "failed", Toast.LENGTH_LONG).show();
+            onCreateEthFail();
+        }
+        return encryptor;
+    }
+
     private void onCreateEthSuccess(Account account){
         Button btn_add_eth = (Button) findViewById(R.id.btn_add_eth);
         btn_add_eth.setEnabled(true);
 
-        //Intent landingPageIntent = new Intent(this, LandingPageActivity.class);
-        //landingPageIntent.putExtra("account", account);
-        //startActivity(landingPageIntent);
+        final Intent landingPageIntent = new Intent(this, LandingPageActivity.class);
+        landingPageIntent.putExtra("account", account);
+        startActivity(landingPageIntent);
     }
 
     private void onCreateEthFail(){
         Button btn_add_eth = (Button) findViewById(R.id.btn_add_eth);
         btn_add_eth.setEnabled(true);
 
-        //Toast.makeText(this, "Ethereum account creation failed.", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Ethereum account creation failed.", Toast.LENGTH_LONG).show();
     }
 
 }

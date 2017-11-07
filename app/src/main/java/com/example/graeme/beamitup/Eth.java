@@ -1,6 +1,8 @@
 package com.example.graeme.beamitup;
 
-class Eth {
+import java.io.Serializable;
+
+class Eth implements Serializable {
     private String address;
     private byte[] encPrivateKey;
     private long id;
