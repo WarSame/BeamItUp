@@ -9,11 +9,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class CreateTransferActivity extends Activity{
     Intent readyTransferIntent;
+    int lv_position = 0;
+    Account account;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,11 +25,10 @@ public class CreateTransferActivity extends Activity{
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         readyTransferIntent = new Intent(this, ReadyTransferActivity.class);
-        ListView lv_select_account = (ListView)findViewById(R.id.lv_transfer_money_account);
+        final ListView lv_select_account = (ListView)findViewById(R.id.lv_transfer_money_account);
         final Button btn_ready_transfer = (Button) findViewById(R.id.btn_ready_transfer);
-        btn_ready_transfer.setEnabled(false);
 
-        Account account = (Account) getIntent().getSerializableExtra("account");
+        account = (Account) getIntent().getSerializableExtra("account");
         account.addEthereumAccount(new Eth("publickey", "privatekey".getBytes()));
         account.addEthereumAccount(new Eth("publickey2", "privatekey2".getBytes()));
         ArrayList<Eth> eths = account.getEths();
@@ -38,19 +40,24 @@ public class CreateTransferActivity extends Activity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 view.setSelected(true);
-                btn_ready_transfer.setEnabled(true);
+                lv_position = position;
             }
         });
 
         btn_ready_transfer.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                readyTransferIntent.putExtra("senderPublicKey", "");
+                Eth eth = (Eth)lv_select_account.getItemAtPosition(lv_position);
+                readyTransferIntent.putExtra("senderAddress", eth.getAddress());
                 readyTransferIntent.putExtra("amount", ((EditText)findViewById(R.id.edittext_transfer_money_amount)).getText().toString());
                 readyTransferIntent.putExtra("reason", ((EditText)findViewById(R.id.edittext_transfer_money_reason)).getText().toString());
                 startActivity(readyTransferIntent);
             }
         });
+    }
+
+    private void onCreateTransferFail(){
+        Toast.makeText(this, "Transfer creation failed", Toast.LENGTH_LONG).show();
     }
 
 }

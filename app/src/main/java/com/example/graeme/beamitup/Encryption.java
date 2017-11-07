@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
+import android.support.annotation.NonNull;
 import android.util.Base64;
 import android.util.Log;
 
@@ -30,6 +31,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 
 class Encryption {
@@ -69,22 +71,28 @@ class Encryption {
         Encryptor(){
         }
 
-        byte[] encryptText(final String alias, final String textToEncrypt) throws Exception {
-            KeyGenerator kg = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, KEY_PROVIDER);
-            kg.init(new KeyGenParameterSpec.Builder(
-                    alias,
+        void encryptText(final String alias, final String textToEncrypt) throws Exception {
+            Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+            cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(alias));
+
+            this.iv = cipher.getIV();
+            this.encryption = cipher.doFinal(textToEncrypt.getBytes(TEXT_FORMAT));
+        }
+
+        @NonNull
+        private SecretKey getSecretKey(final String alias) throws NoSuchAlgorithmException,
+                NoSuchProviderException, InvalidAlgorithmParameterException {
+
+            final KeyGenerator keyGenerator = KeyGenerator
+                    .getInstance(KeyProperties.KEY_ALGORITHM_AES, KEY_PROVIDER);
+
+            keyGenerator.init(new KeyGenParameterSpec.Builder(alias,
                     KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
                     .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
                     .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                    .build()
-            );
+                    .build());
 
-            Key key = kg.generateKey();
-            Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-            cipher.init(Cipher.ENCRYPT_MODE, key);
-
-            this.iv = cipher.getIV();
-            return this.encryption = cipher.doFinal(textToEncrypt.getBytes(TEXT_FORMAT));
+            return keyGenerator.generateKey();
         }
 
         byte[] getEncryption(){
@@ -105,11 +113,14 @@ class Encryption {
         }
 
         String decryptText(final String alias, final byte[] encryptedData, final byte[] encryptionIV) throws Exception {
-            KeyStore.Entry entry = ks.getEntry(alias, null);
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             GCMParameterSpec spec = new GCMParameterSpec(128, encryptionIV);
-            cipher.init(Cipher.DECRYPT_MODE, ((KeyStore.SecretKeyEntry) entry).getSecretKey(), spec);
+            cipher.init(Cipher.DECRYPT_MODE, getSecretKey(alias), spec);
             return new String(cipher.doFinal(encryptedData), TEXT_FORMAT);
+        }
+
+        private SecretKey getSecretKey(final String alias) throws UnrecoverableEntryException, NoSuchAlgorithmException, KeyStoreException {
+            return ((KeyStore.SecretKeyEntry) ks.getEntry(alias, null)).getSecretKey();
         }
     }
 }

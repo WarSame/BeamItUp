@@ -28,7 +28,7 @@ public class ReadyTransferActivity extends Activity {
         TextView tv_amount_reason = (TextView)findViewById(R.id.tv_reason_value);
         tv_amount_reason.setText(reason);
 
-        String senderPublicKey = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        String senderPublicKey = getIntent().getStringExtra("senderAddress");
 
         Transfer tran = new Transfer(amount, reason, senderPublicKey);
         NfcAdapter mNfcAdapter = NfcAdapter.getDefaultAdapter(this);

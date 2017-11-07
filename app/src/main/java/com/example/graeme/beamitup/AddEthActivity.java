@@ -44,7 +44,7 @@ public class AddEthActivity extends Activity {
 
         Encryption.Encryptor encryptor = encryptPrivateKey(ethAddress, privateKeyString);
 
-        String decryptedText = decryptPrivateKey(ethAddress, encryptor.getIv(), encryptor.getEncryption());
+        String decryptedText = decryptPrivateKey(ethAddress, encryptor.getEncryption(), encryptor.getIv());
         Toast.makeText(this, decryptedText, Toast.LENGTH_LONG).show();
 
         Eth eth = new Eth(ethAddress, encryptor.getEncryption());
