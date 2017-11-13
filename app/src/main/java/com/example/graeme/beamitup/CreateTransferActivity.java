@@ -29,8 +29,6 @@ public class CreateTransferActivity extends Activity{
         final Button btn_ready_transfer = (Button) findViewById(R.id.btn_ready_transfer);
 
         account = (Account) getIntent().getSerializableExtra("account");
-        account.addEthereumAccount(new Eth("publickey", "privatekey".getBytes()));
-        account.addEthereumAccount(new Eth("publickey2", "privatekey2".getBytes()));
         ArrayList<Eth> eths = account.getEths();
 
         EthAdapter ethAdapter = new EthAdapter(this, eths);

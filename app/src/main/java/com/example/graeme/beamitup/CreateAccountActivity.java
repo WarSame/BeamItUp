@@ -93,7 +93,6 @@ public class CreateAccountActivity extends Activity {
         Toast.makeText(this, "Create account failed.", Toast.LENGTH_LONG).show();
     }
 
-
     boolean isValid(String email, String password, String confirmPassword, StringBuilder errors){
         return emailValid(email, errors) && passwordValid(password, confirmPassword, errors);
     }
