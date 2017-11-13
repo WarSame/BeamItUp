@@ -19,6 +19,9 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Transfer tran = new Transfer("5", "because", "");
+        tran.sendTransfer();
+
         Button btn_sign_in = (Button)findViewById(R.id.btn_sign_in);
         Button btn_create_account = (Button)findViewById(R.id.btn_create_account);
 

@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+            android:label="@string/title_activity_login" />
         <activity
             android:name=".CreateTransferActivity"
             android:label="@string/title_activity_transfer_money"
@@ -93,7 +93,7 @@
         </activity>
         <activity
             android:name=".CreateReplyTransferActivity"
-            android:label="@string/title_activity_create_reply_transfer"></activity>
+            android:label="@string/title_activity_create_reply_transfer" />
     </application>
 
 </manifest>

@@ -1,5 +1,9 @@
 package com.example.graeme.beamitup;
 
+import android.util.Log;
+
+import com.typesafe.config.ConfigFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -8,6 +12,19 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.math.BigInteger;
+
+import org.ethereum.config.SystemProperties;
+import org.ethereum.core.*;
+import org.ethereum.crypto.ECKey;
+import org.ethereum.crypto.HashUtil;
+import org.ethereum.db.ByteArrayWrapper;
+import org.ethereum.facade.Ethereum;
+import org.ethereum.facade.EthereumFactory;
+import org.ethereum.listener.EthereumListenerAdapter;
+import org.ethereum.util.ByteUtil;
+import org.spongycastle.util.encoders.Hex;
+import org.springframework.context.annotation.Bean;
 
 class Transfer implements Serializable {
     private String amount;
@@ -93,5 +110,38 @@ class Transfer implements Serializable {
 
     void setReceiverPublicKey(String receiverPublicKey) {
         this.receiverPublicKey = receiverPublicKey;
+    }
+
+    private static final BigInteger weiInEther = BigInteger.valueOf(1_000_000_000_000_000_000L);
+    void sendTransfer(){
+        final byte[] senderPrivateKey = HashUtil.sha3("cow".getBytes());
+        final byte[] senderAddress = ECKey.fromPrivate(senderPrivateKey).getAddress();
+
+        class SampleConfig extends RopstenSample.RopstenSampleConfig {
+            @Bean
+            public RopstenSample sampleBean() {
+                return new RopstenSample();
+            }
+        }
+        Ethereum ethereum = EthereumFactory.createEthereum(SampleConfig.class);
+        BigInteger ethToSend = BigInteger.valueOf(Long.parseLong(this.amount));
+        BigInteger weiToSend = weiInEther.multiply(ethToSend);
+        BigInteger nonce = ethereum.getRepository().getNonce(senderAddress);
+
+        String receiverAddress = "0x6861B070f43842FC16eAD07854eE5D91B9D27C13";
+        Log.d("Transfer", "receiveraddress = " + receiverAddress);
+
+        Transaction tx = new Transaction(
+                ByteUtil.bigIntegerToBytes(nonce),
+                ByteUtil.longToBytesNoLeadZeroes(ethereum.getGasPrice()),
+                ByteUtil.longToBytesNoLeadZeroes(200000),
+                Hex.decode(receiverAddress),
+                ByteUtil.bigIntegerToBytes(weiToSend),
+                new byte[0],
+                ethereum.getChainIdForNextBlock()
+        );
+
+        tx.sign(ECKey.fromPrivate(senderPrivateKey));
+        ethereum.submitTransaction(tx);
     }
 }
