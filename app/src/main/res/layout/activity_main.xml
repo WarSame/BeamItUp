@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="8dp"
-    tools:context="com.example.graeme.beamitup.LoginActivity">
+    tools:context="com.example.graeme.beamitup.MainActivity">
 
     <LinearLayout
         android:gravity="center_horizontal"

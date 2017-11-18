@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.graeme.beamitup.ReplyTransferActivity">
+    tools:context="com.example.graeme.beamitup.CreateTransferActivity">
 
     <LinearLayout
         android:gravity="center_horizontal"
@@ -31,24 +31,35 @@
                 android:layout_margin="16dp" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_transfer_money_reason"
+        <EditText
+            android:id="@+id/edittext_transfer_money_reason"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/hint_transfer_money_reason"
             android:layout_margin="16dp"
             android:layout_gravity="center_horizontal"
+            android:inputType="textMultiLine"
             android:layout_weight="1" />
 
-        <TextView
-            android:id="@+id/tv_transfer_money_amount"
+        <EditText
+            android:id="@+id/edittext_transfer_money_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/hint_transfer_money_amount"
             android:layout_margin="16dp"
             android:layout_gravity="center_horizontal"
+            android:inputType="numberDecimal"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/btn_ready_transfer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/text_button_ready_transfer"
+            android:layout_margin="16dp"
             android:layout_weight="1" />
     </LinearLayout>
 

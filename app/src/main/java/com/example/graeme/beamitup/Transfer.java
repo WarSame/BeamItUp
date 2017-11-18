@@ -94,4 +94,8 @@ class Transfer implements Serializable {
     void setReceiverPublicKey(String receiverPublicKey) {
         this.receiverPublicKey = receiverPublicKey;
     }
+
+    void sendTransfer(){
+
+    }
 }
