@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
+
 public class MainActivity extends Activity {
     private static final int REQUEST_LOGIN = 0;
     private static final int REQUEST_SIGNUP = 1;
@@ -20,8 +22,12 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         Transfer tran = new Transfer("5", "because", "");
-        String i = tran.sendTransfer(this);
-        Toast.makeText(this, ""+i, Toast.LENGTH_LONG).show();
+        try {
+            TransactionReceipt receipt = tran.sendTransfer(this);
+            Toast.makeText(this, receipt.toString(), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         Button btn_sign_in = (Button)findViewById(R.id.btn_sign_in);
         Button btn_create_account = (Button)findViewById(R.id.btn_create_account);

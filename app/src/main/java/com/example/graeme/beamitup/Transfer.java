@@ -1,30 +1,38 @@
 package com.example.graeme.beamitup;
 
 import android.content.Context;
-import android.os.Environment;
-import android.widget.Toast;
+import android.os.AsyncTask;
+import android.os.StrictMode;
+import android.util.Log;
 
-import org.web3j.crypto.CipherException;
+import org.spongycastle.util.encoders.Hex;
+import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
+import org.web3j.protocol.core.RemoteCall;
+import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.tx.ClientTransactionManager;
+import org.web3j.tx.FastRawTransactionManager;
+import org.web3j.tx.RawTransactionManager;
+import org.web3j.tx.TransactionManager;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 import org.web3j.protocol.http.HttpService;
+import org.web3j.utils.Async;
+import org.web3j.utils.Convert;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 class Transfer implements Serializable {
     private String amount;
@@ -112,35 +120,38 @@ class Transfer implements Serializable {
         this.receiverPublicKey = receiverPublicKey;
     }
 
-    String sendTransfer(Context context){
-        String fileName = "";
-        File walletdir = new File(context.getFilesDir() + "wallets");
-        try {
-            if (!walletdir.exists()){
-                walletdir.mkdir();
-            }
-            //Toast.makeText(context, walletfile.getPath(), Toast.LENGTH_LONG).show();
-            fileName = WalletUtils.generateNewWalletFile("pass", walletdir, false);
-        } catch (Exception e) {
-            e.printStackTrace();
+    private String obtainWalletFile(final String WALLET_DIRECTORY) throws Exception {
+        File walletdir = new File(WALLET_DIRECTORY);
+        if (!walletdir.exists()){
+            walletdir.mkdir();
         }
+        String fileName = WalletUtils.generateLightNewWalletFile("pass", walletdir);
+        Log.d("TAG", "obtainWalletFile: " + fileName);
         return fileName;
-        /*
-        Web3j web3 = Web3j.build(new InfuraHttpService("https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9"));
-        Web3ClientVersion web3ClientVersion = null;
-        String clientVersion = "";
-        try {
-            web3ClientVersion = web3.web3ClientVersion().send();
-            clientVersion = web3ClientVersion.getWeb3ClientVersion();
-            Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-            TransactionReceipt receipt = Transfer.sendFunds(
-            web3, credentials, "0x<address>|<ensName>",
-            BigDecimal.valueOf(1.0), Convert.Unit.ETHER).send();
+    }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return clientVersion;
-        */
+    private Credentials obtainCredentials(final String WALLET_DIRECTORY) throws Exception {
+        String walletLocation = WALLET_DIRECTORY + obtainWalletFile(WALLET_DIRECTORY);
+        Log.d("TAG", "obtainCredentials: " + walletLocation);
+        return WalletUtils.loadCredentials("pass", walletLocation);
+    }
+
+    TransactionReceipt sendTransfer(Context context) throws Exception {
+        final String WALLET_DIRECTORY = context.getFilesDir() + "/wallets/";
+
+        //Credentials credentials = obtainCredentials(WALLET_DIRECTORY);
+        Web3j web3 = Web3jFactory.build(new HttpService("https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9"));
+
+        ClientTransactionManager clientTransactionManager =
+                new ClientTransactionManager(web3, "0x6861B070f43842FC16eAD07854eE5D91B9D27C13");
+
+        org.web3j.tx.Transfer tran = new org.web3j.tx.Transfer(web3, clientTransactionManager);
+
+        RemoteCall<TransactionReceipt> rc = tran.sendFunds(
+                "0x31B98D14007bDEe637298086988A0bBd31184523",
+                BigDecimal.valueOf(1.0),
+                Convert.Unit.ETHER);
+
+        return rc.send();
     }
 }
