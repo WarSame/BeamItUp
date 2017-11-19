@@ -20,7 +20,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         Transfer tran = new Transfer("5", "because", "");
-        tran.sendTransfer();
+        String i = tran.sendTransfer(this);
+        Toast.makeText(this, ""+i, Toast.LENGTH_LONG).show();
 
         Button btn_sign_in = (Button)findViewById(R.id.btn_sign_in);
         Button btn_create_account = (Button)findViewById(R.id.btn_create_account);
