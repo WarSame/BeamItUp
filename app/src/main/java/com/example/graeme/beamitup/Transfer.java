@@ -3,6 +3,7 @@ package com.example.graeme.beamitup;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.spongycastle.util.encoders.Hex;
@@ -33,6 +34,16 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 class Transfer implements Serializable {
     private String amount;
@@ -138,20 +149,32 @@ class Transfer implements Serializable {
 
     TransactionReceipt sendTransfer(Context context) throws Exception {
         final String WALLET_DIRECTORY = context.getFilesDir() + "/wallets/";
+        final String FROM_ADDRESS = "0x6861B070f43842FC16eAD07854eE5D91B9D27C13";
+        final String TO_ADDRESS = "0x31B98D14007bDEe637298086988A0bBd31184523";
 
         //Credentials credentials = obtainCredentials(WALLET_DIRECTORY);
-        Web3j web3 = Web3jFactory.build(new HttpService("https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9"));
 
-        ClientTransactionManager clientTransactionManager =
-                new ClientTransactionManager(web3, "0x6861B070f43842FC16eAD07854eE5D91B9D27C13");
 
-        org.web3j.tx.Transfer tran = new org.web3j.tx.Transfer(web3, clientTransactionManager);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Callable<TransactionReceipt> task = new Callable<TransactionReceipt>() {
+            @Override
+            public TransactionReceipt call() throws Exception {
+                Web3j web3 = Web3jFactory.build(new HttpService("https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9"));
 
-        RemoteCall<TransactionReceipt> rc = tran.sendFunds(
-                "0x31B98D14007bDEe637298086988A0bBd31184523",
-                BigDecimal.valueOf(1.0),
-                Convert.Unit.ETHER);
+                ClientTransactionManager clientTransactionManager =
+                        new ClientTransactionManager(web3, FROM_ADDRESS);
 
-        return rc.send();
+                org.web3j.tx.Transfer tran = new org.web3j.tx.Transfer(web3, clientTransactionManager);
+
+                RemoteCall<TransactionReceipt> rc = tran.sendFunds(
+                        TO_ADDRESS,
+                        BigDecimal.valueOf(1.0),
+                        Convert.Unit.ETHER
+                );
+                return rc.send();
+            }
+        };
+        Future<TransactionReceipt> future = executor.submit(task);
+        return future.get();
     }
 }
