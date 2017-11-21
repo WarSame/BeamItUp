@@ -1,19 +1,38 @@
 package com.example.graeme.beamitup;
 
+import android.content.Context;
+import android.util.Log;
+
+import org.web3j.crypto.Credentials;
+import org.web3j.crypto.WalletUtils;
+import org.web3j.protocol.Web3j;
+import org.web3j.protocol.Web3jFactory;
+import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.protocol.http.HttpService;
+import org.web3j.utils.Async;
+import org.web3j.utils.Convert;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 class Transfer implements Serializable {
     private String amount;
     private String reason;
     private String senderPublicKey;
     private String receiverPublicKey;
+    private static final String TAG = "Transfer";
 
     Transfer(String amount, String reason, String senderPublicKey){
         this.amount = amount;
@@ -50,7 +69,7 @@ class Transfer implements Serializable {
         try {
             in = new ObjectInputStream(bis);
             o = in.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
@@ -95,7 +114,68 @@ class Transfer implements Serializable {
         this.receiverPublicKey = receiverPublicKey;
     }
 
-    void sendTransfer(){
+    private String obtainWalletFile(final String WALLET_DIRECTORY) throws Exception {
+        File walletdir = new File(WALLET_DIRECTORY);
 
+        if (!walletdir.exists()){
+            walletdir.mkdir();
+        }
+
+        String fileName = WalletUtils.generateLightNewWalletFile("pass", walletdir);
+
+        Log.d(TAG, "obtainWalletFile: " + fileName);
+
+        return fileName;
+    }
+
+    private Credentials obtainCredentials(final String WALLET_DIRECTORY) throws Exception {
+        String walletLocation = WALLET_DIRECTORY + obtainWalletFile(WALLET_DIRECTORY);
+
+        Log.d(TAG, "obtainCredentials: " + walletLocation);
+
+        Credentials cred = WalletUtils.loadCredentials("pass", new File(walletLocation));
+
+        Log.d(TAG, "obtainCredentials: address: " + cred.getAddress() + " key: "
+                + cred.getEcKeyPair().getPublicKey());
+        return cred;
+    }
+
+    TransactionReceipt sendTransfer(Context context) throws Exception {
+        final String WALLET_DIRECTORY = context.getFilesDir() + "/wallets/";
+        final String FROM_ADDRESS = "0x6861B070f43842FC16eAD07854eE5D91B9D27C13";
+        final String TO_ADDRESS = "0x31B98D14007bDEe637298086988A0bBd31184523";
+
+        Callable<TransactionReceipt> task = new Callable<TransactionReceipt>() {
+            @Override
+            public TransactionReceipt call() throws Exception {
+                Web3j web3 = Web3jFactory.build(
+                        new HttpService("https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9")
+                );
+                Log.d(TAG, web3.web3ClientVersion().send().getWeb3ClientVersion());
+
+                Credentials credentials = Credentials.create(
+                        "ethprivatekey"
+                );
+                Log.d(TAG, "Credentials retrieved.");
+
+                Log.d(TAG, "Credentials address: " + credentials.getAddress());
+                BigInteger balance = web3.ethGetBalance(credentials.getAddress(), DefaultBlockParameterName.LATEST).
+                        sendAsync().get().getBalance();
+                Log.d(TAG, "Balance: " + balance);
+
+                TransactionReceipt receipt = org.web3j.tx.Transfer.sendFunds(
+                        web3,
+                        credentials,
+                        TO_ADDRESS,
+                        BigDecimal.ONE,
+                        Convert.Unit.WEI
+                ).send();
+                Log.d(TAG, receipt.getFrom());
+                Log.d(TAG, receipt.getTo());
+                return receipt;
+            }
+        };
+        Future<TransactionReceipt> future = Async.run(task);
+        return future.get();
     }
 }
