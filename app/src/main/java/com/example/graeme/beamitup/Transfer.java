@@ -1,24 +1,14 @@
 package com.example.graeme.beamitup;
 
 import android.content.Context;
-import android.os.AsyncTask;
-import android.os.StrictMode;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
-import org.spongycastle.util.encoders.Hex;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
-import org.web3j.protocol.core.RemoteCall;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
-import org.web3j.tx.ClientTransactionManager;
-import org.web3j.tx.FastRawTransactionManager;
-import org.web3j.tx.RawTransactionManager;
-import org.web3j.tx.TransactionManager;
+import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
-import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.utils.Async;
 import org.web3j.utils.Convert;
@@ -34,22 +24,15 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 class Transfer implements Serializable {
     private String amount;
     private String reason;
     private String senderPublicKey;
     private String receiverPublicKey;
+    private static final String TAG = "Transfer";
 
     Transfer(String amount, String reason, String senderPublicKey){
         this.amount = amount;
@@ -133,18 +116,28 @@ class Transfer implements Serializable {
 
     private String obtainWalletFile(final String WALLET_DIRECTORY) throws Exception {
         File walletdir = new File(WALLET_DIRECTORY);
+
         if (!walletdir.exists()){
             walletdir.mkdir();
         }
+
         String fileName = WalletUtils.generateLightNewWalletFile("pass", walletdir);
-        Log.d("TAG", "obtainWalletFile: " + fileName);
+
+        Log.d(TAG, "obtainWalletFile: " + fileName);
+
         return fileName;
     }
 
     private Credentials obtainCredentials(final String WALLET_DIRECTORY) throws Exception {
         String walletLocation = WALLET_DIRECTORY + obtainWalletFile(WALLET_DIRECTORY);
-        Log.d("TAG", "obtainCredentials: " + walletLocation);
-        return WalletUtils.loadCredentials("pass", walletLocation);
+
+        Log.d(TAG, "obtainCredentials: " + walletLocation);
+
+        Credentials cred = WalletUtils.loadCredentials("pass", new File(walletLocation));
+
+        Log.d(TAG, "obtainCredentials: address: " + cred.getAddress() + " key: "
+                + cred.getEcKeyPair().getPublicKey());
+        return cred;
     }
 
     TransactionReceipt sendTransfer(Context context) throws Exception {
@@ -152,29 +145,37 @@ class Transfer implements Serializable {
         final String FROM_ADDRESS = "0x6861B070f43842FC16eAD07854eE5D91B9D27C13";
         final String TO_ADDRESS = "0x31B98D14007bDEe637298086988A0bBd31184523";
 
-        //Credentials credentials = obtainCredentials(WALLET_DIRECTORY);
-
-
-        ExecutorService executor = Executors.newSingleThreadExecutor();
         Callable<TransactionReceipt> task = new Callable<TransactionReceipt>() {
             @Override
             public TransactionReceipt call() throws Exception {
-                Web3j web3 = Web3jFactory.build(new HttpService("https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9"));
-
-                ClientTransactionManager clientTransactionManager =
-                        new ClientTransactionManager(web3, FROM_ADDRESS);
-
-                org.web3j.tx.Transfer tran = new org.web3j.tx.Transfer(web3, clientTransactionManager);
-
-                RemoteCall<TransactionReceipt> rc = tran.sendFunds(
-                        TO_ADDRESS,
-                        BigDecimal.valueOf(1.0),
-                        Convert.Unit.ETHER
+                Web3j web3 = Web3jFactory.build(
+                        new HttpService("https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9")
                 );
-                return rc.send();
+                Log.d(TAG, web3.web3ClientVersion().send().getWeb3ClientVersion());
+
+                Credentials credentials = Credentials.create(
+                        "ethprivatekey"
+                );
+                Log.d(TAG, "Credentials retrieved.");
+
+                Log.d(TAG, "Credentials address: " + credentials.getAddress());
+                BigInteger balance = web3.ethGetBalance(credentials.getAddress(), DefaultBlockParameterName.LATEST).
+                        sendAsync().get().getBalance();
+                Log.d(TAG, "Balance: " + balance);
+
+                TransactionReceipt receipt = org.web3j.tx.Transfer.sendFunds(
+                        web3,
+                        credentials,
+                        TO_ADDRESS,
+                        BigDecimal.ONE,
+                        Convert.Unit.WEI
+                ).send();
+                Log.d(TAG, receipt.getFrom());
+                Log.d(TAG, receipt.getTo());
+                return receipt;
             }
         };
-        Future<TransactionReceipt> future = executor.submit(task);
+        Future<TransactionReceipt> future = Async.run(task);
         return future.get();
     }
 }
