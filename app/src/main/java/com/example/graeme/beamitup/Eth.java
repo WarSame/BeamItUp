@@ -5,6 +5,7 @@ import java.io.Serializable;
 class Eth implements Serializable {
     private String address;
     private byte[] encPrivateKey;
+    private byte[] iv;
     private long id;
 
     Eth(String address, byte[] encPrivateKey){
@@ -27,5 +28,13 @@ class Eth implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public byte[] getIv() {
+        return iv;
+    }
+
+    public void setIv(byte[] iv) {
+        this.iv = iv;
     }
 }

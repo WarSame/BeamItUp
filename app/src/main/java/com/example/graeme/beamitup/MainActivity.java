@@ -11,6 +11,9 @@ import android.widget.Toast;
 
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
 public class MainActivity extends Activity {
     private static final int REQUEST_LOGIN = 0;
     private static final int REQUEST_SIGNUP = 1;
@@ -20,14 +23,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Transfer tran = new Transfer("5", "because", "");
-        try {
-            TransactionReceipt receipt = tran.sendTransfer(this);
-            Toast.makeText(this, receipt.toString(), Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         Button btn_sign_in = (Button)findViewById(R.id.btn_sign_in);
         Button btn_create_account = (Button)findViewById(R.id.btn_create_account);

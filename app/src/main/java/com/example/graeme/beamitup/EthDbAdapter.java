@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 
-public class EthDbAdapter extends DbAdapter{
+class EthDbAdapter extends DbAdapter{
     private static final String TAG = "EthDbAdapter";
 
     EthDbAdapter(Context context) {
@@ -16,7 +16,8 @@ public class EthDbAdapter extends DbAdapter{
         ContentValues contentValues = new ContentValues();
         contentValues.put(EthTable.ETH_ADDRESS,
                 eth.getAddress());
-        contentValues.put(EthTable.ETH_ENC_PRIVATE_KEY, eth.getEncPrivateKey());
+        contentValues.put(EthTable.ETH_ENC_PRIVATE_KEY,
+                eth.getEncPrivateKey());
         return this.db.insert(EthTable.ETH_TABLE_NAME, null, contentValues);
     }
 
@@ -38,7 +39,12 @@ public class EthDbAdapter extends DbAdapter{
         ContentValues contentValues = new ContentValues();
         contentValues.put(EthTable.ETH_ADDRESS, eth.getAddress());
         contentValues.put(EthTable.ETH_ENC_PRIVATE_KEY, eth.getEncPrivateKey());
-        return this.db.update(EthTable.ETH_TABLE_NAME, contentValues, EthTable._ID + "=" + id, null) > 0;
+        return this.db.update(
+                EthTable.ETH_TABLE_NAME,
+                contentValues,
+                EthTable._ID + "=" + id,
+                null
+        ) > 0;
     }
 
     boolean deleteAccount(long id){

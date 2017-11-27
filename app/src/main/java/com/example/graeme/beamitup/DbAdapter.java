@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 class DbAdapter {
     //If changing schema, must update db version
-    static final int DATABASE_VERSION = 2;
+    static final int DATABASE_VERSION = 3;
     static final String DATABASE_NAME = "BeamItUp.db";
 
     private DatabaseHelper DbHelper;
@@ -65,7 +65,7 @@ class DbAdapter {
         static final String ACCOUNT_COLUMN_SALT = "salt";
 
         static final String SQL_CREATE_TABLE = "CREATE TABLE " + ACCOUNT_TABLE_NAME +
-                " (" + _ID + " INTEGER PRIMARY KEY," + ACCOUNT_COLUMN_EMAIL + " TEXT," +
+                " (" + ACCOUNT_COLUMN_EMAIL + " TEXT PRIMARY KEY," +
                 ACCOUNT_COLUMN_PASSWORD_HASH + " BLOB," + ACCOUNT_COLUMN_SALT + " BLOB)";
 
         static final String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " + ACCOUNT_TABLE_NAME;
@@ -73,12 +73,14 @@ class DbAdapter {
 
     static class AccountEthTable implements BaseColumns {
         static final String ACCOUNT_ETH_TABLE_NAME = "account_eth";
-        static final String ACCOUNT_ETH_COLUMN_ACCOUNT_ID = "account_id";
+        static final String ACCOUNT_ETH_COLUMN_ACCOUNT_EMAIL = "account_email";
         static final String ACCOUNT_ETH_COLUMN_ETH_ID = "eth_id";
 
         static final String SQL_CREATE_TABLE = "CREATE TABLE " + ACCOUNT_ETH_TABLE_NAME +
-                " (" + _ID + " INTEGER PRIMARY KEY," + ACCOUNT_ETH_COLUMN_ACCOUNT_ID + " INTEGER," +
-                ACCOUNT_ETH_COLUMN_ETH_ID + " INTEGER)";
+                " (" + ACCOUNT_ETH_COLUMN_ACCOUNT_EMAIL + " TEXT," +
+                ACCOUNT_ETH_COLUMN_ETH_ID + " INTEGER, " +
+                "PRIMARY KEY(" + ACCOUNT_ETH_COLUMN_ACCOUNT_EMAIL +
+                "," + ACCOUNT_ETH_COLUMN_ETH_ID + ")";
 
         static final String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " + ACCOUNT_ETH_TABLE_NAME;
     }
@@ -87,10 +89,11 @@ class DbAdapter {
         static final String ETH_TABLE_NAME = "eth";
         static final String ETH_ADDRESS = "address";
         static final String ETH_ENC_PRIVATE_KEY = "enc_private_key";
+        static final String ETH_IV = "iv";
 
         static final String SQL_CREATE_TABLE = "CREATE TABLE " + ETH_TABLE_NAME +
             " (" + _ID + " INTEGER PRIMARY KEY," + ETH_ADDRESS + " TEXT," +
-            ETH_ENC_PRIVATE_KEY + " BLOB)";
+            ETH_ENC_PRIVATE_KEY + " BLOB " + ETH_IV + "BLOB)";
 
         static final String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " + ETH_TABLE_NAME;
 

@@ -31,6 +31,7 @@ class Transfer implements Serializable {
     private String amount;
     private String reason;
     private String senderPublicKey;
+    private String senderPrivateKey;
     private String receiverPublicKey;
     private static final String TAG = "Transfer";
 
@@ -38,6 +39,7 @@ class Transfer implements Serializable {
         this.amount = amount;
         this.reason = reason;
         this.senderPublicKey = senderPublicKey;
+        this.senderPublicKey = null;
         this.receiverPublicKey = null;
     }
 
@@ -55,8 +57,8 @@ class Transfer implements Serializable {
         } finally {
             try {
                 bos.close();
-            } catch (IOException ex) {
-                // ignore close exception
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
         return bytes;
@@ -106,6 +108,14 @@ class Transfer implements Serializable {
         this.senderPublicKey = senderPublicKey;
     }
 
+    public String getSenderPrivateKey() {
+        return senderPrivateKey;
+    }
+
+    public void setSenderPrivateKey(String senderPrivateKey) {
+        this.senderPrivateKey = senderPrivateKey;
+    }
+
     private String getReceiverPublicKey() {
         return receiverPublicKey;
     }
@@ -133,17 +143,18 @@ class Transfer implements Serializable {
 
         Log.d(TAG, "obtainCredentials: " + walletLocation);
 
-        Credentials cred = WalletUtils.loadCredentials("pass", new File(walletLocation));
+        Credentials cred = WalletUtils.loadCredentials(
+                this.getSenderPrivateKey(),
+                new File(walletLocation)
+        );
 
         Log.d(TAG, "obtainCredentials: address: " + cred.getAddress() + " key: "
                 + cred.getEcKeyPair().getPublicKey());
         return cred;
     }
 
-    TransactionReceipt sendTransfer(Context context) throws Exception {
+    Future<TransactionReceipt> send(Context context) throws Exception {
         final String WALLET_DIRECTORY = context.getFilesDir() + "/wallets/";
-        final String FROM_ADDRESS = "0x6861B070f43842FC16eAD07854eE5D91B9D27C13";
-        final String TO_ADDRESS = "0x31B98D14007bDEe637298086988A0bBd31184523";
 
         Callable<TransactionReceipt> task = new Callable<TransactionReceipt>() {
             @Override
@@ -153,9 +164,7 @@ class Transfer implements Serializable {
                 );
                 Log.d(TAG, web3.web3ClientVersion().send().getWeb3ClientVersion());
 
-                Credentials credentials = Credentials.create(
-                        "ethprivatekey"
-                );
+                Credentials credentials = obtainCredentials(WALLET_DIRECTORY);
                 Log.d(TAG, "Credentials retrieved.");
 
                 Log.d(TAG, "Credentials address: " + credentials.getAddress());
@@ -166,16 +175,16 @@ class Transfer implements Serializable {
                 TransactionReceipt receipt = org.web3j.tx.Transfer.sendFunds(
                         web3,
                         credentials,
-                        TO_ADDRESS,
+                        getReceiverPublicKey(),
                         BigDecimal.ONE,
                         Convert.Unit.WEI
                 ).send();
+
                 Log.d(TAG, receipt.getFrom());
                 Log.d(TAG, receipt.getTo());
                 return receipt;
             }
         };
-        Future<TransactionReceipt> future = Async.run(task);
-        return future.get();
+        return Async.run(task);
     }
 }

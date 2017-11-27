@@ -5,7 +5,14 @@ import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.app.Activity;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
+
+import java.util.ArrayList;
+import java.util.concurrent.Future;
 
 public class FinishTransferActivity extends Activity {
 
@@ -17,7 +24,21 @@ public class FinishTransferActivity extends Activity {
 
         Transfer tran = getReplyTransferMessage();
 
-        //Perform ethereum transfer now that we have all the necessary information
+        Account account = (Account) getIntent().getSerializableExtra("account");
+        ArrayList<Eth> ethIds = account.getEths();
+
+        TextView tv_transfer_status = (TextView)findViewById(R.id.tv_finish_transfer_status_value);
+
+        try {
+            String senderPrivateKey = "";
+            tran.setSenderPrivateKey(senderPrivateKey);
+            Future<TransactionReceipt> future = tran.send(this);
+            future.get();
+            tv_transfer_status.setText( getResources().getString(R.string.transfer_succeeded) );
+        } catch (Exception e) {
+            e.printStackTrace();
+            tv_transfer_status.setText( getResources().getString(R.string.transfer_failed) );
+        }
 
     }
 

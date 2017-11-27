@@ -55,6 +55,9 @@ public class CreateAccountActivity extends Activity {
         Account account;
         try {
             account = new Account(this, email, password);
+            AccountDbAdapter db = new AccountDbAdapter(this);
+            db.createAccount(account);
+            db.close();
         } catch (NoSuchAlgorithmException e) {
             Log.e(TAG, "No such algorithm.");
             e.printStackTrace();
@@ -71,7 +74,6 @@ public class CreateAccountActivity extends Activity {
         AccountDbAdapter db = new AccountDbAdapter(this);
         Intent resultIntent = new Intent();
         try {
-            db.createAccount(account);
             Log.v(TAG, "Successfully created account.");
             resultIntent.putExtra("account", account);
             setResult(RESULT_OK, resultIntent);

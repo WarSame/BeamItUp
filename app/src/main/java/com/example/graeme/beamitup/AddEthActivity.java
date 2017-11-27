@@ -8,11 +8,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-
 public class AddEthActivity extends Activity {
 
     @Override
@@ -48,10 +43,17 @@ public class AddEthActivity extends Activity {
         Toast.makeText(this, decryptedText, Toast.LENGTH_LONG).show();
 
         Eth eth = new Eth(ethAddress, encryptor.getEncryption());
+        EthDbAdapter ethDb = new EthDbAdapter(this);
+        eth.setId(ethDb.createEth(eth));
+        ethDb.close();
 
         Account account = (Account) getIntent().getSerializableExtra("account");
-        account.addEthereumAccount(eth);
-        //Attach eth in DB
+        account.addEthereumAccount(this, eth);
+
+        AccountEthDbAdapter accEthDb = new AccountEthDbAdapter(this);
+        accEthDb.createAccountEth(account.getEmail(), eth.getId());
+        accEthDb.close();
+
 
         onCreateEthSuccess(account);
     }

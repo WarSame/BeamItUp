@@ -2,6 +2,7 @@ package com.example.graeme.beamitup;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -33,15 +34,9 @@ public class LoginActivity extends Activity {
             return;
         }
 
-        Account account;
-        try {
-            account = new Account(this, email, password);
-        } catch (NoSuchAlgorithmException e) {
-            Log.e(TAG, "No such algorithm.");
-            e.printStackTrace();
-            onLoginFail();
-            return;
-        }
+        AccountDbAdapter db = new AccountDbAdapter(this);
+        Account account = db.retrieveAccount(email);
+        db.close();
 
         if (isAuthentic(account)){
             onLoginSuccess(account);

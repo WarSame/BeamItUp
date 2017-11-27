@@ -30,5 +30,13 @@
     <string name="title_activity_create_reply_transfer">CreateReplyTransferActivity</string>
     <string name="text_button_ready_reply">Ready Reply</string>
 
+    <string name="tv_finish_transfer_status">Status</string>
+    <string name="tv_finish_transfer_amount">Amount</string>
+    <string name="tv_finish_transfer_reason">Reason</string>
+    <string name="tv_finish_transfer_sender_public_key">Sender Public Key</string>
+    <string name="tv_finish_transfer_receiver_public_key">Receiver Public Key</string>
+    <string name="transfer_succeeded">Transfer succeeded.</string>
+    <string name="transfer_failed">Transfer failed.</string>
+
 
 </resources>
