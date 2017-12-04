@@ -8,7 +8,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.widget.Toast;
 
-import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 import static com.example.graeme.beamitup.Account.startNewLine;
 
@@ -34,9 +34,11 @@ public class LoginActivity extends Activity {
             return;
         }
 
-        AccountDbAdapter db = new AccountDbAdapter(this);
-        Account account = db.retrieveAccount(email);
-        db.close();
+        AccountDbAdapter accountDbAdapter = new AccountDbAdapter(this);
+        Account account = accountDbAdapter.retrieveAccount(email);
+        accountDbAdapter.close();
+
+        account.setEths(retrieveEths(account.getId()));
 
         if (isAuthentic(account)){
             onLoginSuccess(account);
@@ -46,6 +48,50 @@ public class LoginActivity extends Activity {
             Toast.makeText(this, "Username and password combination not found.", Toast.LENGTH_LONG).show();
             onLoginFail();
         }
+    }
+
+    ArrayList<Eth> retrieveEths(long accountId){
+        EthDbAdapter ethDbAdapter = new EthDbAdapter(this);
+
+        Cursor res = ethDbAdapter.retrieveEthByAccountId(accountId);
+        ArrayList<Eth> eths = addEthsToListFromCursor(res);
+
+        ethDbAdapter.close();
+
+        Log.d(TAG, "Account ID: "+ accountId);
+        //Log.d(TAG, "eth account id: "+eths.get(0).getAccountId());
+        Log.d(TAG, "Number of eth in arraylist: " + eths.size());
+        return eths;
+    }
+
+    ArrayList<Eth> addEthsToListFromCursor(Cursor res){
+        ArrayList<Eth> eths = new ArrayList<>();
+        int numEth = res.getCount();
+        for (int i = 0; i < numEth; i++){
+            Eth eth = getEthFromCursor(res);
+            eths.add(eth);
+            res.moveToNext();
+        }
+        return eths;
+    }
+
+    Eth getEthFromCursor(Cursor res){
+        Eth eth = new Eth();
+        Log.d(TAG, Integer.toString(res.getColumnIndex(DbAdapter.EthTable.ETH_ID)));
+
+        long ethId = res.getLong(res.getColumnIndex(DbAdapter.EthTable.ETH_ID));
+        long accountId = res.getLong(res.getColumnIndex(DbAdapter.EthTable.ETH_ACCOUNT_ID));
+        String address = res.getString(res.getColumnIndex(DbAdapter.EthTable.ETH_ADDRESS));
+        byte[] encPrivateKey = res.getBlob(res.getColumnIndex(DbAdapter.EthTable.ETH_ENC_PRIVATE_KEY));
+        byte[] iv = res.getBlob(res.getColumnIndex(DbAdapter.EthTable.ETH_IV));
+
+        eth.setId(ethId);
+        eth.setAccountId(accountId);
+        eth.setAddress(address);
+        eth.setEncPrivateKey(encPrivateKey);
+        eth.setIv(iv);
+
+        return eth;
     }
 
     private void onLoginSuccess(Account account){

@@ -1,11 +1,10 @@
 package com.example.graeme.beamitup;
 
+import android.app.Activity;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
-import android.app.Activity;
-import android.provider.Settings;
 import android.widget.TextView;
 import android.widget.Toast;
 

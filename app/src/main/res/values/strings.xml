@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">BeamItUp</string>
+
     <string name="title_activity_transfer_money">Transfer Money</string>
     <string name="text_button_transfer_money">Transfer Money</string>
     <string name="text_button_ready_transfer">Ready Transfer</string>
@@ -18,9 +19,10 @@
     <string name="text_button_create_account">Create Account</string>
     <string name="text_et_email">Email</string>
     <string name="text_et_password">Password</string>
-    <string name="title_activity_create_account">CreateAccount</string>
-    <string name="title_activity_landing_page">LandingPageActivity</string>
     <string name="et_confirm_password">Confirm Password</string>
+    <string name="title_activity_create_account">CreateAccount</string>
+
+    <string name="title_activity_landing_page">LandingPageActivity</string>
     <string name="title_activity_add_eth">AddEthActivity</string>
     <string name="et_private_key">Private Key</string>
     <string name="et_eth_address">Ethereum Address</string>

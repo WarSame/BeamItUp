@@ -1,9 +1,9 @@
 package com.example.graeme.beamitup;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.SQLException;
 import android.os.Bundle;
-import android.app.Activity;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -56,7 +56,8 @@ public class CreateAccountActivity extends Activity {
         try {
             account = new Account(this, email, password);
             AccountDbAdapter db = new AccountDbAdapter(this);
-            db.createAccount(account);
+            long accountId = db.createAccount(account);
+            account.setId(accountId);
             db.close();
         } catch (NoSuchAlgorithmException e) {
             Log.e(TAG, "No such algorithm.");

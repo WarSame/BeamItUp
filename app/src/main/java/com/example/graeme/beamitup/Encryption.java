@@ -1,36 +1,22 @@
 package com.example.graeme.beamitup;
 
-import android.annotation.TargetApi;
-import android.content.Context;
-import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.support.annotation.NonNull;
-import android.util.Base64;
-import android.util.Log;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
-import java.security.Signature;
 import java.security.UnrecoverableEntryException;
 import java.security.cert.CertificateException;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 
@@ -69,6 +55,10 @@ class Encryption {
         private byte[] iv;
 
         Encryptor(){
+        }
+
+        void encryptPrivateKey(String ethAddress, String privateKeyString) throws Exception {
+            this.encryptText(ethAddress, privateKeyString);
         }
 
         void encryptText(final String alias, final String textToEncrypt) throws Exception {
@@ -111,6 +101,11 @@ class Encryption {
             ks = KeyStore.getInstance(KEY_PROVIDER);
             ks.load(null);
         }
+
+        String decryptPrivateKey(String ethAddress, byte[] privateKeyEnc, byte[] iv) throws Exception {
+            return this.decryptText(ethAddress, privateKeyEnc, iv);
+        }
+
 
         String decryptText(final String alias, final byte[] encryptedData, final byte[] encryptionIV) throws Exception {
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);

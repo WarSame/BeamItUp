@@ -1,8 +1,8 @@
 package com.example.graeme.beamitup;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Activity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,50 +37,36 @@ public class AddEthActivity extends Activity {
         String ethAddress = et_eth_address.getText().toString();
         String privateKeyString = et_private_key.getText().toString();
 
-        Encryption.Encryptor encryptor = encryptPrivateKey(ethAddress, privateKeyString);
+        Encryption.Encryptor encryptor = new Encryption.Encryptor();
+        try {
+            encryptor.encryptPrivateKey(ethAddress, privateKeyString);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        String decryptedText = decryptPrivateKey(ethAddress, encryptor.getEncryption(), encryptor.getIv());
+        String decryptedText = null;
+        try {
+            decryptedText = new Encryption.Decryptor().decryptPrivateKey(ethAddress, encryptor.getEncryption(), encryptor.getIv());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         Toast.makeText(this, decryptedText, Toast.LENGTH_LONG).show();
 
+        Account account = (Account) getIntent().getSerializableExtra("account");
+
         Eth eth = new Eth(ethAddress, encryptor.getEncryption());
+        eth.setAccountId(account.getId());
+
         EthDbAdapter ethDb = new EthDbAdapter(this);
         eth.setId(ethDb.createEth(eth));
         ethDb.close();
 
-        Account account = (Account) getIntent().getSerializableExtra("account");
         account.addEthereumAccount(this, eth);
-
-        AccountEthDbAdapter accEthDb = new AccountEthDbAdapter(this);
-        accEthDb.createAccountEth(account.getEmail(), eth.getId());
-        accEthDb.close();
-
 
         onCreateEthSuccess(account);
     }
 
-    private String decryptPrivateKey(String ethAddress, byte[] encryption, byte[] iv) {
-        Encryption.Decryptor decryptor = null;
-        String decryptedText = null;
-        try {
-            decryptor = new Encryption.Decryptor();
-            decryptedText = decryptor.decryptText(ethAddress, encryption, iv);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return decryptedText;
-    }
-
-    private Encryption.Encryptor encryptPrivateKey(String ethAddress, String privateKeyString) {
-        Encryption.Encryptor encryptor = new Encryption.Encryptor();
-        try {
-            encryptor.encryptText(ethAddress, privateKeyString);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this, "failed", Toast.LENGTH_LONG).show();
-            onCreateEthFail();
-        }
-        return encryptor;
-    }
 
     private void onCreateEthSuccess(Account account){
         Button btn_add_eth = (Button) findViewById(R.id.btn_add_eth);

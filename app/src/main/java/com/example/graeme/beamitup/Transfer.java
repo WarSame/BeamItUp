@@ -30,7 +30,7 @@ import java.util.concurrent.Future;
 class Transfer implements Serializable {
     private String amount;
     private String reason;
-    private String senderPublicKey;
+    private String senderAddress;
     private String senderPrivateKey;
     private String receiverPublicKey;
     private static final String TAG = "Transfer";
@@ -38,8 +38,8 @@ class Transfer implements Serializable {
     Transfer(String amount, String reason, String senderPublicKey){
         this.amount = amount;
         this.reason = reason;
-        this.senderPublicKey = senderPublicKey;
-        this.senderPublicKey = null;
+        this.senderAddress = senderPublicKey;
+        this.senderPrivateKey = null;
         this.receiverPublicKey = null;
     }
 
@@ -85,34 +85,26 @@ class Transfer implements Serializable {
         return (Transfer)o;
     }
 
-    private String getReason() {
+    String getReason() {
         return reason;
     }
 
-    private String getAmount() {
+    String getAmount() {
         return amount;
     }
 
     public String toString (){
         return "Amount: " + amount + "\n"
                 + "reason: " + reason + "\n"
-                + "sender public key: " + senderPublicKey + "\n"
+                + "sender public key: " + senderAddress + "\n"
                 + "receiver public key: " + receiverPublicKey;
     }
 
-    private String getSenderPublicKey() {
-        return senderPublicKey;
-    }
-
-    private void setSenderPublicKey(String senderPublicKey) {
-        this.senderPublicKey = senderPublicKey;
-    }
-
-    public String getSenderPrivateKey() {
+    String getSenderPrivateKey() {
         return senderPrivateKey;
     }
 
-    public void setSenderPrivateKey(String senderPrivateKey) {
+    void setSenderPrivateKey(String senderPrivateKey) {
         this.senderPrivateKey = senderPrivateKey;
     }
 
@@ -186,5 +178,13 @@ class Transfer implements Serializable {
             }
         };
         return Async.run(task);
+    }
+
+    public String getSenderAddress() {
+        return senderAddress;
+    }
+
+    public void setSenderAddress(String senderAddress) {
+        this.senderAddress = senderAddress;
     }
 }
