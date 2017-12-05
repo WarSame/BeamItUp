@@ -2,14 +2,16 @@ package com.example.graeme.beamitup;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
 import java.sql.SQLException;
 
+import static com.example.graeme.beamitup.DbAdapter.AccountTable.ACCOUNT_ID;
+import static com.example.graeme.beamitup.DbAdapter.AccountTable.ACCOUNT_TABLE_NAME;
+
 class DbAdapter {
     //If changing schema, must update db version
-    static final int DATABASE_VERSION = 2;
+    static final int DATABASE_VERSION = 8;
     static final String DATABASE_NAME = "BeamItUp.db";
 
     private DatabaseHelper DbHelper;
@@ -24,7 +26,7 @@ class DbAdapter {
         }
     }
 
-    static class DatabaseHelper extends SQLiteOpenHelper
+    static class DatabaseHelper extends BeamItUpDbHelper
     {
         DatabaseHelper(Context context)
         {
@@ -34,9 +36,7 @@ class DbAdapter {
         @Override
         public void onCreate(SQLiteDatabase db)
         {
-            db.execSQL(AccountTable.SQL_CREATE_TABLE);
-            db.execSQL(AccountEthTable.SQL_CREATE_TABLE);
-            db.execSQL(AccountEthTable.SQL_CREATE_TABLE);
+            super.onCreate(db);
         }
 
         @Override
@@ -44,6 +44,7 @@ class DbAdapter {
                               int newVersion)
         {
             // Adding any table mods to this guy here
+            super.onUpgrade(db, oldVersion, newVersion);
         }
     }
 
@@ -60,37 +61,39 @@ class DbAdapter {
 
     static class AccountTable implements BaseColumns {
         static final String ACCOUNT_TABLE_NAME = "account";
-        static final String ACCOUNT_COLUMN_EMAIL = "email";
-        static final String ACCOUNT_COLUMN_PASSWORD_HASH = "password";
-        static final String ACCOUNT_COLUMN_SALT = "salt";
+        static final String ACCOUNT_ID = "account_id";
+        static final String ACCOUNT_EMAIL = "email";
+        static final String ACCOUNT_PASSWORD_HASH = "password";
+        static final String ACCOUNT_SALT = "salt";
 
         static final String SQL_CREATE_TABLE = "CREATE TABLE " + ACCOUNT_TABLE_NAME +
-                " (" + _ID + " INTEGER PRIMARY KEY," + ACCOUNT_COLUMN_EMAIL + " TEXT," +
-                ACCOUNT_COLUMN_PASSWORD_HASH + " BLOB," + ACCOUNT_COLUMN_SALT + " BLOB)";
+                " (" + ACCOUNT_ID + " INTEGER PRIMARY KEY,"
+                + ACCOUNT_EMAIL + " TEXT,"
+                + ACCOUNT_PASSWORD_HASH + " BLOB,"
+                + ACCOUNT_SALT + " BLOB,"
+                + "CONSTRAINT email_unique UNIQUE"
+                + "(" + ACCOUNT_EMAIL +")"
+                + ")";
 
         static final String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " + ACCOUNT_TABLE_NAME;
     }
 
-    static class AccountEthTable implements BaseColumns {
-        static final String ACCOUNT_ETH_TABLE_NAME = "account_eth";
-        static final String ACCOUNT_ETH_COLUMN_ACCOUNT_ID = "account_id";
-        static final String ACCOUNT_ETH_COLUMN_ETH_ID = "eth_id";
-
-        static final String SQL_CREATE_TABLE = "CREATE TABLE " + ACCOUNT_ETH_TABLE_NAME +
-                " (" + _ID + " INTEGER PRIMARY KEY," + ACCOUNT_ETH_COLUMN_ACCOUNT_ID + " INTEGER," +
-                ACCOUNT_ETH_COLUMN_ETH_ID + " INTEGER)";
-
-        static final String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " + ACCOUNT_ETH_TABLE_NAME;
-    }
-
     static class EthTable implements  BaseColumns {
         static final String ETH_TABLE_NAME = "eth";
+        static final String ETH_ID = "eth_id";
+        static final String ETH_ACCOUNT_ID = "ETH_ACCOUNT_ID";
         static final String ETH_ADDRESS = "address";
         static final String ETH_ENC_PRIVATE_KEY = "enc_private_key";
+        static final String ETH_IV = "iv";
 
         static final String SQL_CREATE_TABLE = "CREATE TABLE " + ETH_TABLE_NAME +
-            " (" + _ID + " INTEGER PRIMARY KEY," + ETH_ADDRESS + " TEXT," +
-            ETH_ENC_PRIVATE_KEY + " BLOB)";
+            " (" + ETH_ID + " INTEGER PRIMARY KEY,"
+                + ETH_ACCOUNT_ID + " INTEGER,"
+                + ETH_ADDRESS + " TEXT,"
+                + ETH_ENC_PRIVATE_KEY + " BLOB,"
+                + ETH_IV + " BLOB,"
+                + "FOREIGN KEY (" + ETH_ACCOUNT_ID + ") REFERENCES "
+                + ACCOUNT_TABLE_NAME + "(" + ACCOUNT_ID + "))";
 
         static final String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " + ETH_TABLE_NAME;
 

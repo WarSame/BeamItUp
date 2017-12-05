@@ -23,7 +23,7 @@ public class EthAdapter extends ArrayAdapter {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_eth, parent, false);
         }
         TextView tv_publicKey = (TextView)convertView.findViewById(R.id.tv_eth_address);
-        tv_publicKey.setText(eth.getAddress());
+        tv_publicKey.setText( eth.getAddress() );
         return convertView;
     }
 }

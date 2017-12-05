@@ -20,7 +20,13 @@ class Account implements Serializable {
         this.email = email;
         obtainSaltAndHash(context, email, password);
         this.eths = new ArrayList<>();
-        this.id = -1;
+    }
+
+    Account(String email, byte[] passwordHash, byte[] salt, long id){
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.salt = salt;
+        this.id = id;
     }
 
     static void startNewLine(StringBuilder errors) {
@@ -34,12 +40,11 @@ class Account implements Serializable {
         AccountDbAdapter db = new AccountDbAdapter(context);
         if (db.isEmailInUse(email)){
             this.salt = db.retrieveSalt(email);
-            this.passwordHash = Encryption.hashPassword(password, salt);
         }
         else {
             this.salt = Encryption.generateSalt();
-            this.passwordHash = Encryption.hashPassword(password, this.salt);
         }
+        this.passwordHash = Encryption.hashPassword(password, this.salt);
         db.close();
     }
 
@@ -59,8 +64,12 @@ class Account implements Serializable {
         return this.eths;
     }
 
-    void addEthereumAccount(Eth eth){
-        this.eths.add(eth);
+    void setEths(ArrayList<Eth> eths){
+        this.eths = eths;
+    }
+
+    void addEthereumAccount(Context context, Eth ethId){
+        this.eths.add(ethId);
     }
 
     void removeEthereumAccount(Eth eth){

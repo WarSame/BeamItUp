@@ -32,7 +32,7 @@
         </LinearLayout>
 
         <EditText
-            android:id="@+id/edittext_transfer_money_reason"
+            android:id="@+id/et_transfer_money_reason"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -43,7 +43,7 @@
             android:layout_weight="1" />
 
         <EditText
-            android:id="@+id/edittext_transfer_money_amount"
+            android:id="@+id/et_transfer_money_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"

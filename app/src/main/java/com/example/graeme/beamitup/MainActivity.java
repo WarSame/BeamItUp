@@ -1,15 +1,13 @@
 package com.example.graeme.beamitup;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Activity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 public class MainActivity extends Activity {
     private static final int REQUEST_LOGIN = 0;
@@ -20,14 +18,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Transfer tran = new Transfer("5", "because", "");
-        try {
-            TransactionReceipt receipt = tran.sendTransfer(this);
-            Toast.makeText(this, receipt.toString(), Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         Button btn_sign_in = (Button)findViewById(R.id.btn_sign_in);
         Button btn_create_account = (Button)findViewById(R.id.btn_create_account);
