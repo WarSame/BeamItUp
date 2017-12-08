@@ -13,8 +13,6 @@ import android.widget.Toast;
 
 import java.security.NoSuchAlgorithmException;
 
-import static com.example.graeme.beamitup.Account.startNewLine;
-
 public class CreateAccountActivity extends Activity {
     private static final String TAG = "CreateAccountActivity";
 
@@ -44,28 +42,29 @@ public class CreateAccountActivity extends Activity {
         String email = et_email.getText().toString();
         String password = et_password.getText().toString();
         String confirmPassword = et_confirm_password.getText().toString();
-        StringBuilder errors = new StringBuilder();
 
-        if (!isValid(email, password, confirmPassword, errors)){
-            Toast.makeText(this, errors, Toast.LENGTH_LONG).show();
+        if (!isValid(email, password, confirmPassword)){
             onCreateAccountFail();
             return;
         }
 
         Account account;
         try {
-            account = new Account(this, email, password);
-            AccountDbAdapter db = new AccountDbAdapter(this);
-            long accountId = db.createAccount(account);
-            account.setId(accountId);
-            db.close();
+            account = createNewAccount(email, password);
+            onCreateAccountSuccess(account);
         } catch (NoSuchAlgorithmException e) {
-            Log.e(TAG, "No such algorithm.");
             e.printStackTrace();
             onCreateAccountFail();
-            return;
         }
-        onCreateAccountSuccess(account);
+    }
+
+    private Account createNewAccount(String email, String password) throws NoSuchAlgorithmException {
+        byte[] salt = Encryption.generateSalt();
+        byte[] passwordHash = Encryption.hashPassword(password, salt);
+        AccountDbAdapter db = new AccountDbAdapter(this);
+        long accountId = db.createAccount(email, passwordHash, salt);
+        db.close();
+        return new Account(email, accountId);
     }
 
     private void onCreateAccountSuccess(Account account){
@@ -76,7 +75,7 @@ public class CreateAccountActivity extends Activity {
         Intent resultIntent = new Intent();
         try {
             Log.v(TAG, "Successfully created account.");
-            resultIntent.putExtra("account", account);
+            Session.createSession(account);
             setResult(RESULT_OK, resultIntent);
         } catch (SQLException e){
             Log.e(TAG, "Account creation error.");
@@ -96,43 +95,52 @@ public class CreateAccountActivity extends Activity {
         Toast.makeText(this, "Create account failed.", Toast.LENGTH_LONG).show();
     }
 
-    boolean isValid(String email, String password, String confirmPassword, StringBuilder errors){
-        return emailValid(email, errors) && passwordValid(password, confirmPassword, errors);
+    boolean isValid(String email, String password, String confirmPassword){
+        return emailValid(email) && passwordValid(password, confirmPassword);
     }
 
-    private boolean emailValid(String email, StringBuilder errors) {
-        boolean valid = true;
-
+    private boolean emailValid(String email) {
         if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            startNewLine(errors);
-            errors.append("Enter a valid email.");
+            Toast.makeText(
+                    this,
+                    "Enter a valid email.",
+                    Toast.LENGTH_SHORT
+            ).show();
             return false;
         }
 
         if (isEmailInUse(email)){
-            startNewLine(errors);
-            errors.append("Email in use - choose another email.");
-            valid = false;
+            Toast.makeText(
+                    this,
+                    "Email in use - choose another email.",
+                    Toast.LENGTH_SHORT
+            ).show();
+            return false;
         }
-        return valid;
+        return true;
     }
 
-    private boolean passwordValid(String password, String confirmPassword, StringBuilder errors) {
-        boolean valid = true;
-
+    private boolean passwordValid(String password, String confirmPassword) {
         if (password.length() < Account.MINIMUM_PASSWORD_LENGTH || password.length() > Account.MAXIMUM_PASSWORD_LENGTH){
-            errors.append("Password must be between " + Account.MINIMUM_PASSWORD_LENGTH + " and " +
-                    Account.MAXIMUM_PASSWORD_LENGTH + " characters.");
+            Toast.makeText(
+                    this,
+                    "Password must be between " + Account.MINIMUM_PASSWORD_LENGTH + " and " +
+                    Account.MAXIMUM_PASSWORD_LENGTH + " characters.",
+                    Toast.LENGTH_SHORT
+            ).show();
             return false;
         }
 
         if (!password.equals(confirmPassword)){
-            startNewLine(errors);
-            errors.append("Password and password confirmation must match.");
-            valid = false;
+            Toast.makeText(
+                    this,
+                    "Password and password confirmation must match.",
+                    Toast.LENGTH_SHORT
+            ).show();
+            return false;
         }
 
-        return valid;
+        return true;
     }
 
     boolean isEmailInUse(String email) {

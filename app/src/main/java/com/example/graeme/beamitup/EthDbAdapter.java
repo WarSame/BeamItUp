@@ -43,7 +43,7 @@ class EthDbAdapter extends DbAdapter{
         Cursor res = this.db.query(
                 EthTable.ETH_TABLE_NAME,
                 new String[]{
-                    EthTable.ETH_ID,
+                    EthTable._ID,
                     EthTable.ETH_ACCOUNT_ID,
                     EthTable.ETH_ADDRESS,
                     EthTable.ETH_ENC_PRIVATE_KEY,

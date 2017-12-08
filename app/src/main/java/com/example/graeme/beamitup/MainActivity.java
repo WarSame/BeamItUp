@@ -54,8 +54,8 @@ public class MainActivity extends Activity {
             switch (resultCode){
                 case RESULT_OK:
                     //Finish activity and log them in
-                    Account account = (Account) data.getSerializableExtra("account");
-                    onLoginSuccess(account);
+                    Log.d(TAG, "Session account email: " + Session.getUserDetails().getEmail());
+                    onLoginSuccess();
                     break;
                 case RESULT_CANCELED:
                     onLoginFail();
@@ -64,22 +64,28 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void onLoginSuccess(Account account){
+    @Override
+    protected void onStart(){
+        super.onStart();
+        if (Session.isAlive()){
+            Log.d(TAG, "Session is alive.");
+            final Intent landingPageIntent = new Intent(this, LandingPageActivity.class);
+            startActivity(landingPageIntent);
+        }
+        Log.d(TAG, "Session is dead");
+    }
+
+    private void onLoginSuccess(){
         Button btn_sign_in = (Button)findViewById(R.id.btn_sign_in);
         btn_sign_in.setEnabled(true);
 
-        Log.v(TAG, "Successfully logged in.");
-
         final Intent landingPageIntent = new Intent(this, LandingPageActivity.class);
-        landingPageIntent.putExtra("account", account);
         startActivity(landingPageIntent);
     }
 
     private void onLoginFail() {
         Button btn_sign_in = (Button)findViewById(R.id.btn_sign_in);
         btn_sign_in.setEnabled(true);
-
-        Toast.makeText(this, "Login failed.", Toast.LENGTH_SHORT).show();
     }
 
 }

@@ -29,7 +29,7 @@ public class CreateTransferActivity extends Activity{
         readyTransferIntent = new Intent(this, ReadyTransferActivity.class);
         final Button btn_ready_transfer = (Button) findViewById(R.id.btn_ready_transfer);
 
-        account = (Account) getIntent().getSerializableExtra("account");
+        account = Session.getUserDetails();
         ArrayList<Eth> eths = account.getEths();
 
         EthAdapter ethAdapter = new EthAdapter(this, eths);

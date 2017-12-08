@@ -6,12 +6,11 @@ import android.provider.BaseColumns;
 
 import java.sql.SQLException;
 
-import static com.example.graeme.beamitup.DbAdapter.AccountTable.ACCOUNT_ID;
 import static com.example.graeme.beamitup.DbAdapter.AccountTable.ACCOUNT_TABLE_NAME;
 
 class DbAdapter {
     //If changing schema, must update db version
-    static final int DATABASE_VERSION = 8;
+    static final int DATABASE_VERSION = 9;
     static final String DATABASE_NAME = "BeamItUp.db";
 
     private DatabaseHelper DbHelper;
@@ -61,13 +60,12 @@ class DbAdapter {
 
     static class AccountTable implements BaseColumns {
         static final String ACCOUNT_TABLE_NAME = "account";
-        static final String ACCOUNT_ID = "account_id";
         static final String ACCOUNT_EMAIL = "email";
         static final String ACCOUNT_PASSWORD_HASH = "password";
         static final String ACCOUNT_SALT = "salt";
 
         static final String SQL_CREATE_TABLE = "CREATE TABLE " + ACCOUNT_TABLE_NAME +
-                " (" + ACCOUNT_ID + " INTEGER PRIMARY KEY,"
+                " (" + _ID + " INTEGER PRIMARY KEY,"
                 + ACCOUNT_EMAIL + " TEXT,"
                 + ACCOUNT_PASSWORD_HASH + " BLOB,"
                 + ACCOUNT_SALT + " BLOB,"
@@ -80,20 +78,19 @@ class DbAdapter {
 
     static class EthTable implements  BaseColumns {
         static final String ETH_TABLE_NAME = "eth";
-        static final String ETH_ID = "eth_id";
         static final String ETH_ACCOUNT_ID = "ETH_ACCOUNT_ID";
         static final String ETH_ADDRESS = "address";
         static final String ETH_ENC_PRIVATE_KEY = "enc_private_key";
         static final String ETH_IV = "iv";
 
         static final String SQL_CREATE_TABLE = "CREATE TABLE " + ETH_TABLE_NAME +
-            " (" + ETH_ID + " INTEGER PRIMARY KEY,"
+            " (" + _ID + " INTEGER PRIMARY KEY,"
                 + ETH_ACCOUNT_ID + " INTEGER,"
                 + ETH_ADDRESS + " TEXT,"
                 + ETH_ENC_PRIVATE_KEY + " BLOB,"
                 + ETH_IV + " BLOB,"
                 + "FOREIGN KEY (" + ETH_ACCOUNT_ID + ") REFERENCES "
-                + ACCOUNT_TABLE_NAME + "(" + ACCOUNT_ID + "))";
+                + ACCOUNT_TABLE_NAME + "(" + _ID + "))";
 
         static final String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " + ETH_TABLE_NAME;
 
