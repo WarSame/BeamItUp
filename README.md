@@ -10,9 +10,9 @@ Working:
 * Receiving transfer with NFC and preparing reply
 * Receiving reply
 * Basic encryption for security
+* Account session
 
 Todo:
-* Account session
 * Send funds after receiving reply
 * Combine above for easily finishing transfer
 
