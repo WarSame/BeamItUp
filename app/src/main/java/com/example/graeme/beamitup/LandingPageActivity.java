@@ -18,9 +18,6 @@ public class LandingPageActivity extends Activity {
 
         final Intent createTransferIntent = new Intent(this, CreateTransferActivity.class);
         final Intent addEthIntent = new Intent(this, AddEthActivity.class);
-        Account account = (Account) getIntent().getSerializableExtra("account");
-        createTransferIntent.putExtra("account", account);
-        addEthIntent.putExtra("account", account);
 
         btn_transfer_money.setOnClickListener(new View.OnClickListener(){
             @Override

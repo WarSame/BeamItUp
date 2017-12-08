@@ -53,7 +53,7 @@ public class AddEthActivity extends Activity {
 
         Toast.makeText(this, decryptedText, Toast.LENGTH_LONG).show();
 
-        Account account = (Account) getIntent().getSerializableExtra("account");
+        Account account = Session.getUserDetails();
 
         Eth eth = new Eth(ethAddress, encryptor.getEncryption());
         eth.setAccountId(account.getId());
@@ -62,7 +62,7 @@ public class AddEthActivity extends Activity {
         eth.setId(ethDb.createEth(eth));
         ethDb.close();
 
-        account.addEthereumAccount(this, eth);
+        account.addEthereumAccount(eth);
 
         onCreateEthSuccess(account);
     }
@@ -73,7 +73,6 @@ public class AddEthActivity extends Activity {
         btn_add_eth.setEnabled(true);
 
         final Intent landingPageIntent = new Intent(this, LandingPageActivity.class);
-        landingPageIntent.putExtra("account", account);
         startActivity(landingPageIntent);
     }
 

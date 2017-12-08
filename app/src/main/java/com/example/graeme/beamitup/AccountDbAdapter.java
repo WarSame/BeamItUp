@@ -14,16 +14,14 @@ class AccountDbAdapter extends DbAdapter {
         super(context);
     }
 
-    long createAccount(Account account) throws SQLException {
+    long createAccount(String email, byte[] passwordHash, byte[] salt) throws SQLException {
         ContentValues contentValues = new ContentValues();
         contentValues.put(AccountTable.ACCOUNT_EMAIL,
-                account.getEmail());
+                email);
         contentValues.put(AccountTable.ACCOUNT_PASSWORD_HASH,
-                account.getPasswordHash());
+                passwordHash);
         contentValues.put(AccountTable.ACCOUNT_SALT,
-                account.getSalt());
-        contentValues.put(AccountTable.ACCOUNT_ID,
-                account.getId());
+                salt);
         return this.db.insert(AccountTable.ACCOUNT_TABLE_NAME, null, contentValues);
     }
 
@@ -33,7 +31,7 @@ class AccountDbAdapter extends DbAdapter {
                         AccountTable.ACCOUNT_EMAIL,
                         AccountTable.ACCOUNT_PASSWORD_HASH,
                         AccountTable.ACCOUNT_SALT,
-                        AccountTable.ACCOUNT_ID
+                        AccountTable._ID
                 },
                 AccountTable.ACCOUNT_EMAIL + "=?", new String[]{email},
                 null,
@@ -47,24 +45,16 @@ class AccountDbAdapter extends DbAdapter {
 
     Account retrieveAccount(String email){
         Cursor res = getAccountCursor(email);
-        byte[] passwordHash = res.getBlob(
-                res.getColumnIndex(AccountTable.ACCOUNT_PASSWORD_HASH)
-        );
-        byte[] salt = res.getBlob(
-                res.getColumnIndex(AccountTable.ACCOUNT_SALT)
-        );
         long id = res.getLong(
-                res.getColumnIndex(AccountTable.ACCOUNT_ID)
+                res.getColumnIndex(AccountTable._ID)
         );
-        return new Account(email, passwordHash, salt, id);
+        return new Account(email, id);
     }
 
     boolean updateAccount(String email, Account account){
         ContentValues contentValues = new ContentValues();
         contentValues.put(AccountTable.ACCOUNT_EMAIL, account.getEmail());
-        contentValues.put(AccountTable.ACCOUNT_PASSWORD_HASH, account.getPasswordHash());
-        contentValues.put(AccountTable.ACCOUNT_SALT, account.getSalt());
-        contentValues.put(AccountTable.ACCOUNT_ID, account.getId());
+        contentValues.put(AccountTable._ID, account.getId());
         return this.db.update(
                 AccountTable.ACCOUNT_TABLE_NAME,
                 contentValues,
@@ -81,18 +71,18 @@ class AccountDbAdapter extends DbAdapter {
         ) > 0;
     }
 
-    boolean isAuthentic(Account account){
+    boolean isAuthentic(String email, byte[] passwordHash){
         Cursor res = this.db.query(AccountTable.ACCOUNT_TABLE_NAME,
                 new String[]{
                         AccountTable.ACCOUNT_EMAIL,
                         AccountTable.ACCOUNT_PASSWORD_HASH
                 },
-                AccountTable.ACCOUNT_EMAIL + " like ?", new String[]{account.getEmail()},
+                AccountTable.ACCOUNT_EMAIL + " like ?", new String[]{email},
                 null, null, null);
         res.moveToFirst();
         byte[] storedHash = (res.getBlob(res.getColumnIndex(AccountTable.ACCOUNT_PASSWORD_HASH)));
         res.close();
-        return Arrays.equals(storedHash, account.getPasswordHash());
+        return Arrays.equals(storedHash, passwordHash);
     }
 
     byte[] retrieveSalt(String email){
