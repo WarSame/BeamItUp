@@ -86,8 +86,6 @@ public class MainActivity extends Activity {
     private void onLoginFail() {
         Button btn_sign_in = (Button)findViewById(R.id.btn_sign_in);
         btn_sign_in.setEnabled(true);
-
-        Toast.makeText(this, "Login failed.", Toast.LENGTH_SHORT).show();
     }
 
 }

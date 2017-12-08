@@ -48,7 +48,7 @@ public class CreateAccountActivity extends Activity {
             return;
         }
 
-        Account account = null;
+        Account account;
         try {
             account = createNewAccount(email, password);
             onCreateAccountSuccess(account);

@@ -43,7 +43,8 @@ public class LoginActivity extends Activity
         }
         if (isAuthentic(email, passwordHash)){
             Account account = retrieveAccount(email);
-            retrieveEths(account.getId());
+            ArrayList<Eth> eths = retrieveEths(account.getId());
+            account.setEths(eths);
             onLoginSuccess(account);
         }
         else {
