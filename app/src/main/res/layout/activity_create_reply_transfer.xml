@@ -15,22 +15,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:orientation="vertical"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1">
-            <ListView
-                android:id="@+id/lv_transfer_money_account"
-                android:choiceMode="singleChoice"
-                android:listSelector="@color/colorAccent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:isScrollContainer="false"
-                android:layout_margin="16dp" />
-        </LinearLayout>
-
         <TextView
             android:id="@+id/tv_transfer_money_reason"
             android:layout_width="wrap_content"

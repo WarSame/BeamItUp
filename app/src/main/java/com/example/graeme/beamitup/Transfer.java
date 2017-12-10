@@ -32,7 +32,7 @@ class Transfer implements Serializable {
     private String reason;
     private String senderAddress;
     private String senderPrivateKey;
-    private String receiverPublicKey;
+    private String receiverAddress;
     private static final String TAG = "Transfer";
 
     Transfer(String amount, String reason, String senderPublicKey){
@@ -40,7 +40,7 @@ class Transfer implements Serializable {
         this.reason = reason;
         this.senderAddress = senderPublicKey;
         this.senderPrivateKey = null;
-        this.receiverPublicKey = null;
+        this.receiverAddress = null;
     }
 
     static byte[] toBytes(Transfer tran){
@@ -97,7 +97,7 @@ class Transfer implements Serializable {
         return "Amount: " + amount + "\n"
                 + "reason: " + reason + "\n"
                 + "sender public key: " + senderAddress + "\n"
-                + "receiver public key: " + receiverPublicKey;
+                + "receiver public key: " + receiverAddress;
     }
 
     String getSenderPrivateKey() {
@@ -108,12 +108,12 @@ class Transfer implements Serializable {
         this.senderPrivateKey = senderPrivateKey;
     }
 
-    private String getReceiverPublicKey() {
-        return receiverPublicKey;
+    String getReceiverAddress() {
+        return receiverAddress;
     }
 
-    void setReceiverPublicKey(String receiverPublicKey) {
-        this.receiverPublicKey = receiverPublicKey;
+    void setReceiverAddress(String receiverAddress) {
+        this.receiverAddress = receiverAddress;
     }
 
     private String obtainWalletFile(final String WALLET_DIRECTORY) throws Exception {
@@ -167,7 +167,7 @@ class Transfer implements Serializable {
                 TransactionReceipt receipt = org.web3j.tx.Transfer.sendFunds(
                         web3,
                         credentials,
-                        getReceiverPublicKey(),
+                        getReceiverAddress(),
                         BigDecimal.ONE,
                         Convert.Unit.WEI
                 ).send();

@@ -1,6 +1,7 @@
 package com.example.graeme.beamitup;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,9 +17,7 @@ import java.util.ArrayList;
 public class CreateTransferActivity extends Activity{
     private static final String TAG = "CreateTransferActivity";
     Intent readyTransferIntent;
-    int lv_position = -1;
     Account account;
-    ListView lv_select_account;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,19 +29,6 @@ public class CreateTransferActivity extends Activity{
         final Button btn_ready_transfer = (Button) findViewById(R.id.btn_ready_transfer);
 
         account = Session.getUserDetails();
-        ArrayList<Eth> eths = account.getEths();
-
-        EthAdapter ethAdapter = new EthAdapter(this, eths);
-        lv_select_account = (ListView)findViewById(R.id.lv_transfer_money_account);
-        lv_select_account.setAdapter(ethAdapter);
-
-        lv_select_account.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                view.setSelected(true);
-                lv_position = position;
-            }
-        });
 
         btn_ready_transfer.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -66,7 +52,8 @@ public class CreateTransferActivity extends Activity{
     }
 
     boolean isEthSelected(){
-        return lv_position != -1;
+        //return lv_position != -1;
+        return true;
     }
 
     boolean isValidAmount(){
@@ -99,11 +86,10 @@ public class CreateTransferActivity extends Activity{
     }
 
     private void onCreateTransferSuccess(){
-        Eth eth = (Eth)lv_select_account.getItemAtPosition(lv_position);
         String amount = ((EditText)findViewById(R.id.et_transfer_money_amount)).getText().toString();
         String reason = ((EditText)findViewById(R.id.et_transfer_money_reason)).getText().toString();
 
-        readyTransferIntent.putExtra("senderAddress", eth.getAddress());
+        //readyTransferIntent.putExtra("senderAddress", eth.getAddress());
         readyTransferIntent.putExtra("amount", amount);
         readyTransferIntent.putExtra("reason", reason);
         startActivity(readyTransferIntent);
