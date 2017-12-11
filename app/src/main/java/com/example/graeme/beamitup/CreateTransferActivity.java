@@ -20,6 +20,8 @@ public class CreateTransferActivity extends FragmentActivity
 {
     private static final String TAG = "CreateTransferActivity";
     Intent readyTransferIntent;
+    int lv_position = -1;
+    Eth eth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +53,12 @@ public class CreateTransferActivity extends FragmentActivity
         });
     }
 
-    public void onEthSelected(int position){
-        Log.d(TAG, "eth selected" + position);
+    public void onEthSelected(Eth eth){
+        Log.d(TAG, "Eth selected. ID: " + eth.getId() + " Address:" + eth.getAddress());
     }
 
     boolean isEthSelected(){
-        //return lv_position != -1;
-        return true;
+        return lv_position != -1;
     }
 
     boolean isValidAmount(){
@@ -93,7 +94,7 @@ public class CreateTransferActivity extends FragmentActivity
         String amount = ((EditText)findViewById(R.id.et_transfer_money_amount)).getText().toString();
         String reason = ((EditText)findViewById(R.id.et_transfer_money_reason)).getText().toString();
 
-        //readyTransferIntent.putExtra("senderAddress", eth.getAddress());
+        readyTransferIntent.putExtra("senderAddress", eth.getAddress());
         readyTransferIntent.putExtra("amount", amount);
         readyTransferIntent.putExtra("reason", reason);
         startActivity(readyTransferIntent);

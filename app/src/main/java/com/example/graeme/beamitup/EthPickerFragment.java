@@ -28,8 +28,7 @@ public class EthPickerFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView lv, View v, int position, long id){
-        Log.d(TAG, "clicked itjjjjem");
-        ethListener.onEthSelected(position);
+        ethListener.onEthSelected(eths.get(position));
     }
 
     @Override
@@ -50,7 +49,9 @@ public class EthPickerFragment extends ListFragment {
     }
 
     public interface onEthSelectedListener {
-        void onEthSelected(int position);
+        void onEthSelected(Eth eth);
     }
+
+
 
 }

@@ -6,13 +6,13 @@
     android:layout_margin="16dp">
 
     <TextView
-        android:layout_margin="8dp"
+        android:layout_margin="16dp"
         android:id="@+id/tv_eth_id"
         android:layout_width="wrap_content"
         android:layout_height="match_parent" />
 
     <TextView
-        android:layout_margin="8dp"
+        android:layout_margin="16dp"
         android:id="@+id/tv_eth_address"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
