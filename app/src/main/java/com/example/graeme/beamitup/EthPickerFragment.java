@@ -20,13 +20,16 @@ public class EthPickerFragment extends ListFragment {
 
     ArrayList<Eth> eths;
 
+    onEthSelectedListener ethListener;
+
     public EthPickerFragment(){
         eths = Session.getUserDetails().getEths();
     }
 
     @Override
     public void onListItemClick(ListView lv, View v, int position, long id){
-        Log.d(TAG, "clicked item");
+        Log.d(TAG, "clicked itjjjjem");
+        ethListener.onEthSelected(position);
     }
 
     @Override
@@ -34,6 +37,20 @@ public class EthPickerFragment extends ListFragment {
         EthPickerAdapter adapter = new EthPickerAdapter(getActivity(), eths);
         setListAdapter(adapter);
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            ethListener = (onEthSelectedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnArticleSelectedListener");
+        }
+    }
+
+    public interface onEthSelectedListener {
+        void onEthSelected(int position);
     }
 
 }

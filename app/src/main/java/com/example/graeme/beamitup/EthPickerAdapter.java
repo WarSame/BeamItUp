@@ -14,7 +14,7 @@ public class EthPickerAdapter extends ArrayAdapter {
 
     private ArrayList<Eth> eths;
 
-    public EthPickerAdapter(@NonNull Context context, @NonNull ArrayList<Eth> eths) {
+    EthPickerAdapter(@NonNull Context context, @NonNull ArrayList<Eth> eths) {
         super(context, 0, eths);
         this.eths = eths;
     }
@@ -39,10 +39,17 @@ public class EthPickerAdapter extends ArrayAdapter {
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         Eth eth = (Eth)getItem(position);
         if (convertView == null){
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_eth, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(
+                    R.layout.list_item_eth,
+                    parent,
+                    false
+            );
         }
-        TextView tv_publicKey = (TextView)convertView.findViewById(R.id.tv_eth_address);
-        tv_publicKey.setText( eth.getAddress() );
+        TextView tv_address = (TextView)convertView.findViewById(R.id.tv_eth_address);
+        TextView tv_id = (TextView)convertView.findViewById(R.id.tv_eth_id);
+
+        tv_address.setText( eth.getAddress() );
+        tv_id.setText( Long.toString( eth.getId() ) );
         return convertView;
     }
 }

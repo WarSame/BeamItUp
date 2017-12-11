@@ -16,10 +16,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class CreateTransferActivity extends FragmentActivity
+    implements EthPickerFragment.onEthSelectedListener
 {
     private static final String TAG = "CreateTransferActivity";
     Intent readyTransferIntent;
-    Account account;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +29,6 @@ public class CreateTransferActivity extends FragmentActivity
 
         readyTransferIntent = new Intent(this, ReadyTransferActivity.class);
         final Button btn_ready_transfer = (Button) findViewById(R.id.btn_ready_transfer);
-
-        account = Session.getUserDetails();
 
         btn_ready_transfer.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -54,7 +52,7 @@ public class CreateTransferActivity extends FragmentActivity
     }
 
     public void onEthSelected(int position){
-        Log.d(TAG, "eth selected");
+        Log.d(TAG, "eth selected" + position);
     }
 
     boolean isEthSelected(){
