@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,7 +15,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class CreateTransferActivity extends Activity{
+public class CreateTransferActivity extends FragmentActivity
+{
     private static final String TAG = "CreateTransferActivity";
     Intent readyTransferIntent;
     Account account;
@@ -49,6 +51,10 @@ public class CreateTransferActivity extends Activity{
                 onCreateTransferFail();
             }
         });
+    }
+
+    public void onEthSelected(int position){
+        Log.d(TAG, "eth selected");
     }
 
     boolean isEthSelected(){

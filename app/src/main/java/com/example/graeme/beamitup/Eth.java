@@ -1,8 +1,9 @@
 package com.example.graeme.beamitup;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-class Eth implements Serializable {
+class Eth implements Parcelable {
     private String address;
     private byte[] encPrivateKey;
     private byte[] iv;
@@ -17,6 +18,26 @@ class Eth implements Serializable {
         this.encPrivateKey = encPrivateKey;
         this.id = -1;
     }
+
+    protected Eth(Parcel in) {
+        address = in.readString();
+        encPrivateKey = in.createByteArray();
+        iv = in.createByteArray();
+        id = in.readLong();
+        accountId = in.readLong();
+    }
+
+    public static final Creator<Eth> CREATOR = new Creator<Eth>() {
+        @Override
+        public Eth createFromParcel(Parcel in) {
+            return new Eth(in);
+        }
+
+        @Override
+        public Eth[] newArray(int size) {
+            return new Eth[size];
+        }
+    };
 
     String getAddress() {
         return address;
@@ -56,5 +77,19 @@ class Eth implements Serializable {
 
     void setAccountId(long accountId) {
         this.accountId = accountId;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(address);
+        dest.writeByteArray(encPrivateKey);
+        dest.writeByteArray(iv);
+        dest.writeLong(id);
+        dest.writeLong(accountId);
     }
 }
