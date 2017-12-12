@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 class Eth implements Parcelable {
+    private String nickname;
     private String address;
     private byte[] encPrivateKey;
     private byte[] iv;

@@ -20,7 +20,6 @@ public class CreateTransferActivity extends FragmentActivity
 {
     private static final String TAG = "CreateTransferActivity";
     Intent readyTransferIntent;
-    int lv_position = -1;
     Eth eth;
 
     @Override
@@ -36,29 +35,30 @@ public class CreateTransferActivity extends FragmentActivity
             @Override
             public void onClick(View v) {
                 btn_ready_transfer.setEnabled(false);
-                boolean isEthSelected = isEthSelected();
                 boolean isValidAmount = isValidAmount();
-                if ( isEthSelected && isValidAmount ){
+                if (eth == null){
+                    Log.d(TAG, "No ethereum account selected.");
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "You must select a valid ethereum account.",
+                            Toast.LENGTH_LONG
+                    ).show();
+                    enableReadyButton();
+                }
+                else if (!isValidAmount){
+                    Log.d(TAG, "No valid amount selected.");
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "You must select a valid amount.",
+                            Toast.LENGTH_LONG
+                    ).show();
+                    enableReadyButton();
+                }
+                else {
                     onCreateTransferSuccess();
-                    return;
                 }
-                if ( !isEthSelected ){
-                    alertEthNotSelected();
-                }
-                if ( !isValidAmount ){
-                    alertInvalidAmount();
-                }
-                onCreateTransferFail();
             }
         });
-    }
-
-    public void onEthSelected(Eth eth){
-        Log.d(TAG, "Eth selected. ID: " + eth.getId() + " Address:" + eth.getAddress());
-    }
-
-    boolean isEthSelected(){
-        return lv_position != -1;
     }
 
     boolean isValidAmount(){
@@ -66,31 +66,14 @@ public class CreateTransferActivity extends FragmentActivity
         return !amount.equals("") && Integer.valueOf(amount) > 0;
     }
 
-    void alertEthNotSelected(){
-        Log.d(TAG, "No ethereum account selected.");
-        Toast.makeText(
-                getApplicationContext(),
-                "You must select a valid ethereum account.",
-                Toast.LENGTH_LONG
-        ).show();
-    }
-
-    void alertInvalidAmount(){
-        Log.d(TAG, "No valid amount selected.");
-        Toast.makeText(
-                getApplicationContext(),
-                "You must select a valid amount.",
-                Toast.LENGTH_LONG
-        ).show();
-    }
-
-    private void onCreateTransferFail(){
-        Button btn_ready_transfer = (Button) findViewById(R.id.btn_ready_transfer);
-        btn_ready_transfer.setEnabled(true);
-        Toast.makeText(this, "Transfer creation failed", Toast.LENGTH_LONG).show();
+    public void onEthSelected(Eth eth){
+        Log.d(TAG, "Eth selected. ID: " + eth.getId() + " Address:" + eth.getAddress());
+        this.eth = eth;
     }
 
     private void onCreateTransferSuccess(){
+        enableReadyButton();
+
         String amount = ((EditText)findViewById(R.id.et_transfer_money_amount)).getText().toString();
         String reason = ((EditText)findViewById(R.id.et_transfer_money_reason)).getText().toString();
 
@@ -98,6 +81,11 @@ public class CreateTransferActivity extends FragmentActivity
         readyTransferIntent.putExtra("amount", amount);
         readyTransferIntent.putExtra("reason", reason);
         startActivity(readyTransferIntent);
+    }
+
+    void enableReadyButton(){
+        Button btn_ready_transfer = (Button) findViewById(R.id.btn_ready_transfer);
+        btn_ready_transfer.setEnabled(true);
     }
 
 }

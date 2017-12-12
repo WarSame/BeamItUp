@@ -1,20 +1,20 @@
 package com.example.graeme.beamitup;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class CreateReplyTransferActivity extends FragmentActivity {
-
+public class CreateReplyTransferActivity extends FragmentActivity
+        implements EthPickerFragment.onEthSelectedListener
+{
+    private static final String TAG = "CreateReplyTransfer";
     Intent replyTransferIntent;
     Transfer tran;
     Eth eth;
@@ -26,15 +26,25 @@ public class CreateReplyTransferActivity extends FragmentActivity {
         tran = getReadyTransferMessage();
         displayTransferDetails(tran);
 
-        Button btn_ready_reply = (Button)findViewById(R.id.btn_ready_reply);
-
+        final Button btn_ready_reply = (Button)findViewById(R.id.btn_ready_reply);
         replyTransferIntent = new Intent(this, ReplyTransferActivity.class);
         btn_ready_reply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                replyTransferIntent.putExtra("transfer", tran);
-                replyTransferIntent.putExtra("eth", eth);//Care, mnight be null
-                startActivity(replyTransferIntent);
+                btn_ready_reply.setEnabled(false);
+
+                if (eth == null){
+                    Log.d(TAG, "No ethereum account selected.");
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "You must select a valid ethereum account.",
+                            Toast.LENGTH_LONG
+                    ).show();
+                    enableReadyButton();
+                }
+                else {
+                    onCreateReplySuccess();
+                }
             }
         });
     }
@@ -57,5 +67,21 @@ public class CreateReplyTransferActivity extends FragmentActivity {
         return tran;
     }
 
+    void onCreateReplySuccess(){
+        enableReadyButton();
 
+        replyTransferIntent.putExtra("transfer", tran);
+        replyTransferIntent.putExtra("eth", eth);
+        startActivity(replyTransferIntent);
+    }
+
+    void enableReadyButton(){
+        Button btn_ready_transfer = (Button) findViewById(R.id.btn_ready_reply);
+        btn_ready_transfer.setEnabled(true);
+    }
+
+    @Override
+    public void onEthSelected(Eth eth) {
+        this.eth = eth;
+    }
 }
