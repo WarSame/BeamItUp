@@ -67,7 +67,7 @@ public class CreateTransferActivity extends FragmentActivity
     }
 
     public void onEthSelected(Eth eth){
-        Log.d(TAG, "Eth selected. ID: " + eth.getId() + " Address:" + eth.getAddress());
+        Log.d(TAG, "Eth selected. ID: " + eth.getId() + " Address: " + eth.getAddress());
         this.eth = eth;
     }
 

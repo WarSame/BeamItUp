@@ -20,7 +20,7 @@ public class ReplyTransferActivity extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         tran = (Transfer)getIntent().getSerializableExtra("transfer");
-        eth = (Eth)getIntent().getSerializableExtra("eth");
+        eth = getIntent().getParcelableExtra("eth");
 
         prepareReplyTransfer(tran, eth);
         displayTransferDetails();
@@ -40,16 +40,26 @@ public class ReplyTransferActivity extends Activity {
         tran.setReceiverAddress(eth.getAddress());
 
         if (mNfcAdapter == null) {
-            Toast.makeText(this, "NFC is not available", Toast.LENGTH_LONG).show();
+            Toast.makeText(
+                    this,
+                    "NFC is not available",
+                    Toast.LENGTH_LONG
+            ).show();
             finish();
             return;
         }
 
-        NdefRecord rec = NdefRecord.createMime("application/" + getApplicationContext().getPackageName() + "/reply_transfer",
-                Transfer.toBytes(tran));
+        NdefRecord rec = NdefRecord.createMime(
+                "application/" + getApplicationContext().getPackageName() + "/reply_transfer",
+                Transfer.toBytes(tran)
+        );
         NdefMessage msg = new NdefMessage(rec);
 
-        Toast.makeText(this, Transfer.fromBytes(msg.getRecords()[0].getPayload()).toString(), Toast.LENGTH_LONG).show();
+        Toast.makeText(
+                this,
+                Transfer.fromBytes(msg.getRecords()[0].getPayload()).toString(),
+                Toast.LENGTH_LONG
+        ).show();
 
         mNfcAdapter.setNdefPushMessage(msg, this);
     }

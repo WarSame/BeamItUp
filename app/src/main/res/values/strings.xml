@@ -1,45 +1,53 @@
 <resources>
     <string name="app_name">BeamItUp</string>
 
+    <!-- Titles -->
     <string name="title_activity_transfer_money">Transfer Money</string>
-    <string name="text_button_transfer_money">Transfer Money</string>
-    <string name="text_button_ready_transfer">Ready Transfer</string>
-    <string name="text_button_past_transfers">Transfer History</string>
-    <string name="text_button_add_eth">Add Ethereum Account</string>
-    <string name="hint_transfer_money_amount">Amount</string>
-    <string name="hint_transfer_money_reason">Reason</string>
     <string name="title_activity_ready_transfer">Ready Transfer</string>
     <string name="title_activity_reply_transfer">Reply To Transfer</string>
     <string name="title_activity_finish_transfer">Finish Transfer</string>
-    <string name="tv_eth_address">Address</string>
-
-    <!-- Signin -->
-    <string name="text_button_sign_in">Sign In</string>
-    <string name="text_button_register">Register</string>
-    <string name="text_button_create_account">Create Account</string>
-    <string name="text_et_email">Email</string>
-    <string name="text_et_password">Password</string>
-    <string name="et_confirm_password">Confirm Password</string>
     <string name="title_activity_create_account">CreateAccount</string>
-
     <string name="title_activity_landing_page">Home</string>
     <string name="title_activity_add_eth">Add Ethereum Account</string>
-    <string name="et_private_key">Private Key</string>
-    <string name="et_eth_address">Ethereum Address</string>
     <string name="title_activity_receive_transfer">Receive Transfer</string>
     <string name="title_activity_main">Login</string>
     <string name="title_activity_login">Login</string>
     <string name="title_activity_create_reply_transfer">Create Transfer Reply</string>
-    <string name="text_button_ready_reply">Ready Reply</string>
 
-    <string name="tv_finish_transfer_status">Status</string>
-    <string name="tv_finish_transfer_amount">Amount</string>
-    <string name="tv_finish_transfer_reason">Reason</string>
-    <string name="tv_finish_transfer_sender_public_key">Sender Public Key</string>
-    <string name="tv_finish_transfer_receiver_public_key">Receiver Public Key</string>
+    <!-- Keys -->
+    <string name="amount_label">Amount:</string>
+    <string name="reason_label">Reason:</string>
+    <string name="receiver_address_label">Receiver Address:</string>
+    <string name="sender_address_label">Sender Address:</string>
+    <string name="status_label">Status:</string>
+
+    <!-- Values -->
+    <string name="amount_value">amount</string>
+    <string name="reason_value">reason</string>
+    <string name="receiver_address_value">receiver address</string>
+    <string name="sender_address_value">sender address</string>
+    <string name="status_value">status</string>
+
+    <!-- Buttons -->
+    <string name="btn_ready_reply">Ready Reply</string>
+    <string name="btn_transfer_money">Transfer Money</string>
+    <string name="btn_ready_transfer">Ready Transfer</string>
+    <string name="btn_past_transfers">Transfer History</string>
+    <string name="btn_add_eth">Add Ethereum Account</string>
+    <string name="btn_sign_in">Sign In</string>
+    <string name="btn_register">Register</string>
+    <string name="btn_create_account">Create Account</string>
+
+    <!-- Hints -->
+    <string name="hint_private_key">Private Key</string>
+    <string name="hint_eth_address">Ethereum Address</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_confirm_password">Confirm Password</string>
+    <string name="hint_reason">Reason</string>
+    <string name="hint_amount">Amount</string>
+
     <string name="transfer_succeeded">Transfer succeeded.</string>
     <string name="transfer_failed">Transfer failed.</string>
-    <string name="tv_transfer_money_receiver_address">Receiver Address</string>
-
 
 </resources>

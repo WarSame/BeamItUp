@@ -17,7 +17,7 @@
 
         <EditText
             android:id="@+id/et_email"
-            android:hint="@string/text_et_email"
+            android:hint="@string/hint_email"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="16dp"
@@ -25,7 +25,7 @@
 
         <EditText
             android:id="@+id/et_password"
-            android:hint="@string/text_et_password"
+            android:hint="@string/hint_password"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="16dp"
@@ -33,7 +33,7 @@
 
         <EditText
             android:id="@+id/et_confirm_password"
-            android:hint="@string/et_confirm_password"
+            android:hint="@string/hint_confirm_password"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="16dp"
@@ -41,7 +41,7 @@
 
         <Button
             android:id="@+id/btn_create_account"
-            android:text="@string/text_button_create_account"
+            android:text="@string/btn_create_account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"/>

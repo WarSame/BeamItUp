@@ -1,49 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.graeme.beamitup.ReplyTransferActivity">
+    tools:context="com.example.graeme.beamitup.ReplyTransferActivity"
+    android:columnCount="2"
+    android:rowCount="4"
+    android:layout_margin="16dp" >
 
-    <LinearLayout
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/tv_transfer_money_receiver_address_label"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:weightSum="3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:ems="10"
+        android:text="@string/receiver_address_label"
+        android:layout_margin="16dp"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
-        <TextView
-            android:id="@+id/tv_transfer_money_receiver_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/tv_transfer_money_receiver_address"
-            android:layout_margin="16dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"/>
+    <TextView
+        android:id="@+id/tv_transfer_money_receiver_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="@string/receiver_address_value"
+        android:layout_margin="16dp"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintLeft_toRightOf="@+id/tv_transfer_money_receiver_address_label"
+        app:layout_constraintTop_toTopOf="@+id/tv_transfer_money_receiver_address_label"
+        />
+    
+    <TextView
+        android:id="@+id/tv_transfer_money_reason_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="@string/reason_label"
+        android:layout_margin="16dp"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/tv_transfer_money_receiver_address_label"
+        />
 
-        <TextView
-            android:id="@+id/tv_transfer_money_reason"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/hint_transfer_money_reason"
-            android:layout_margin="16dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1" />
+    <TextView
+        android:id="@+id/tv_transfer_money_reason"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="@string/reason_value"
+        android:layout_margin="16dp"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintLeft_toRightOf="@+id/tv_transfer_money_reason_label"
+        app:layout_constraintTop_toTopOf="@+id/tv_transfer_money_reason_label"
+        />
 
-        <TextView
-            android:id="@+id/tv_transfer_money_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/hint_transfer_money_amount"
-            android:layout_margin="16dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_transfer_money_amount_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="@string/amount_label"
+        android:layout_margin="16dp"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/tv_transfer_money_reason_label"
+        />
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/tv_transfer_money_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="@string/amount_value"
+        android:layout_margin="16dp"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintLeft_toRightOf="@+id/tv_transfer_money_amount_label"
+        app:layout_constraintTop_toTopOf="@+id/tv_transfer_money_amount_label"
+        />
+
+</GridLayout>

@@ -21,16 +21,16 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_finish_transfer_sender_public_key_label"
-            android:text="@string/tv_finish_transfer_sender_public_key"
+            android:id="@+id/tv_finish_transfer_sender_address_label"
+            android:text="@string/sender_address_label"
             android:layout_weight="1"
             />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_finish_transfer_sender_public_key_value"
-            android:text="@string/tv_finish_transfer_sender_public_key"
+            android:id="@+id/tv_finish_transfer_sender_address_value"
+            android:text="@string/sender_address_value"
             android:layout_weight="1"
             />
     </LinearLayout>
@@ -49,7 +49,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/tv_finish_transfer_receiver_public_key_label"
-            android:text="@string/tv_finish_transfer_receiver_public_key"
+            android:text="@string/receiver_address_label"
             android:layout_weight="1"
             />
 
@@ -57,7 +57,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/tv_finish_transfer_receiver_public_key_value"
-            android:text="@string/tv_finish_transfer_receiver_public_key"
+            android:text="@string/receiver_address_value"
             android:layout_weight="1"
             />
     </LinearLayout>
@@ -76,7 +76,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/tv_finish_transfer_status_label"
-            android:text="@string/tv_finish_transfer_status"
+            android:text="@string/status_label"
             android:layout_weight="1"
             />
 
@@ -84,7 +84,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/tv_finish_transfer_status_value"
-            android:text="@string/tv_finish_transfer_status"
+            android:text="@string/status_value"
             android:layout_weight="1"
             />
     </LinearLayout>
@@ -103,7 +103,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/tv_finish_transfer_amount_label"
-            android:text="@string/tv_finish_transfer_amount"
+            android:text="@string/amount_label"
             android:layout_weight="1"
             />
 
@@ -111,7 +111,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/tv_finish_transfer_amount_value"
-            android:text="@string/tv_finish_transfer_amount"
+            android:text="@string/amount_value"
             android:layout_weight="1"
             />
     </LinearLayout>
@@ -130,7 +130,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/tv_finish_transfer_reason_label"
-            android:text="@string/tv_finish_transfer_reason"
+            android:text="@string/reason_label"
             android:layout_weight="1"
             />
 
@@ -138,7 +138,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/tv_finish_transfer_reason_value"
-            android:text="@string/tv_finish_transfer_reason"
+            android:text="@string/reason_value"
             android:layout_weight="1"
             />
     </LinearLayout>

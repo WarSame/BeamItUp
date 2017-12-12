@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/hint_transfer_money_reason"
+        android:hint="@string/hint_reason"
         android:layout_margin="16dp"
         android:layout_gravity="center_horizontal" />
 
@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/hint_transfer_money_amount"
+        android:hint="@string/hint_amount"
         android:layout_margin="16dp"
         android:layout_gravity="center_horizontal" />
 
@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/text_button_ready_reply"
+        android:text="@string/btn_ready_reply"
         android:layout_margin="16dp" />
 
 </LinearLayout>
