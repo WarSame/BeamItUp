@@ -8,11 +8,9 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class TransferTest {
+    Context appContext;
     @Test
     public void useAppContext() throws Exception {
-        // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getTargetContext();
-
-        assertEquals("com.example.graeme.beamitup", appContext.getPackageName());
+        appContext = InstrumentationRegistry.getTargetContext();
     }
 }

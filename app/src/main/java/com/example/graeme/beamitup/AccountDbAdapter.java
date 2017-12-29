@@ -2,10 +2,12 @@ package com.example.graeme.beamitup;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.SQLException;
 
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 class AccountDbAdapter extends DbAdapter {
     private static final String TAG = "AccountDbAdapter";
@@ -45,6 +47,9 @@ class AccountDbAdapter extends DbAdapter {
 
     Account retrieveAccount(String email){
         Cursor res = getAccountCursor(email);
+        if (res.getCount() == 0){
+            throw new NoSuchElementException();
+        }
         long id = res.getLong(
                 res.getColumnIndex(AccountTable._ID)
         );
@@ -58,16 +63,16 @@ class AccountDbAdapter extends DbAdapter {
         return this.db.update(
                 AccountTable.ACCOUNT_TABLE_NAME,
                 contentValues,
-                AccountTable.ACCOUNT_EMAIL + "=" + email,
-                null
+                AccountTable.ACCOUNT_EMAIL + "=?",
+                new String[]{email}
         ) > 0;
     }
 
     boolean deleteAccount(String email){
         return this.db.delete(
                 AccountTable.ACCOUNT_TABLE_NAME,
-                AccountTable.ACCOUNT_EMAIL + "=" + email,
-                null
+                AccountTable.ACCOUNT_EMAIL + "=?",
+                new String[]{email}
         ) > 0;
     }
 
@@ -80,6 +85,9 @@ class AccountDbAdapter extends DbAdapter {
                 AccountTable.ACCOUNT_EMAIL + " like ?", new String[]{email},
                 null, null, null);
         res.moveToFirst();
+        if (res.getCount() == 0){
+            return false;
+        }
         byte[] storedHash = (res.getBlob(res.getColumnIndex(AccountTable.ACCOUNT_PASSWORD_HASH)));
         res.close();
         return Arrays.equals(storedHash, passwordHash);

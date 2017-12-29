@@ -2,6 +2,7 @@ package com.example.graeme.beamitup;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
 import java.sql.SQLException;
@@ -13,7 +14,7 @@ class DbAdapter {
     static final int DATABASE_VERSION = 9;
     static final String DATABASE_NAME = "BeamItUp.db";
 
-    private DatabaseHelper DbHelper;
+    DatabaseHelper DbHelper;
     SQLiteDatabase db;
 
     DbAdapter(Context context){
@@ -25,32 +26,35 @@ class DbAdapter {
         }
     }
 
-    static class DatabaseHelper extends BeamItUpDbHelper
+    static class DatabaseHelper extends SQLiteOpenHelper
     {
         DatabaseHelper(Context context)
         {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
 
-        @Override
         public void onCreate(SQLiteDatabase db)
         {
-            super.onCreate(db);
+            db.execSQL(AccountTable.SQL_CREATE_TABLE);
+            db.execSQL(EthTable.SQL_CREATE_TABLE);
         }
 
-        @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion,
                               int newVersion)
         {
-            // Adding any table mods to this guy here
-            super.onUpgrade(db, oldVersion, newVersion);
+            db.execSQL(AccountTable.SQL_DELETE_TABLE);
+            db.execSQL(EthTable.SQL_DELETE_TABLE);
+            onCreate(db);
+        }
+
+        public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion){
+            onUpgrade(db, oldVersion, newVersion);
         }
     }
 
-    DbAdapter open() throws SQLException
+    void open() throws SQLException
     {
         this.db = this.DbHelper.getWritableDatabase();
-        return this;
     }
 
     void close()
