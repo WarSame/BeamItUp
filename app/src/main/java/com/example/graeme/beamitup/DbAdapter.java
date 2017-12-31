@@ -14,7 +14,7 @@ class DbAdapter {
     static final int DATABASE_VERSION = 9;
     static final String DATABASE_NAME = "BeamItUp.db";
 
-    DatabaseHelper DbHelper;
+    private DatabaseHelper DbHelper;
     SQLiteDatabase db;
 
     DbAdapter(Context context){
@@ -52,7 +52,7 @@ class DbAdapter {
         }
     }
 
-    void open() throws SQLException
+    private void open() throws SQLException
     {
         this.db = this.DbHelper.getWritableDatabase();
     }
@@ -82,7 +82,7 @@ class DbAdapter {
 
     static class EthTable implements  BaseColumns {
         static final String ETH_TABLE_NAME = "eth";
-        static final String ETH_ACCOUNT_ID = "ETH_ACCOUNT_ID";
+        static final String ETH_ACCOUNT_ID = "account_id";
         static final String ETH_ADDRESS = "address";
         static final String ETH_ENC_PRIVATE_KEY = "enc_private_key";
         static final String ETH_IV = "iv";
@@ -97,7 +97,6 @@ class DbAdapter {
                 + ACCOUNT_TABLE_NAME + "(" + _ID + "))";
 
         static final String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " + ETH_TABLE_NAME;
-
     }
 
 }

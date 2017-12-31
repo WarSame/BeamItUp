@@ -2,14 +2,12 @@ package com.example.graeme.beamitup;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
 import android.widget.Toast;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 
 public class LoginActivity extends Activity
 {
@@ -33,18 +31,16 @@ public class LoginActivity extends Activity
             return;
         }
 
-        byte[] passwordHash;
+        boolean isAuthentic;
         try {
-            passwordHash = retrievePasswordHash(email, password);
+            isAuthentic = isAuthentic(email, password);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             onLoginFail();
             return;
         }
-        if (isAuthentic(email, passwordHash)){
+        if (isAuthentic){
             Account account = retrieveAccount(email);
-            ArrayList<Eth> eths = retrieveEths(account.getId());
-            account.setEths(eths);
             onLoginSuccess(account);
         }
         else {
@@ -59,59 +55,6 @@ public class LoginActivity extends Activity
         Account account = db.retrieveAccount(email);
         db.close();
         return account;
-    }
-
-    byte[] retrievePasswordHash(String email, String password) throws NoSuchAlgorithmException {
-        AccountDbAdapter db = new AccountDbAdapter(this);
-        byte[] salt = db.retrieveSalt(email);
-        db.close();
-        return Encryption.hashPassword(password, salt);
-    }
-
-    ArrayList<Eth> retrieveEths(long accountId)
-    {
-        EthDbAdapter ethDbAdapter = new EthDbAdapter(this);
-
-        Cursor res = ethDbAdapter.retrieveEthByAccountId(accountId);
-        ArrayList<Eth> eths = addEthsToListFromCursor(res);
-
-        ethDbAdapter.close();
-
-        Log.d(TAG, "Account ID: "+ accountId);
-        Log.d(TAG, "Number of eth in arraylist: " + eths.size());
-        return eths;
-    }
-
-    ArrayList<Eth> addEthsToListFromCursor(Cursor res)
-    {
-        ArrayList<Eth> eths = new ArrayList<>();
-        int numEth = res.getCount();
-        for (int i = 0; i < numEth; i++){
-            Eth eth = getEthFromCursor(res);
-            eths.add(eth);
-            res.moveToNext();
-        }
-        return eths;
-    }
-
-    Eth getEthFromCursor(Cursor res)
-    {
-        Eth eth = new Eth();
-
-        long ethId = res.getLong(res.getColumnIndex(DbAdapter.EthTable._ID));
-        long accountId = res.getLong(res.getColumnIndex(DbAdapter.EthTable.ETH_ACCOUNT_ID));
-        String address = res.getString(res.getColumnIndex(DbAdapter.EthTable.ETH_ADDRESS));
-        byte[] encPrivateKey = res.getBlob(res.getColumnIndex(DbAdapter.EthTable.ETH_ENC_PRIVATE_KEY));
-        byte[] iv = res.getBlob(res.getColumnIndex(DbAdapter.EthTable.ETH_IV));
-
-        eth.setId(ethId);
-        eth.setAccountId(accountId);
-        eth.setAddress(address);
-        eth.setEncPrivateKey(encPrivateKey);
-        eth.setIv(iv);
-        Log.d(TAG, "Eth address: " + eth.getAddress());
-
-        return eth;
     }
 
     private void onLoginSuccess(Account account)
@@ -166,10 +109,9 @@ public class LoginActivity extends Activity
         return valid;
     }
 
-    boolean isAuthentic(String email, byte[] passwordHash)
-    {
+    boolean isAuthentic(String email, String password) throws NoSuchAlgorithmException {
         AccountDbAdapter db = new AccountDbAdapter(this);
-        boolean isAuthentic = db.isAuthentic(email, passwordHash);
+        boolean isAuthentic = db.isAuthentic(email, password);
         db.close();
 
         return isAuthentic;

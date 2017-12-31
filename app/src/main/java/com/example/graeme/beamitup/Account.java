@@ -17,8 +17,18 @@ class Account implements Serializable {
         this.eths = new ArrayList<>();
     }
 
+    Account(String email, long id, ArrayList<Eth> eths){
+        this.email = email;
+        this.id = id;
+        this.eths = eths;
+    }
+
     String getEmail() {
         return email;
+    }
+
+    void setEmail(String email) {
+        this.email = email;
     }
 
     ArrayList<Eth> getEths() {
@@ -29,11 +39,11 @@ class Account implements Serializable {
         this.eths = eths;
     }
 
-    void addEthereumAccount(Eth ethId){
+    void addEth(Eth ethId){
         this.eths.add(ethId);
     }
 
-    void removeEthereumAccount(Eth eth){
+    void removeEth(Eth eth){
         this.eths.remove(eth);
     }
 

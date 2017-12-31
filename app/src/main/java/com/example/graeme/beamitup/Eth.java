@@ -2,7 +2,7 @@ package com.example.graeme.beamitup;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
+//TODO remove parcelable
 class Eth implements Parcelable {
     private String nickname;
     private String address;
@@ -12,6 +12,7 @@ class Eth implements Parcelable {
     private long accountId;
 
     Eth(){
+        this.id = -1;
     }
 
     Eth(String address, byte[] encPrivateKey){

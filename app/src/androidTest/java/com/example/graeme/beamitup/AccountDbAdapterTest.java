@@ -1,6 +1,7 @@
 package com.example.graeme.beamitup;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.test.InstrumentationRegistry;
 
@@ -16,15 +17,16 @@ import static org.junit.Assert.*;
 public class AccountDbAdapterTest {
     private AccountDbAdapter accountDB;
 
-    private String insertedEmail;
-    private byte[] insertedSalt;
-    private byte[] insertedPasswordHash;
+    private String insertedEmail = "someinsertedEmail@thisplace.com";
+    private String insertedPassword = "someinsertedPassword";
+    private Account insertedAccount;
 
-    private String notInsertedEmail;
-    private byte[] notInsertedSalt;
-    private byte[] notInsertedPasswordHash;
+    private Account otherInsertedAccount;
+    private Eth otherInsertedEth;
 
-    Account newAccount;
+    private String notInsertedEmail = "somenotInsertedemail@place.com";
+    private String notInsertedPassword = "somenotInsertedpassword";
+    private Account notInsertedAccount;
 
     @Before
     public void setUp() throws Exception {
@@ -34,20 +36,22 @@ public class AccountDbAdapterTest {
         DbAdapter.DatabaseHelper dbHelper = new DbAdapter.DatabaseHelper(appContext);
         dbHelper.onUpgrade(accountDB.db, 0, 1);//Wipe db tables
 
-        insertedEmail = "someinsertedEmail@thisplace.com";
-        String insertedPassword = "someinsertedPassword";
-        insertedSalt = Encryption.generateSalt();
-        insertedPasswordHash = Encryption.hashPassword(insertedPassword, insertedSalt);
+        long insertedAccountID = accountDB.createAccount(insertedEmail, insertedPassword);
+        insertedAccount = new Account(insertedEmail, insertedAccountID);
+        Eth insertedEth = new Eth("someaddress", "privatekey".getBytes());
+        insertedEth.setAccountId(insertedAccount.getId());
+        insertedAccount.addEth(insertedEth);
+        accountDB.updateAccount(insertedAccount);
 
-        accountDB.createAccount(insertedEmail, insertedPasswordHash, insertedSalt);
+        String otherInsertedEmail = "someotherinsertedemail@thisplace.com";
+        String otherInsertedPassword = "someotherinsertedpassword";
+        long otherInsertedAccountID = accountDB.createAccount(otherInsertedEmail, otherInsertedPassword);
+        otherInsertedAccount = new Account(otherInsertedEmail, otherInsertedAccountID);
+        otherInsertedEth = new Eth();
+        // TODO: make eth constructor better
+        otherInsertedEth.setAccountId(otherInsertedAccount.getId());
 
-        notInsertedEmail = "somenotInsertedemail@place.com";
-        String notInsertedPassword = "somenotInsertedpassword";
-        notInsertedSalt = Encryption.generateSalt();
-        notInsertedPasswordHash = Encryption.hashPassword(notInsertedPassword, notInsertedSalt);
-
-        newAccount = new Account("someotheremail@someotherplace.com", 17);
-
+        notInsertedAccount = new Account(notInsertedEmail, 17);
     }
 
     @After
@@ -57,12 +61,12 @@ public class AccountDbAdapterTest {
 
     @Test
     public void createAccount_NotInsertedAccountCreated_ShouldBePositive() throws Exception {
-        assertTrue(accountDB.createAccount(notInsertedEmail, notInsertedPasswordHash, notInsertedSalt) > 0);
+        assertTrue(accountDB.createAccount(notInsertedEmail, notInsertedPassword) > 0);
     }
 
     @Test
     public void createAccount_InsertedAccountCreated_ShouldBeNegativeOne() throws Exception {
-        assertTrue(accountDB.createAccount(insertedEmail, insertedPasswordHash, insertedSalt) == -1);
+        assertTrue(accountDB.createAccount(insertedEmail, insertedPassword) == -1);
     }
 
     @Test
@@ -77,38 +81,61 @@ public class AccountDbAdapterTest {
     }
 
     @Test
-    public void updateAccount_InsertedAccountUpdated_ShouldBeTrue() throws Exception {
-        assertTrue(accountDB.updateAccount(insertedEmail, newAccount));
+    public void updateAccount_InsertedAccountUpdatedEmail_ShouldBeTrue() throws Exception {
+        String updatedEmail = "updatedemail@someplace.com";
+        insertedAccount.setEmail(updatedEmail);
+        accountDB.updateAccount(insertedAccount);
+        assertTrue(updatedEmail.equals(insertedAccount.getEmail()));
+    }
+
+    @Test(expected = SQLiteConstraintException.class)
+    public void updateAccount_InsertedAccountDuplicated_ShouldBeSQLiteConstraintException() throws Exception {
+        otherInsertedAccount.setEmail(insertedEmail);
+        accountDB.updateAccount(otherInsertedAccount);
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void updateAccount_NotInsertedAccountUpdated_ShouldBeNoSuchElementException() throws Exception {
+        accountDB.updateAccount(notInsertedAccount);
     }
 
     @Test
-    public void updateAccount_NotInsertedAccountUpdated_ShouldBeFalse() throws Exception {
-        assertFalse(accountDB.updateAccount(notInsertedEmail, newAccount));
+    public void updateAccount_InsertedAccountUpdatedExistingEth_ShouldBeTrue() throws Exception {
+        Account newAccount = accountDB.retrieveAccount(insertedAccount.getEmail());
+        assertTrue(newAccount.getEths().size() == 1);
+    }
+
+    @Test
+    public void updateAccount_InsertedAccountUpdatedNewEth_ShouldBeTrue() throws Exception {
+        insertedAccount.addEth(otherInsertedEth);
+        accountDB.updateAccount(insertedAccount);
+        Account newAccount = accountDB.retrieveAccount(insertedAccount.getEmail());
+        assertTrue(newAccount.getEths().size() == 2);
     }
 
     @Test
     public void deleteAccount_InsertedAccountDeleted_ShouldBeTrue() throws Exception {
-        assertTrue(accountDB.deleteAccount(insertedEmail));
+        assertTrue(accountDB.deleteAccount(insertedAccount));
     }
 
     @Test
     public void deleteAccount_NotInsertedAccountDeleted_ShouldBeFalse() throws Exception {
-        assertFalse(accountDB.deleteAccount(notInsertedEmail));
+        assertFalse(accountDB.deleteAccount(notInsertedAccount));
     }
 
     @Test
     public void isAuthentic_InsertedAccountCheckedWithCorrectValues_ShouldBeTrue() throws Exception {
-        assertTrue(accountDB.isAuthentic(insertedEmail, insertedPasswordHash));
+        assertTrue(accountDB.isAuthentic(insertedEmail, insertedPassword));
     }
 
     @Test
     public void isAuthentic_InsertedAccountCheckedWithIncorrectValues_ShouldBeFalse() throws Exception {
-        assertFalse(accountDB.isAuthentic(insertedEmail, notInsertedPasswordHash));
+        assertFalse(accountDB.isAuthentic(insertedEmail, notInsertedPassword));
     }
     
     @Test
     public void isAuthentic_NotInsertedAccountChecked_ShouldBeFalse() throws Exception {
-        assertFalse(accountDB.isAuthentic(notInsertedEmail, notInsertedPasswordHash));
+        assertFalse(accountDB.isAuthentic(notInsertedEmail, notInsertedPassword));
     }
 
     @Test

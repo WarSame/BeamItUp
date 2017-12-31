@@ -62,7 +62,7 @@ public class AddEthActivity extends Activity {
         eth.setId(ethDb.createEth(eth));
         ethDb.close();
 
-        account.addEthereumAccount(eth);
+        account.addEth(eth);
 
         onCreateEthSuccess(account);
     }

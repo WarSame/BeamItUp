@@ -2,21 +2,28 @@ package com.example.graeme.beamitup;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteConstraintException;
+import android.util.Log;
 
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 class AccountDbAdapter extends DbAdapter {
     private static final String TAG = "AccountDbAdapter";
+    private Context context;
 
     AccountDbAdapter(Context context) {
         super(context);
+        this.context = context;
     }
 
-    long createAccount(String email, byte[] passwordHash, byte[] salt) throws SQLException {
+    long createAccount(String email, String password) throws SQLException, NoSuchAlgorithmException {
+        byte[] salt = Encryption.generateSalt();
+        byte[] passwordHash = Encryption.hashPassword(password, salt);
         ContentValues contentValues = new ContentValues();
         contentValues.put(AccountTable.ACCOUNT_EMAIL,
                 email);
@@ -24,6 +31,9 @@ class AccountDbAdapter extends DbAdapter {
                 passwordHash);
         contentValues.put(AccountTable.ACCOUNT_SALT,
                 salt);
+        Log.i(TAG,
+                "Creating account with email: " + email
+        );
         return this.db.insert(AccountTable.ACCOUNT_TABLE_NAME, null, contentValues);
     }
 
@@ -38,10 +48,10 @@ class AccountDbAdapter extends DbAdapter {
                 AccountTable.ACCOUNT_EMAIL + "=?", new String[]{email},
                 null,
                 null,
-                null);
-        if (res != null){
-            res.moveToFirst();
-        }
+                null
+        );
+        res.moveToFirst();
+        Log.i(TAG, "Returning cursor of count: " + res.getCount());
         return res;
     }
 
@@ -53,56 +63,96 @@ class AccountDbAdapter extends DbAdapter {
         long id = res.getLong(
                 res.getColumnIndex(AccountTable._ID)
         );
-        return new Account(email, id);
+        Log.i(TAG,
+            "Returning account email: " + email
+            + " id: " + id
+        );
+        ArrayList<Eth> eths = getEthsByAccountID(id);
+        Log.i(TAG, "Number of eths: " + eths.size());
+        return new Account(email, id, eths);
     }
 
-    boolean updateAccount(String email, Account account){
+    private ArrayList<Eth> getEthsByAccountID(long id){
+        EthDbAdapter ethDb = new EthDbAdapter(context);
+        ArrayList<Eth> eths = ethDb.retrieveEthsByAccountId(id);
+        ethDb.close();
+        return eths;
+    }
+
+    void updateAccount(Account account) throws SQLiteConstraintException {
+        if (!updateAccountInAccountTable(account)){
+            throw new NoSuchElementException();
+        }
+        updateAccountEthsInEthTable(account);
+    }
+
+    private void updateAccountEthsInEthTable(Account account) {
+        EthDbAdapter ethDB = new EthDbAdapter(this.context);
+        int numEthsUpdated = ethDB.updateEths(account.getEths());
+        ethDB.close();
+        Log.i(TAG, "Number of eths updated: " + numEthsUpdated);
+    }
+
+    private boolean updateAccountInAccountTable(Account account) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(AccountTable.ACCOUNT_EMAIL, account.getEmail());
-        contentValues.put(AccountTable._ID, account.getId());
         return this.db.update(
                 AccountTable.ACCOUNT_TABLE_NAME,
                 contentValues,
-                AccountTable.ACCOUNT_EMAIL + "=?",
-                new String[]{email}
+                AccountTable._ID + "=?",
+                new String[]{String.valueOf(account.getId())}
         ) > 0;
     }
 
-    boolean deleteAccount(String email){
+    boolean deleteAccount(Account account){
+        Log.i(TAG, "Deleting account: " + account.getEmail());
         return this.db.delete(
                 AccountTable.ACCOUNT_TABLE_NAME,
                 AccountTable.ACCOUNT_EMAIL + "=?",
-                new String[]{email}
+                new String[]{account.getEmail()}
         ) > 0;
     }
 
-    boolean isAuthentic(String email, byte[] passwordHash){
-        Cursor res = this.db.query(AccountTable.ACCOUNT_TABLE_NAME,
+    boolean isAuthentic(String email, String password) throws NoSuchAlgorithmException {
+        Log.i(TAG, "Checking if email " + email + " is authentic.");
+        Cursor res = this.db.query(
+                AccountTable.ACCOUNT_TABLE_NAME,
                 new String[]{
                         AccountTable.ACCOUNT_EMAIL,
                         AccountTable.ACCOUNT_PASSWORD_HASH
                 },
-                AccountTable.ACCOUNT_EMAIL + " like ?", new String[]{email},
-                null, null, null);
-        res.moveToFirst();
+                AccountTable.ACCOUNT_EMAIL + " like ?",
+                new String[]{email},
+                null,
+                null,
+                null
+        );
         if (res.getCount() == 0){
+            res.close();
             return false;
         }
+        res.moveToFirst();
         byte[] storedHash = (res.getBlob(res.getColumnIndex(AccountTable.ACCOUNT_PASSWORD_HASH)));
         res.close();
+        byte[] passwordHash = Encryption.hashPassword(password, retrieveSalt(email));
         return Arrays.equals(storedHash, passwordHash);
     }
 
-    byte[] retrieveSalt(String email){
+    private byte[] retrieveSalt(String email){
+        Log.i(TAG, "Checking if email " + email + " is authentic.");
         Cursor res = this.db.query(AccountTable.ACCOUNT_TABLE_NAME,
                 new String[]{
                         AccountTable.ACCOUNT_EMAIL,
                         AccountTable.ACCOUNT_SALT
                 },
-                AccountTable.ACCOUNT_EMAIL + " like ?", new String[]{email},
-                null, null, null);
+                AccountTable.ACCOUNT_EMAIL + " like ?",
+                new String[]{email},
+                null,
+                null,
+                null
+        );
         res.moveToFirst();
-        byte[] storedSalt = (res.getBlob(res.getColumnIndex(AccountTable.ACCOUNT_SALT)));
+        byte[] storedSalt = res.getBlob(res.getColumnIndex(AccountTable.ACCOUNT_SALT));
         res.close();
 
         return storedSalt;
@@ -113,8 +163,12 @@ class AccountDbAdapter extends DbAdapter {
                 new String[]{
                         AccountTable.ACCOUNT_EMAIL
                 },
-                AccountTable.ACCOUNT_EMAIL + " like ?", new String[]{email},
-                null, null, null);
+                AccountTable.ACCOUNT_EMAIL + " like ?",
+                new String[]{email},
+                null,
+                null,
+                null
+        );
         if (res.getCount() > 0){
             res.close();
             return true;

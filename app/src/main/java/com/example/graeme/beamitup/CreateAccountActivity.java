@@ -59,10 +59,8 @@ public class CreateAccountActivity extends Activity {
     }
 
     private Account createNewAccount(String email, String password) throws NoSuchAlgorithmException {
-        byte[] salt = Encryption.generateSalt();
-        byte[] passwordHash = Encryption.hashPassword(password, salt);
         AccountDbAdapter db = new AccountDbAdapter(this);
-        long accountId = db.createAccount(email, passwordHash, salt);
+        long accountId = db.createAccount(email, password);
         db.close();
         return new Account(email, accountId);
     }

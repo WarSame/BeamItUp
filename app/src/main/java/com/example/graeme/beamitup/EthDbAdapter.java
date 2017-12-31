@@ -4,6 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 class EthDbAdapter extends DbAdapter{
     private static final String TAG = "EthDbAdapter";
@@ -12,42 +17,70 @@ class EthDbAdapter extends DbAdapter{
         super(context);
     }
 
-    long createEth(Eth eth) throws SQLException {
+    long createEth(Eth eth) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(EthTable.ETH_ACCOUNT_ID,
-                eth.getAccountId());
-        contentValues.put(EthTable.ETH_ADDRESS,
-                eth.getAddress());
-        contentValues.put(EthTable.ETH_ENC_PRIVATE_KEY,
-                eth.getEncPrivateKey());
-        contentValues.put(EthTable.ETH_IV,
-                eth.getIv());
-        return this.db.insert(EthTable.ETH_TABLE_NAME, null, contentValues);
+        contentValues.put(
+                EthTable.ETH_ACCOUNT_ID,
+                eth.getAccountId()
+        );
+        contentValues.put(
+                EthTable.ETH_ADDRESS,
+                eth.getAddress()
+        );
+        contentValues.put(
+                EthTable.ETH_ENC_PRIVATE_KEY,
+                eth.getEncPrivateKey()
+        );
+        contentValues.put(
+                EthTable.ETH_IV,
+                eth.getIv()
+        );
+        return this.db.insert(
+                EthTable.ETH_TABLE_NAME,
+                null,
+                contentValues
+        );
     }
 
-    Cursor retrieveEth(long id){
+    Eth retrieveEthByEthID(long id){
         Cursor res = this.db.query(EthTable.ETH_TABLE_NAME,
                 new String[]{
                         EthTable.ETH_ADDRESS,
                         EthTable.ETH_ENC_PRIVATE_KEY
                 },
-                EthTable._ID + "=?", new String[]{Long.toString(id)},
-                null, null, null);
-        if (res != null){
-            res.moveToFirst();
-        }
-        return res;
+                EthTable._ID + "=?",
+                new String[]{Long.toString(id)},
+                null,
+                null,
+                null
+        );
+        res.moveToFirst();
+        Eth eth = retrieveEthFromCursor(res);
+        res.close();
+        return eth;
     }
 
-    Cursor retrieveEthByAccountId(long accountId){
-        Cursor res = this.db.query(
+    ArrayList<Eth> retrieveEthsByAccountId(long accountId){
+        ArrayList<Eth> eths = new ArrayList<>();
+        Cursor res = retrieveEthCursorByAccountID(accountId);
+        Log.i(TAG, "Eth cursor count: " + res.getCount());
+        while (res.moveToNext()) {
+            eths.add(retrieveEthFromCursor(res));
+        }
+        res.close();
+        Log.i(TAG, "Returning number of eths by account id: " + eths.size());
+        return eths;
+    }
+
+    private Cursor retrieveEthCursorByAccountID(long accountId){
+        return this.db.query(
                 EthTable.ETH_TABLE_NAME,
                 new String[]{
-                    EthTable._ID,
-                    EthTable.ETH_ACCOUNT_ID,
-                    EthTable.ETH_ADDRESS,
-                    EthTable.ETH_ENC_PRIVATE_KEY,
-                    EthTable.ETH_IV
+                        EthTable._ID,
+                        EthTable.ETH_ACCOUNT_ID,
+                        EthTable.ETH_ADDRESS,
+                        EthTable.ETH_ENC_PRIVATE_KEY,
+                        EthTable.ETH_IV
                 },
                 EthTable.ETH_ACCOUNT_ID + "=?",
                 new String[]{Long.toString(accountId)},
@@ -55,22 +88,54 @@ class EthDbAdapter extends DbAdapter{
                 null,
                 null
         );
-        if (res != null){
-            res.moveToFirst();
-        }
-        return res;
     }
 
-    boolean updateEth(long id, Eth eth){
+    private Eth retrieveEthFromCursor(Cursor res){
+        Eth eth = new Eth();
+        eth.setAddress(res.getString(res.getColumnIndex(EthTable.ETH_ADDRESS)));
+        eth.setEncPrivateKey(res.getBlob(res.getColumnIndex(EthTable.ETH_ENC_PRIVATE_KEY)));
+        eth.setIv(res.getBlob(res.getColumnIndex(EthTable.ETH_IV)));
+        eth.setId(res.getLong(res.getColumnIndex(EthTable._ID)));
+        eth.setAccountId(res.getInt(res.getColumnIndex(EthTable.ETH_ACCOUNT_ID)));
+        return eth;
+    }
+
+    int updateEths(ArrayList<Eth> eths) throws NoSuchElementException {
+        int numEths = 0;
+        for (Eth eth : eths){
+            Log.i(TAG, "Creating or updating eth with address " + eth.getAddress());
+            createOrUpdateEth(eth);
+            numEths++;
+        }
+        return numEths;
+    }
+
+    private void createOrUpdateEth(Eth eth) throws NoSuchElementException {
+        if (eth.getId() == -1){
+            Log.i(TAG, "Creating eth");
+            createEth(eth);
+        }
+        else {
+            Log.i(TAG, "Updating eth");
+            if (!updateEth(eth)) {
+                Log.e(TAG, "Failed to update eth");
+                throw new NoSuchElementException();
+            }
+        }
+    }
+
+    private boolean updateEth(Eth eth){
         ContentValues contentValues = new ContentValues();
         contentValues.put(EthTable.ETH_ADDRESS, eth.getAddress());
         contentValues.put(EthTable.ETH_ENC_PRIVATE_KEY, eth.getEncPrivateKey());
-        return this.db.update(
+        long numRowsUpdated = this.db.update(
                 EthTable.ETH_TABLE_NAME,
                 contentValues,
-                EthTable._ID + "=" + id,
-                null
-        ) > 0;
+                EthTable._ID + "=?",
+                new String[]{String.valueOf(eth.getId())}
+        );
+        Log.i(TAG, "Updated " + numRowsUpdated + " in updateEth");
+        return numRowsUpdated > 0;
     }
 
     void deleteEth(long id){
