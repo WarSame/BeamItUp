@@ -83,14 +83,6 @@ class AccountDbAdapter extends DbAdapter {
         if (!updateAccountInAccountTable(account)){
             throw new NoSuchElementException();
         }
-        updateAccountEthsInEthTable(account);
-    }
-
-    private void updateAccountEthsInEthTable(Account account) {
-        EthDbAdapter ethDB = new EthDbAdapter(this.context);
-        int numEthsUpdated = ethDB.updateEths(account.getEths());
-        ethDB.close();
-        Log.i(TAG, "Number of eths updated: " + numEthsUpdated);
     }
 
     private boolean updateAccountInAccountTable(Account account) {
@@ -176,4 +168,5 @@ class AccountDbAdapter extends DbAdapter {
         res.close();
         return false;
     }
+
 }

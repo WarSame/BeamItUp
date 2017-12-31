@@ -19,6 +19,8 @@ public class EthDbAdapterTest {
 
         DbAdapter.DatabaseHelper dbHelper = new DbAdapter.DatabaseHelper(appContext);
         dbHelper.onUpgrade(ethDB.db, 0, 1);//Wipe db tables
+
+
     }
 
     @After
@@ -39,7 +41,11 @@ public class EthDbAdapterTest {
     }
 
     @Test
-    public void updateEths() throws Exception {
+    public void retrieveSenderPrivateKey() throws Exception {
+    }
+
+    @Test
+    public void updateEth() throws Exception {
     }
 
     @Test

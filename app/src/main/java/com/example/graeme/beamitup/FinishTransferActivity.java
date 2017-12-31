@@ -12,7 +12,6 @@ import android.widget.Toast;
 import org.apache.commons.lang3.SerializationUtils;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
-import java.util.Arrays;
 import java.util.concurrent.Future;
 
 public class FinishTransferActivity extends Activity {
@@ -37,7 +36,7 @@ public class FinishTransferActivity extends Activity {
         TextView tv_transfer_status = (TextView)findViewById(R.id.tv_finish_transfer_status_value);
 
         try {
-            String senderPrivateKey = getSenderPrivateKey(eth, tran);
+            String senderPrivateKey = getSenderPrivateKey(eth, tran.getSenderAddress());
             tran.setSenderPrivateKey(senderPrivateKey);
             Future<TransactionReceipt> future = tran.send(this);
             future.get();
@@ -60,16 +59,11 @@ public class FinishTransferActivity extends Activity {
         return null;
     }
 
-    String getSenderPrivateKey(Eth eth, Transfer tran) throws Exception{
-        byte[] senderPrivateKeyEnc = eth.getEncPrivateKey();
-        byte[] senderIv = eth.getIv();
-
-        Encryption.Decryptor decryptor = new Encryption.Decryptor();
-        return decryptor.decryptPrivateKey(
-                tran.getSenderAddress(),
-                senderPrivateKeyEnc,
-                senderIv
-        );
+    String getSenderPrivateKey(Eth eth, String senderAddress) throws Exception{
+        EthDbAdapter db = new EthDbAdapter(this);
+        String senderPrivateKey = db.retrieveSenderPrivateKey(eth.getId(), senderAddress);
+        db.close();
+        return senderPrivateKey;
     }
 
     Transfer getReplyTransferMessage(){

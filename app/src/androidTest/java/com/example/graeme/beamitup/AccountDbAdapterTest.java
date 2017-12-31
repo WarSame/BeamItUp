@@ -16,6 +16,7 @@ import static org.junit.Assert.*;
 
 public class AccountDbAdapterTest {
     private AccountDbAdapter accountDB;
+    private EthDbAdapter ethDb;
 
     private String insertedEmail = "someinsertedEmail@thisplace.com";
     private String insertedPassword = "someinsertedPassword";
@@ -32,6 +33,7 @@ public class AccountDbAdapterTest {
     public void setUp() throws Exception {
         Context appContext = InstrumentationRegistry.getTargetContext();
         accountDB = new AccountDbAdapter(appContext);
+        ethDb = new EthDbAdapter(appContext);
 
         DbAdapter.DatabaseHelper dbHelper = new DbAdapter.DatabaseHelper(appContext);
         dbHelper.onUpgrade(accountDB.db, 0, 1);//Wipe db tables
@@ -41,7 +43,7 @@ public class AccountDbAdapterTest {
         Eth insertedEth = new Eth("someaddress", insertedAccountID);
         insertedEth.setAccountId(insertedAccount.getId());
         insertedAccount.addEth(insertedEth);
-        accountDB.updateAccount(insertedAccount);
+        ethDb.createEth(insertedEth, "someotherprivatekey");
 
         String otherInsertedEmail = "someotherinsertedemail@thisplace.com";
         String otherInsertedPassword = "someotherinsertedpassword";
@@ -59,6 +61,7 @@ public class AccountDbAdapterTest {
     @After
     public void tearDown() throws Exception {
         accountDB.close();
+        ethDb.close();
     }
 
     @Test
@@ -83,6 +86,22 @@ public class AccountDbAdapterTest {
     }
 
     @Test
+    public void retrieveAccount_InsertedAccountEthCount_ShouldBeOne() throws Exception {
+        Account newAccount = accountDB.retrieveAccount(insertedAccount.getEmail());
+        assertTrue(newAccount.getEths().size() == 1);
+    }
+
+    @Test
+    public void retrieveAccount_InsertedAccountAndExtraEthCount_ShouldBeTwo() throws Exception {
+        otherInsertedEth.setAccountId(insertedAccount.getId());
+        insertedAccount.addEth(otherInsertedEth);
+        ethDb.createEth(otherInsertedEth, "someprivatekey");
+
+        Account updatedInsertedAccount = accountDB.retrieveAccount(insertedAccount.getEmail());
+        assertTrue(updatedInsertedAccount.getEths().size() == 2);
+    }
+
+    @Test
     public void updateAccount_InsertedAccountUpdatedEmail_ShouldBeTrue() throws Exception {
         String updatedEmail = "updatedemail@someplace.com";
         insertedAccount.setEmail(updatedEmail);
@@ -99,20 +118,6 @@ public class AccountDbAdapterTest {
     @Test(expected = NoSuchElementException.class)
     public void updateAccount_NotInsertedAccountUpdated_ShouldBeNoSuchElementException() throws Exception {
         accountDB.updateAccount(notInsertedAccount);
-    }
-
-    @Test
-    public void updateAccount_InsertedAccountUpdatedExistingEth_ShouldBeTrue() throws Exception {
-        Account newAccount = accountDB.retrieveAccount(insertedAccount.getEmail());
-        assertTrue(newAccount.getEths().size() == 1);
-    }
-
-    @Test
-    public void updateAccount_InsertedAccountUpdatedNewEth_ShouldBeTrue() throws Exception {
-        insertedAccount.addEth(otherInsertedEth);
-        accountDB.updateAccount(insertedAccount);
-        Account newAccount = accountDB.retrieveAccount(insertedAccount.getEmail());
-        assertTrue(newAccount.getEths().size() == 2);
     }
 
     @Test

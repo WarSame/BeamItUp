@@ -16,17 +16,12 @@ class EthDbAdapter extends DbAdapter{
     }
 
     long createEth(Eth eth, String privateKey) {
-        Encryption.Encryptor encryptor = new Encryption.Encryptor();
-        try {
-            encryptor.encryptPrivateKey(eth.getAddress(), privateKey);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Encryption.Encryptor encryptor = encryptPrivateKey(eth.getAddress(), privateKey);
 
-        return insertEth(eth, encryptor.getEncryption(), encryptor.getIv());
+        return createEthInDB(eth, encryptor.getEncryption(), encryptor.getIv());
     }
 
-    private long insertEth(Eth eth, byte[] encPrivateKey, byte[] iv){
+    private long createEthInDB(Eth eth, byte[] encPrivateKey, byte[] iv){
         ContentValues contentValues = new ContentValues();
         contentValues.put(
                 EthTable.ETH_ACCOUNT_ID,
@@ -107,34 +102,70 @@ class EthDbAdapter extends DbAdapter{
         );
     }
 
-    int updateEths(ArrayList<Eth> eths) throws NoSuchElementException {
-        int numEths = 0;
-        for (Eth eth : eths){
-            Log.i(TAG, "Creating or updating eth with address " + eth.getAddress());
-            createOrUpdateEth(eth);
-            numEths++;
-        }
-        return numEths;
+    String retrieveSenderPrivateKey(long ethID, String senderAddress) throws Exception {
+        Encryption.Encryptor encryptor = retrieveEncryptor(ethID);
+        byte[] encPrivateKey = encryptor.getEncryption();
+        byte[] iv = encryptor.getIv();
+        Encryption.Decryptor decryptor = new Encryption.Decryptor();
+        return decryptor.decryptPrivateKey(senderAddress, encPrivateKey, iv);
     }
 
-    private void createOrUpdateEth(Eth eth) throws NoSuchElementException {
-        if (eth.getId() == -1){
-            Log.i(TAG, "Creating eth");
-            createEth(eth);
-        }
-        else {
-            Log.i(TAG, "Updating eth");
-            if (!updateEth(eth)) {
-                Log.e(TAG, "Failed to update eth");
-                throw new NoSuchElementException();
-            }
-        }
+    private Encryption.Encryptor retrieveEncryptor(long ethID){
+        Cursor res = retrieveEncryptorCursor(ethID);
+        return putCursorIntoEncryptor(res);
     }
 
-    private boolean updateEth(Eth eth){
+    private Cursor retrieveEncryptorCursor(long ethID){
+        Cursor res = this.db.query(
+                EthTable.ETH_TABLE_NAME,
+                new String[]{
+                        EthTable.ETH_ENC_PRIVATE_KEY,
+                        EthTable.ETH_IV
+                },
+                EthTable._ID + "=?",
+                new String[]{Long.toString(ethID)},
+                null,
+                null,
+                null
+        );
+        if (res.getCount() == 0){
+            throw new NoSuchElementException();
+        }
+        return res;
+    }
+
+    private Encryption.Encryptor putCursorIntoEncryptor(Cursor res){
+        byte[] encPrivateKey = res.getBlob(res.getColumnIndex(EthTable.ETH_ENC_PRIVATE_KEY));
+        byte[] iv = res.getBlob(res.getColumnIndex(EthTable.ETH_IV));
+        Encryption.Encryptor encryptor = new Encryption.Encryptor();
+        encryptor.setEncryption(encPrivateKey);
+        encryptor.setIv(iv);
+        return encryptor;
+    }
+
+    boolean updateEth(Eth eth, String privateKey){
+        Encryption.Encryptor encryptor = encryptPrivateKey(eth.getAddress(), privateKey);
+        return updateEthInDB(eth, encryptor.getEncryption(), encryptor.getIv());
+    }
+
+    private boolean updateEthInDB(Eth eth, byte[] encPrivateKey, byte[] iv){
         ContentValues contentValues = new ContentValues();
-        contentValues.put(EthTable.ETH_ADDRESS, eth.getAddress());
-        contentValues.put(EthTable.ETH_ENC_PRIVATE_KEY, eth.getEncPrivateKey());
+        contentValues.put(
+                EthTable.ETH_ADDRESS,
+                eth.getAddress()
+        );
+        contentValues.put(
+                EthTable.ETH_ENC_PRIVATE_KEY,
+                encPrivateKey
+        );
+        contentValues.put(
+                EthTable.ETH_IV,
+                iv
+        );
+        contentValues.put(
+                EthTable.ETH_ACCOUNT_ID,
+                eth.getAccountId()
+        );
         long numRowsUpdated = this.db.update(
                 EthTable.ETH_TABLE_NAME,
                 contentValues,
@@ -147,5 +178,15 @@ class EthDbAdapter extends DbAdapter{
 
     void deleteEth(long id){
 
+    }
+
+    private Encryption.Encryptor encryptPrivateKey(String address, String privateKey){
+        Encryption.Encryptor encryptor = new Encryption.Encryptor();
+        try {
+            encryptor.encryptPrivateKey(address, privateKey);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return encryptor;
     }
 }

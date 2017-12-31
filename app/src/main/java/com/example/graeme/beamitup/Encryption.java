@@ -89,8 +89,16 @@ class Encryption {
             return this.encryption;
         }
 
+        void setEncryption(byte[] encryption){
+            this.encryption = encryption;
+        }
+
         byte[] getIv(){
             return this.iv;
+        }
+
+        void setIv(byte[] iv){
+            this.iv = iv;
         }
     }
 
@@ -105,7 +113,6 @@ class Encryption {
         String decryptPrivateKey(String ethAddress, byte[] privateKeyEnc, byte[] iv) throws Exception {
             return this.decryptText(ethAddress, privateKeyEnc, iv);
         }
-
 
         String decryptText(final String alias, final byte[] encryptedData, final byte[] encryptionIV) throws Exception {
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);

@@ -38,16 +38,22 @@ public class AddEthActivity extends Activity {
         String privateKey = et_private_key.getText().toString();
 
         Account account = Session.getUserDetails();
+        addEthToSessionAccount(ethAddress, privateKey, account);
+        onCreateEthSuccess(account);
+    }
 
+    private void addEthToSessionAccount(String ethAddress, String privateKey, Account account) {
         Eth eth = new Eth(ethAddress, account.getId());
 
+        addEthToAccountInDB(account, eth, privateKey);
         account.addEth(eth);
+    }
 
-        AccountDbAdapter db = new AccountDbAdapter(this);
-        db.updateAccount(account);
+    private void addEthToAccountInDB(Account account, Eth eth, String privateKey){
+        EthDbAdapter db = new EthDbAdapter(this);
+        long ethID = db.createEth(eth, privateKey);
+        eth.setId(ethID);
         db.close();
-
-        onCreateEthSuccess(account);
     }
 
 

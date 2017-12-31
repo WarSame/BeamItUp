@@ -105,7 +105,7 @@ class Transfer implements Serializable {
                 Web3j web3 = Web3jFactory.build(
                         new HttpService("https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9")
                 );
-                Log.d(TAG, web3.web3ClientVersion().send().getWeb3ClientVersion());
+                Log.d(TAG, "Client version: " + web3.web3ClientVersion().send().getWeb3ClientVersion());
 
                 Credentials credentials = obtainCredentials(WALLET_DIRECTORY);
                 Log.d(TAG, "Credentials retrieved.");
@@ -113,7 +113,7 @@ class Transfer implements Serializable {
                 Log.d(TAG, "Credentials address: " + credentials.getAddress());
                 BigInteger balance = web3.ethGetBalance(credentials.getAddress(), DefaultBlockParameterName.LATEST).
                         sendAsync().get().getBalance();
-                Log.d(TAG, "Balance: " + balance);
+                Log.d(TAG, "Address balance: " + balance);
 
                 TransactionReceipt receipt = org.web3j.tx.Transfer.sendFunds(
                         web3,
@@ -123,8 +123,8 @@ class Transfer implements Serializable {
                         Convert.Unit.WEI
                 ).send();
 
-                Log.d(TAG, receipt.getFrom());
-                Log.d(TAG, receipt.getTo());
+                Log.d(TAG, "Transfer from: " + receipt.getFrom());
+                Log.d(TAG, "Transfer to: " + receipt.getTo());
                 return receipt;
             }
         };
