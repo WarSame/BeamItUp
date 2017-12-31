@@ -6,12 +6,13 @@ import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.SerializationUtils;
+import org.web3j.crypto.Credentials;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
+import java.util.NoSuchElementException;
 import java.util.concurrent.Future;
 
 public class FinishTransferActivity extends Activity {
@@ -31,32 +32,44 @@ public class FinishTransferActivity extends Activity {
 
         Transfer tran = getReplyTransferMessage();
         Account account = Session.getUserDetails();
-        Eth eth = selectEthFromAccountByAddress(account, tran);
-
-        TextView tv_transfer_status = (TextView)findViewById(R.id.tv_finish_transfer_status_value);
-
         try {
-            String senderPrivateKey = getSenderPrivateKey(eth, tran.getSenderAddress());
-            tran.setSenderPrivateKey(senderPrivateKey);
-            Future<TransactionReceipt> future = tran.send(this);
-            future.get();
-            tv_transfer_status.setText( getResources().getString(R.string.transfer_succeeded) );
-            Log.d(TAG, "Transfer succeeded.");
-        } catch (Exception e) {
+            Eth eth = selectEthFromAccountByAddress(account, tran);
+            sendTransfer(eth, tran);
+        }
+        catch (Exception e){
             e.printStackTrace();
-            tv_transfer_status.setText( getResources().getString(R.string.transfer_failed) );
-            Log.d(TAG, "Transfer failed.");
+            String transferFailedText = "Transfer to " + tran.getReceiverAddress() + " failed.";
+            Toast.makeText(
+                    this,
+                    transferFailedText,
+                    Toast.LENGTH_SHORT
+            ).show();
+            Log.i(TAG, "Transfer failed.");
         }
     }
 
-    Eth selectEthFromAccountByAddress(Account account, Transfer tran){
+    private void sendTransfer(Eth eth, Transfer tran) throws Exception {
+        String senderPrivateKey = getSenderPrivateKey(eth, tran.getSenderAddress());
+        Credentials credentials = Credentials.create(senderPrivateKey);
+        Future<TransactionReceipt> future = tran.send(credentials);
+        future.get();
+        String transferSucceededText = "Transfer to " + tran.getReceiverAddress() + " succeeded.";
+        Toast.makeText(
+                this,
+                transferSucceededText,
+                Toast.LENGTH_SHORT
+        ).show();
+        Log.i(TAG, transferSucceededText);
+    }
+
+    Eth selectEthFromAccountByAddress(Account account, Transfer tran) throws NoSuchElementException {
         String senderAddress = tran.getSenderAddress();
         for ( Eth eth : account.getEths() ){
             if ( eth.getAddress().equals( senderAddress ) ){
                 return eth;
             }
         }
-        return null;
+        throw new NoSuchElementException();
     }
 
     String getSenderPrivateKey(Eth eth, String senderAddress) throws Exception{
