@@ -38,7 +38,7 @@ public class AccountDbAdapterTest {
 
         long insertedAccountID = accountDB.createAccount(insertedEmail, insertedPassword);
         insertedAccount = new Account(insertedEmail, insertedAccountID);
-        Eth insertedEth = new Eth("someaddress", "privatekey".getBytes());
+        Eth insertedEth = new Eth("someaddress", insertedAccountID);
         insertedEth.setAccountId(insertedAccount.getId());
         insertedAccount.addEth(insertedEth);
         accountDB.updateAccount(insertedAccount);
@@ -49,8 +49,6 @@ public class AccountDbAdapterTest {
         otherInsertedAccount = new Account(otherInsertedEmail, otherInsertedAccountID);
         otherInsertedEth = new Eth(
                 "someaddress",
-                "someprrivatekey".getBytes(),
-                "someiv".getBytes(),
                 otherInsertedAccountID
         );
         otherInsertedEth.setAccountId(otherInsertedAccount.getId());

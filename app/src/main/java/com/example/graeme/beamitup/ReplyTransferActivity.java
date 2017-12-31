@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
+import org.apache.commons.lang3.SerializationUtils;
 
 import java.util.Arrays;
 
@@ -55,7 +55,7 @@ public class ReplyTransferActivity extends Activity {
 
         NdefRecord rec = NdefRecord.createMime(
                 "application/" + getApplicationContext().getPackageName() + "/reply_transfer",
-                (new Gson()).toJson(tran).getBytes()
+                SerializationUtils.serialize(tran)
         );
         NdefMessage msg = new NdefMessage(rec);
 

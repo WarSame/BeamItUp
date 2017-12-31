@@ -3,11 +3,9 @@ package com.example.graeme.beamitup;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 class EthDbAdapter extends DbAdapter{
@@ -17,7 +15,18 @@ class EthDbAdapter extends DbAdapter{
         super(context);
     }
 
-    long createEth(Eth eth) {
+    long createEth(Eth eth, String privateKey) {
+        Encryption.Encryptor encryptor = new Encryption.Encryptor();
+        try {
+            encryptor.encryptPrivateKey(eth.getAddress(), privateKey);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return insertEth(eth, encryptor.getEncryption(), encryptor.getIv());
+    }
+
+    private long insertEth(Eth eth, byte[] encPrivateKey, byte[] iv){
         ContentValues contentValues = new ContentValues();
         contentValues.put(
                 EthTable.ETH_ACCOUNT_ID,
@@ -29,11 +38,11 @@ class EthDbAdapter extends DbAdapter{
         );
         contentValues.put(
                 EthTable.ETH_ENC_PRIVATE_KEY,
-                eth.getEncPrivateKey()
+                encPrivateKey
         );
         contentValues.put(
                 EthTable.ETH_IV,
-                eth.getIv()
+                iv
         );
         return this.db.insert(
                 EthTable.ETH_TABLE_NAME,
@@ -93,8 +102,6 @@ class EthDbAdapter extends DbAdapter{
     private Eth retrieveEthFromCursor(Cursor res){
         return new Eth(
                 res.getString(res.getColumnIndex(EthTable.ETH_ADDRESS)),
-                res.getBlob(res.getColumnIndex(EthTable.ETH_ENC_PRIVATE_KEY)),
-                res.getBlob(res.getColumnIndex(EthTable.ETH_IV)),
                 res.getColumnIndex(EthTable._ID),
                 res.getInt(res.getColumnIndex(EthTable.ETH_ACCOUNT_ID))
         );

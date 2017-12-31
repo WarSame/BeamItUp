@@ -13,21 +13,14 @@ import org.web3j.protocol.http.HttpService;
 import org.web3j.utils.Async;
 import org.web3j.utils.Convert;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-class Transfer {
+class Transfer implements Serializable {
     private String amount;
     private String reason;
     private String senderAddress;

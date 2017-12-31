@@ -35,34 +35,17 @@ public class AddEthActivity extends Activity {
         EditText et_private_key = (EditText) findViewById(R.id.et_private_key);
 
         String ethAddress = et_eth_address.getText().toString();
-        String privateKeyString = et_private_key.getText().toString();
-
-        Encryption.Encryptor encryptor = new Encryption.Encryptor();
-        try {
-            encryptor.encryptPrivateKey(ethAddress, privateKeyString);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        String decryptedText = null;
-        try {
-            decryptedText = new Encryption.Decryptor().decryptPrivateKey(ethAddress, encryptor.getEncryption(), encryptor.getIv());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        Toast.makeText(this, decryptedText, Toast.LENGTH_LONG).show();
+        String privateKey = et_private_key.getText().toString();
 
         Account account = Session.getUserDetails();
 
-        Eth eth = new Eth(ethAddress, encryptor.getEncryption());
-        eth.setAccountId(account.getId());
-
-        EthDbAdapter ethDb = new EthDbAdapter(this);
-        eth.setId(ethDb.createEth(eth));
-        ethDb.close();
+        Eth eth = new Eth(ethAddress, account.getId());
 
         account.addEth(eth);
+
+        AccountDbAdapter db = new AccountDbAdapter(this);
+        db.updateAccount(account);
+        db.close();
 
         onCreateEthSuccess(account);
     }

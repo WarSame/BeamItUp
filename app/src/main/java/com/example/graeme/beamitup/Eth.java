@@ -1,31 +1,21 @@
 package com.example.graeme.beamitup;
 
-class Eth {
+import java.io.Serializable;
+
+class Eth implements Serializable{
     private String nickname;
     private String address;
-    private byte[] encPrivateKey;
-    private byte[] iv;
     private long id;
     private long accountId;
 
-    Eth(String address, byte[] encPrivateKey){
+    Eth(String address, long id, long accountId){
         this.address = address;
-        this.encPrivateKey = encPrivateKey;
-        this.id = -1;
-    }
-
-    Eth(String address, byte[] encPrivateKey, byte[] iv, long id, long accountId){
-        this.address = address;
-        this.encPrivateKey = encPrivateKey;
-        this.iv = iv;
         this.id = id;
         this.accountId = accountId;
     }
 
-    Eth(String address, byte[] encPrivateKey, byte[] iv, long accountId){
+    Eth(String address, long accountId){
         this.address = address;
-        this.encPrivateKey = encPrivateKey;
-        this.iv = iv;
         this.id = -1;
         this.accountId = accountId;
     }
@@ -38,28 +28,12 @@ class Eth {
         this.address = address;
     }
 
-    byte[] getEncPrivateKey() {
-        return encPrivateKey;
-    }
-
-    void setEncPrivateKey(byte[] encPrivateKey) {
-        this.encPrivateKey = encPrivateKey;
-    }
-
     public long getId() {
         return id;
     }
 
     void setId(long id) {
         this.id = id;
-    }
-
-    byte[] getIv() {
-        return iv;
-    }
-
-    void setIv(byte[] iv) {
-        this.iv = iv;
     }
 
     long getAccountId() {
