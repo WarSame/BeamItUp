@@ -91,13 +91,13 @@ class EthDbAdapter extends DbAdapter{
     }
 
     private Eth retrieveEthFromCursor(Cursor res){
-        Eth eth = new Eth();
-        eth.setAddress(res.getString(res.getColumnIndex(EthTable.ETH_ADDRESS)));
-        eth.setEncPrivateKey(res.getBlob(res.getColumnIndex(EthTable.ETH_ENC_PRIVATE_KEY)));
-        eth.setIv(res.getBlob(res.getColumnIndex(EthTable.ETH_IV)));
-        eth.setId(res.getLong(res.getColumnIndex(EthTable._ID)));
-        eth.setAccountId(res.getInt(res.getColumnIndex(EthTable.ETH_ACCOUNT_ID)));
-        return eth;
+        return new Eth(
+                res.getString(res.getColumnIndex(EthTable.ETH_ADDRESS)),
+                res.getBlob(res.getColumnIndex(EthTable.ETH_ENC_PRIVATE_KEY)),
+                res.getBlob(res.getColumnIndex(EthTable.ETH_IV)),
+                res.getColumnIndex(EthTable._ID),
+                res.getInt(res.getColumnIndex(EthTable.ETH_ACCOUNT_ID))
+        );
     }
 
     int updateEths(ArrayList<Eth> eths) throws NoSuchElementException {

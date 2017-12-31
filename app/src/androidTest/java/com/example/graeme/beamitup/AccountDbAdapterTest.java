@@ -47,8 +47,12 @@ public class AccountDbAdapterTest {
         String otherInsertedPassword = "someotherinsertedpassword";
         long otherInsertedAccountID = accountDB.createAccount(otherInsertedEmail, otherInsertedPassword);
         otherInsertedAccount = new Account(otherInsertedEmail, otherInsertedAccountID);
-        otherInsertedEth = new Eth();
-        // TODO: make eth constructor better
+        otherInsertedEth = new Eth(
+                "someaddress",
+                "someprrivatekey".getBytes(),
+                "someiv".getBytes(),
+                otherInsertedAccountID
+        );
         otherInsertedEth.setAccountId(otherInsertedAccount.getId());
 
         notInsertedAccount = new Account(notInsertedEmail, 17);

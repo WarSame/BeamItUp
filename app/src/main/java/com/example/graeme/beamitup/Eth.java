@@ -8,14 +8,26 @@ class Eth {
     private long id;
     private long accountId;
 
-    Eth(){
-        this.id = -1;
-    }
-
     Eth(String address, byte[] encPrivateKey){
         this.address = address;
         this.encPrivateKey = encPrivateKey;
         this.id = -1;
+    }
+
+    Eth(String address, byte[] encPrivateKey, byte[] iv, long id, long accountId){
+        this.address = address;
+        this.encPrivateKey = encPrivateKey;
+        this.iv = iv;
+        this.id = id;
+        this.accountId = accountId;
+    }
+
+    Eth(String address, byte[] encPrivateKey, byte[] iv, long accountId){
+        this.address = address;
+        this.encPrivateKey = encPrivateKey;
+        this.iv = iv;
+        this.id = -1;
+        this.accountId = accountId;
     }
 
     String getAddress() {
