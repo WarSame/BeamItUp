@@ -1,9 +1,6 @@
 package com.example.graeme.beamitup;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-//TODO remove parcelable
-class Eth implements Parcelable {
+class Eth {
     private String nickname;
     private String address;
     private byte[] encPrivateKey;
@@ -20,26 +17,6 @@ class Eth implements Parcelable {
         this.encPrivateKey = encPrivateKey;
         this.id = -1;
     }
-
-    protected Eth(Parcel in) {
-        address = in.readString();
-        encPrivateKey = in.createByteArray();
-        iv = in.createByteArray();
-        id = in.readLong();
-        accountId = in.readLong();
-    }
-
-    public static final Creator<Eth> CREATOR = new Creator<Eth>() {
-        @Override
-        public Eth createFromParcel(Parcel in) {
-            return new Eth(in);
-        }
-
-        @Override
-        public Eth[] newArray(int size) {
-            return new Eth[size];
-        }
-    };
 
     String getAddress() {
         return address;
@@ -81,17 +58,4 @@ class Eth implements Parcelable {
         this.accountId = accountId;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(address);
-        dest.writeByteArray(encPrivateKey);
-        dest.writeByteArray(iv);
-        dest.writeLong(id);
-        dest.writeLong(accountId);
-    }
 }

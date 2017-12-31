@@ -8,6 +8,10 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import java.util.Arrays;
+
 public class ReadyTransferActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +42,13 @@ public class ReadyTransferActivity extends Activity {
             return;
         }
 
-        NdefRecord rec = NdefRecord.createMime("application/" + getApplicationContext().getPackageName() + "/ready_transfer",
-                Transfer.toBytes(tran));
+        NdefRecord rec = NdefRecord.createMime(
+                "application/" + getApplicationContext().getPackageName() + "/ready_transfer",
+                (new Gson()).toJson(tran).getBytes()
+        );
         NdefMessage msg = new NdefMessage(rec);
 
-        Toast.makeText(this, Transfer.fromBytes(msg.getRecords()[0].getPayload()).toString(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, Arrays.toString(msg.getRecords()[0].getPayload()), Toast.LENGTH_LONG).show();
 
         mNfcAdapter.setNdefPushMessage(msg, this);
     }

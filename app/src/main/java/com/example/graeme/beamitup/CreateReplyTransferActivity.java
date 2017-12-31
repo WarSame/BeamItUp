@@ -11,6 +11,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import java.util.Arrays;
+
 public class CreateReplyTransferActivity extends FragmentActivity
         implements EthPickerFragment.onEthSelectedListener
 {
@@ -61,7 +65,10 @@ public class CreateReplyTransferActivity extends FragmentActivity
         Intent intent = getIntent();
         if (intent.getType() != null && intent.getType().equals("application/" + getPackageName() + "/ready_transfer")){
             NdefMessage msg = (NdefMessage)intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)[0];
-            tran = Transfer.fromBytes(msg.getRecords()[0].getPayload());
+            tran = (new Gson()).fromJson(
+                    Arrays.toString(msg.getRecords()[0].getPayload()),
+                    Transfer.class
+            );
             Toast.makeText(this, tran.toString(), Toast.LENGTH_LONG).show();
         }
         return tran;
@@ -70,8 +77,12 @@ public class CreateReplyTransferActivity extends FragmentActivity
     void onCreateReplySuccess(){
         enableReadyButton();
 
-        replyTransferIntent.putExtra("transfer", tran);
-        replyTransferIntent.putExtra("eth", eth);
+        String tranGson = (new Gson()).toJson(tran);
+        replyTransferIntent.putExtra("transfer", tranGson);
+
+        String ethGson = (new Gson()).toJson(eth);
+        replyTransferIntent.putExtra("eth", ethGson);
+
         startActivity(replyTransferIntent);
     }
 

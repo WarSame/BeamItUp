@@ -9,8 +9,11 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
+import java.util.Arrays;
 import java.util.concurrent.Future;
 
 public class FinishTransferActivity extends Activity {
@@ -76,7 +79,10 @@ public class FinishTransferActivity extends Activity {
         Boolean isReplyTransfer = intent.getType() != null && intent.getType().equals("application/" + getPackageName() + "/reply_transfer");
         if ( isReplyTransfer ){
             NdefMessage msg = (NdefMessage)intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)[0];
-            tran = Transfer.fromBytes(msg.getRecords()[0].getPayload());
+            tran = (new Gson()).fromJson(
+                    Arrays.toString(msg.getRecords()[0].getPayload()),
+                    Transfer.class
+            );
             Toast.makeText(this, tran.toString(), Toast.LENGTH_LONG).show();
         }
         return tran;

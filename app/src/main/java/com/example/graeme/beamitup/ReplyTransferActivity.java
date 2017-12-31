@@ -8,6 +8,10 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import java.util.Arrays;
+
 public class ReplyTransferActivity extends Activity {
     private static final String TAG = "ReplyTransferActivity";
     Transfer tran;
@@ -51,13 +55,13 @@ public class ReplyTransferActivity extends Activity {
 
         NdefRecord rec = NdefRecord.createMime(
                 "application/" + getApplicationContext().getPackageName() + "/reply_transfer",
-                Transfer.toBytes(tran)
+                (new Gson()).toJson(tran).getBytes()
         );
         NdefMessage msg = new NdefMessage(rec);
 
         Toast.makeText(
                 this,
-                Transfer.fromBytes(msg.getRecords()[0].getPayload()).toString(),
+                Arrays.toString(msg.getRecords()[0].getPayload()),
                 Toast.LENGTH_LONG
         ).show();
 

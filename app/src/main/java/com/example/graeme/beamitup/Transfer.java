@@ -27,7 +27,7 @@ import java.math.BigInteger;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-class Transfer implements Serializable {
+class Transfer {
     private String amount;
     private String reason;
     private String senderAddress;
@@ -41,48 +41,6 @@ class Transfer implements Serializable {
         this.senderAddress = senderPublicKey;
         this.senderPrivateKey = null;
         this.receiverAddress = null;
-    }
-
-    static byte[] toBytes(Transfer tran){
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutput out;
-        byte[] bytes = null;
-        try {
-            out = new ObjectOutputStream(bos);
-            out.writeObject(tran);
-            out.flush();
-            bytes = bos.toByteArray();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                bos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return bytes;
-    }
-
-    static Transfer fromBytes(byte[] bytes){
-        ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-        ObjectInput in = null;
-        Object o = null;
-        try {
-            in = new ObjectInputStream(bis);
-            o = in.readObject();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (in != null) {
-                    in.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return (Transfer)o;
     }
 
     String getReason() {
