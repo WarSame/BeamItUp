@@ -41,7 +41,6 @@ public class AccountDbAdapterTest {
         long insertedAccountID = accountDB.createAccount(insertedEmail, insertedPassword);
         insertedAccount = new Account(insertedEmail, insertedAccountID);
         Eth insertedEth = new Eth("someaddress", insertedAccountID);
-        insertedEth.setAccountId(insertedAccount.getId());
         insertedAccount.addEth(insertedEth);
         ethDb.createEth(insertedEth, "someotherprivatekey");
 
@@ -49,11 +48,7 @@ public class AccountDbAdapterTest {
         String otherInsertedPassword = "someotherinsertedpassword";
         long otherInsertedAccountID = accountDB.createAccount(otherInsertedEmail, otherInsertedPassword);
         otherInsertedAccount = new Account(otherInsertedEmail, otherInsertedAccountID);
-        otherInsertedEth = new Eth(
-                "someaddress",
-                otherInsertedAccountID
-        );
-        otherInsertedEth.setAccountId(otherInsertedAccount.getId());
+        otherInsertedEth = new Eth("someaddress", otherInsertedAccountID);
 
         notInsertedAccount = new Account(notInsertedEmail, 17);
     }
@@ -66,7 +61,8 @@ public class AccountDbAdapterTest {
 
     @Test
     public void createAccount_NotInsertedAccountCreated_ShouldBePositive() throws Exception {
-        assertTrue(accountDB.createAccount(notInsertedEmail, notInsertedPassword) > 0);
+        long accountID = accountDB.createAccount(notInsertedEmail, notInsertedPassword);
+        assertTrue( accountID > 0);
     }
 
     @Test
