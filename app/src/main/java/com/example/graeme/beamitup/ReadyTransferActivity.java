@@ -10,8 +10,6 @@ import android.widget.Toast;
 
 import org.apache.commons.lang3.SerializationUtils;
 
-import java.util.Arrays;
-
 public class ReadyTransferActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +45,6 @@ public class ReadyTransferActivity extends Activity {
                 SerializationUtils.serialize(tran)
         );
         NdefMessage msg = new NdefMessage(rec);
-
-        Toast.makeText(this, Arrays.toString(msg.getRecords()[0].getPayload()), Toast.LENGTH_LONG).show();
 
         mNfcAdapter.setNdefPushMessage(msg, this);
     }
