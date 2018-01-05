@@ -119,6 +119,7 @@ class EthDbAdapter extends DbAdapter{
 
     private Encryption.Encryptor retrieveEncryptor(long ethID){
         Cursor res = retrieveEncryptorCursor(ethID);
+        res.moveToFirst();
         return putCursorIntoEncryptor(res);
     }
 
