@@ -39,26 +39,30 @@ public class AddEthActivity extends Activity {
         String ethAddress = et_eth_address.getText().toString();
         String privateKey = et_private_key.getText().toString();
 
-        Account sessionAccount = addEthToSessionAccount(ethAddress);
-        Eth eth = new Eth(ethAddress, sessionAccount.getId());
-        associateEthWithAccountInDB(eth, privateKey);
+        createEthAndAddToSessionAccount(ethAddress, privateKey);
+
         onCreateEthSuccess();
     }
 
-    private Account addEthToSessionAccount(String ethAddress) {
-        Account account = Session.getUserDetails();
-        Eth eth = new Eth(ethAddress, account.getId());
-
-        account.addEth(eth);
-        return account;
+    private void createEthAndAddToSessionAccount(String ethAddress, String privateKey) {
+        Account sessionAccount = Session.getUserDetails();
+        Eth eth = createEthFromSessionAccountID(sessionAccount.getId(), ethAddress);
+        long ethID = insertEthInDB(eth, privateKey);
+        eth.setId(ethID);
+        sessionAccount.addEth(eth);
     }
 
-    private void associateEthWithAccountInDB(Eth eth, String privateKey){
+    private Eth createEthFromSessionAccountID(long sessionAccountID, String ethAddress) {
+        Log.i(TAG, "Session account id: " + sessionAccountID);
+        return new Eth(ethAddress, sessionAccountID);
+    }
+
+    private long insertEthInDB(Eth eth, String privateKey){
         EthDbAdapter db = new EthDbAdapter(this);
         long ethID = db.createEth(eth, privateKey);
         Log.i(TAG, "Setting eth id to " + ethID);
-        eth.setId(ethID);
         db.close();
+        return ethID;
     }
 
 
