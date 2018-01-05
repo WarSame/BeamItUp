@@ -5,12 +5,15 @@ import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.SerializationUtils;
 
 public class ReadyTransferActivity extends Activity {
+    private static final String TAG = "ReadyTransferActivity";
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +35,11 @@ public class ReadyTransferActivity extends Activity {
         String senderPublicKey = getIntent().getStringExtra("senderAddress");
 
         Transfer tran = new Transfer(amount, reason, senderPublicKey);
+
+        Log.i(TAG, "Sending transfer with amount: " + amount
+                + " reason: " + reason
+                + " senderAddress: " + senderPublicKey);
+
         NfcAdapter mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
         if (mNfcAdapter == null) {
