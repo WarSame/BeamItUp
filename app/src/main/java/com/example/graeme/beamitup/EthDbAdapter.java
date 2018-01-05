@@ -18,10 +18,13 @@ class EthDbAdapter extends DbAdapter{
     long createEth(Eth eth, String privateKey) {
         Encryption.Encryptor encryptor = encryptPrivateKey(eth.getAddress(), privateKey);
 
-        return createEthInDB(eth, encryptor.getEncryption(), encryptor.getIv());
+        long ethID = createEthInDB(eth, encryptor.getEncryption(), encryptor.getIv());
+        Log.i(TAG, "Returning eth id: " + ethID);
+        return ethID;
     }
 
     private long createEthInDB(Eth eth, byte[] encPrivateKey, byte[] iv){
+        Log.i(TAG, "Inserting eth into db of address: " + eth.getAddress());
         ContentValues contentValues = new ContentValues();
         contentValues.put(
                 EthTable.ETH_ACCOUNT_ID,
@@ -39,11 +42,13 @@ class EthDbAdapter extends DbAdapter{
                 EthTable.ETH_IV,
                 iv
         );
-        return this.db.insert(
+        long ethID = this.db.insert(
                 EthTable.ETH_TABLE_NAME,
                 null,
                 contentValues
         );
+        Log.i(TAG, "Inserted Eth has id: " + ethID);
+        return ethID;
     }
 
     Eth retrieveEthByEthID(long id){

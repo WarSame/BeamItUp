@@ -3,12 +3,14 @@ package com.example.graeme.beamitup;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 public class AddEthActivity extends Activity {
+    private static final String TAG = "AddEthActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,7 @@ public class AddEthActivity extends Activity {
     private void associateEthWithAccountInDB(Eth eth, String privateKey){
         EthDbAdapter db = new EthDbAdapter(this);
         long ethID = db.createEth(eth, privateKey);
+        Log.i(TAG, "Setting eth id to " + ethID);
         eth.setId(ethID);
         db.close();
     }
