@@ -77,6 +77,7 @@ class EthDbAdapter extends DbAdapter{
     }
 
     private Cursor retrieveEthCursorByAccountID(long accountId){
+        Log.i(TAG, "Retrieving eth cursor for eths associated with account id " + accountId);
         return this.db.query(
                 EthTable.ETH_TABLE_NAME,
                 new String[]{

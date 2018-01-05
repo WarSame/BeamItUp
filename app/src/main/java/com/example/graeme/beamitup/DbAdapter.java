@@ -11,7 +11,7 @@ import static com.example.graeme.beamitup.DbAdapter.AccountTable.ACCOUNT_TABLE_N
 
 class DbAdapter {
     //If changing schema, must update db version
-    static final int DATABASE_VERSION = 9;
+    static final int DATABASE_VERSION = 10;
     static final String DATABASE_NAME = "BeamItUp.db";
 
     private DatabaseHelper DbHelper;

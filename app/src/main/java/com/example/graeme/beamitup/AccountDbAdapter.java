@@ -51,11 +51,12 @@ class AccountDbAdapter extends DbAdapter {
                 null
         );
         res.moveToFirst();
-        Log.i(TAG, "Returning cursor of count: " + res.getCount());
+        Log.i(TAG, "Returning account cursor of count: " + res.getCount());
         return res;
     }
 
     Account retrieveAccount(String email){
+        Log.i(TAG, "Retrieving account associated with " + email);
         Cursor res = getAccountCursor(email);
         if (res.getCount() == 0){
             throw new NoSuchElementException();
@@ -131,13 +132,13 @@ class AccountDbAdapter extends DbAdapter {
     }
 
     private byte[] retrieveSalt(String email){
-        Log.i(TAG, "Checking if email " + email + " is authentic.");
+        Log.i(TAG, "Retrieving salt of " + email + "");
         Cursor res = this.db.query(AccountTable.ACCOUNT_TABLE_NAME,
                 new String[]{
                         AccountTable.ACCOUNT_EMAIL,
                         AccountTable.ACCOUNT_SALT
                 },
-                AccountTable.ACCOUNT_EMAIL + " like ?",
+                AccountTable.ACCOUNT_EMAIL + "=?",
                 new String[]{email},
                 null,
                 null,
@@ -151,6 +152,7 @@ class AccountDbAdapter extends DbAdapter {
     }
 
     boolean isEmailInUse(String email){
+        Log.i(TAG, "Determining whether the email " + email + " is in use");
         Cursor res = this.db.query(AccountTable.ACCOUNT_TABLE_NAME,
                 new String[]{
                         AccountTable.ACCOUNT_EMAIL
@@ -163,9 +165,11 @@ class AccountDbAdapter extends DbAdapter {
         );
         if (res.getCount() > 0){
             res.close();
+            Log.i(TAG, "Email is in use");
             return true;
         }
         res.close();
+        Log.i(TAG, "Email is not in use");
         return false;
     }
 
