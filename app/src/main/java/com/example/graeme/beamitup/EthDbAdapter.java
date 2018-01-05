@@ -74,6 +74,7 @@ class EthDbAdapter extends DbAdapter{
         Cursor res = retrieveEthCursorByAccountID(accountId);
         Log.i(TAG, "Eth cursor count: " + res.getCount());
         while (res.moveToNext()) {
+            Log.i(TAG, "Eth id: " + res.getLong(res.getColumnIndex(EthTable._ID)));
             eths.add(retrieveEthFromCursor(res));
         }
         res.close();
@@ -103,7 +104,7 @@ class EthDbAdapter extends DbAdapter{
     private Eth retrieveEthFromCursor(Cursor res){
         return new Eth(
                 res.getString(res.getColumnIndex(EthTable.ETH_ADDRESS)),
-                res.getColumnIndex(EthTable._ID),
+                res.getLong(res.getColumnIndex(EthTable._ID)),
                 res.getInt(res.getColumnIndex(EthTable.ETH_ACCOUNT_ID))
         );
     }
