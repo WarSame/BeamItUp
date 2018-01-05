@@ -9,12 +9,14 @@ Working:
 * Ready transfer for sending with NFC
 * Receiving transfer with NFC and preparing reply
 * Receiving reply
+* Sending transfer through Ethereum network to peer's account received in reply
 * Basic encryption for security
 * Account session
 
 Todo:
-* Send funds after receiving reply
-* Combine above for easily finishing transfer
+* Fix up interface(especially avoid repeating transfer on screen rotation)
+* More testing
+* Avoid lag when sending transfer
 
 Wishlist:
 * Transfers in CAD
