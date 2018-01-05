@@ -13,7 +13,7 @@ import org.apache.commons.lang3.SerializationUtils;
 
 public class ReadyTransferActivity extends Activity {
     private static final String TAG = "ReadyTransferActivity";
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

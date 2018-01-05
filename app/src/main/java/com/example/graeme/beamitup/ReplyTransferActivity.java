@@ -5,6 +5,7 @@ import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +25,7 @@ public class ReplyTransferActivity extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         tran = (Transfer)getIntent().getSerializableExtra("transfer");
-        eth = getIntent().getParcelableExtra("eth");
+        eth = (Eth)getIntent().getSerializableExtra("eth");
 
         prepareReplyTransfer(tran, eth);
         displayTransferDetails();
@@ -59,11 +60,7 @@ public class ReplyTransferActivity extends Activity {
         );
         NdefMessage msg = new NdefMessage(rec);
 
-        Toast.makeText(
-                this,
-                Arrays.toString(msg.getRecords()[0].getPayload()),
-                Toast.LENGTH_LONG
-        ).show();
+        Log.i(TAG, "Eth reply selected id: " + eth.getId() + " address: " + eth.getAddress());
 
         mNfcAdapter.setNdefPushMessage(msg, this);
     }
