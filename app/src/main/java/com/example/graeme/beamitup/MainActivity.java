@@ -72,7 +72,9 @@ public class MainActivity extends Activity {
             final Intent landingPageIntent = new Intent(this, LandingPageActivity.class);
             startActivity(landingPageIntent);
         }
-        Log.d(TAG, "Session is dead");
+        else {
+            Log.d(TAG, "Session is dead");
+        }
     }
 
     private void onLoginSuccess(){
