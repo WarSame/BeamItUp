@@ -37,19 +37,21 @@ public class AddEthActivity extends Activity {
         String ethAddress = et_eth_address.getText().toString();
         String privateKey = et_private_key.getText().toString();
 
-        Account account = Session.getUserDetails();
-        addEthToSessionAccount(ethAddress, privateKey, account);
-        onCreateEthSuccess(account);
+        Account sessionAccount = addEthToSessionAccount(ethAddress);
+        Eth eth = new Eth(ethAddress, sessionAccount.getId());
+        associateEthWithAccountInDB(eth, privateKey);
+        onCreateEthSuccess();
     }
 
-    private void addEthToSessionAccount(String ethAddress, String privateKey, Account account) {
+    private Account addEthToSessionAccount(String ethAddress) {
+        Account account = Session.getUserDetails();
         Eth eth = new Eth(ethAddress, account.getId());
 
-        addEthToAccountInDB(account, eth, privateKey);
         account.addEth(eth);
+        return account;
     }
 
-    private void addEthToAccountInDB(Account account, Eth eth, String privateKey){
+    private void associateEthWithAccountInDB(Eth eth, String privateKey){
         EthDbAdapter db = new EthDbAdapter(this);
         long ethID = db.createEth(eth, privateKey);
         eth.setId(ethID);
@@ -57,7 +59,7 @@ public class AddEthActivity extends Activity {
     }
 
 
-    private void onCreateEthSuccess(Account account){
+    private void onCreateEthSuccess(){
         Button btn_add_eth = (Button) findViewById(R.id.btn_add_eth);
         btn_add_eth.setEnabled(true);
 
