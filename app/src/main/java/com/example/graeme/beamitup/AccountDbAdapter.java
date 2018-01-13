@@ -21,7 +21,7 @@ class AccountDbAdapter extends DbAdapter {
         this.context = context;
     }
 
-    long createAccount(String email, String password) throws SQLException, NoSuchAlgorithmException {
+    long createAccount(String email, char[] password) throws SQLException, NoSuchAlgorithmException {
         byte[] salt = Encryption.generateSalt();
         byte[] passwordHash = Encryption.hashPassword(password, salt);
         ContentValues contentValues = new ContentValues();
@@ -45,7 +45,8 @@ class AccountDbAdapter extends DbAdapter {
                         AccountTable.ACCOUNT_SALT,
                         AccountTable._ID
                 },
-                AccountTable.ACCOUNT_EMAIL + "=?", new String[]{email},
+                AccountTable.ACCOUNT_EMAIL + "=?",
+                new String[]{email},
                 null,
                 null,
                 null
@@ -106,15 +107,16 @@ class AccountDbAdapter extends DbAdapter {
         ) > 0;
     }
 
-    boolean isAuthentic(String email, String password) throws NoSuchAlgorithmException {
+    boolean isAuthentic(String email, char[] password) throws NoSuchAlgorithmException {
         Log.i(TAG, "Checking if email " + email + " is authentic.");
         Cursor res = this.db.query(
                 AccountTable.ACCOUNT_TABLE_NAME,
                 new String[]{
                         AccountTable.ACCOUNT_EMAIL,
-                        AccountTable.ACCOUNT_PASSWORD_HASH
+                        AccountTable.ACCOUNT_PASSWORD_HASH,
+                        AccountTable.ACCOUNT_SALT
                 },
-                AccountTable.ACCOUNT_EMAIL + " like ?",
+                AccountTable.ACCOUNT_EMAIL + "=?",
                 new String[]{email},
                 null,
                 null,
@@ -126,29 +128,10 @@ class AccountDbAdapter extends DbAdapter {
         }
         res.moveToFirst();
         byte[] storedHash = (res.getBlob(res.getColumnIndex(AccountTable.ACCOUNT_PASSWORD_HASH)));
+        byte[] storedSalt = (res.getBlob(res.getColumnIndex(AccountTable.ACCOUNT_SALT)));
         res.close();
-        byte[] passwordHash = Encryption.hashPassword(password, retrieveSalt(email));
+        byte[] passwordHash = Encryption.hashPassword(password, storedSalt);
         return Arrays.equals(storedHash, passwordHash);
-    }
-
-    private byte[] retrieveSalt(String email){
-        Log.i(TAG, "Retrieving salt of " + email + "");
-        Cursor res = this.db.query(AccountTable.ACCOUNT_TABLE_NAME,
-                new String[]{
-                        AccountTable.ACCOUNT_EMAIL,
-                        AccountTable.ACCOUNT_SALT
-                },
-                AccountTable.ACCOUNT_EMAIL + "=?",
-                new String[]{email},
-                null,
-                null,
-                null
-        );
-        res.moveToFirst();
-        byte[] storedSalt = res.getBlob(res.getColumnIndex(AccountTable.ACCOUNT_SALT));
-        res.close();
-
-        return storedSalt;
     }
 
     boolean isEmailInUse(String email){
