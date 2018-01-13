@@ -5,6 +5,9 @@ import android.security.keystore.KeyProperties;
 import android.support.annotation.NonNull;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -14,6 +17,7 @@ import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.security.UnrecoverableEntryException;
 import java.security.cert.CertificateException;
+import java.util.Arrays;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -27,14 +31,25 @@ class Encryption {
     private static final String TRANSFORMATION = "AES/GCM/NoPadding";
     private static final String TEXT_FORMAT = "UTF-8";
 
-    static byte[] hashPassword(String password, byte[] salt) throws NoSuchAlgorithmException{
+    static private byte[] toBytes(char[] chars) {
+        CharBuffer charBuffer = CharBuffer.wrap(chars);
+        ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
+        byte[] bytes = Arrays.copyOfRange(byteBuffer.array(),
+                byteBuffer.position(), byteBuffer.limit());
+        Arrays.fill(charBuffer.array(), '\u0000');
+        Arrays.fill(byteBuffer.array(), (byte) 0);
+        return bytes;
+    }
+
+    static byte[] hashPassword(char[] password, byte[] salt) throws NoSuchAlgorithmException{
         MessageDigest md;
         byte[] passwordHash;
 
         md = MessageDigest.getInstance(HASHING_ALGORITHM);
         md.reset();
         md.update(salt);
-        passwordHash = md.digest(password.getBytes());
+        passwordHash = md.digest(toBytes(password));
+        Arrays.fill(password, '\0');//Clear password for security
 
         if (passwordHash == null){
             return null;

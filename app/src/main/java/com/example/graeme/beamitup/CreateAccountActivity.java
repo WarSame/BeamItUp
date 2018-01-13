@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 public class CreateAccountActivity extends Activity {
     private static final String TAG = "CreateAccountActivity";
@@ -40,10 +41,14 @@ public class CreateAccountActivity extends Activity {
         EditText et_confirm_password = (EditText) findViewById(R.id.et_confirm_password);
 
         String email = et_email.getText().toString();
-        String password = et_password.getText().toString();
-        String confirmPassword = et_confirm_password.getText().toString();
+        char[] password = (et_password.getText().toString()).toCharArray();
+        char[] confirmPassword = (et_confirm_password.getText().toString()).toCharArray();
 
-        if (!isValid(email, password, confirmPassword)){
+        Boolean isValid = !isValid(email, password, confirmPassword);
+
+        Arrays.fill(confirmPassword, '\0');//Clear confirm password for security
+
+        if (isValid){
             onCreateAccountFail();
             return;
         }
@@ -58,7 +63,7 @@ public class CreateAccountActivity extends Activity {
         }
     }
 
-    private Account createNewAccount(String email, String password) throws NoSuchAlgorithmException {
+    private Account createNewAccount(String email, char[] password) throws NoSuchAlgorithmException {
         AccountDbAdapter db = new AccountDbAdapter(this);
         long accountId = db.createAccount(email, password);
         db.close();
@@ -93,7 +98,7 @@ public class CreateAccountActivity extends Activity {
         Toast.makeText(this, "Create account failed.", Toast.LENGTH_LONG).show();
     }
 
-    boolean isValid(String email, String password, String confirmPassword){
+    boolean isValid(String email, char[] password, char[] confirmPassword){
         return emailValid(email) && passwordValid(password, confirmPassword);
     }
 
@@ -118,8 +123,8 @@ public class CreateAccountActivity extends Activity {
         return true;
     }
 
-    private boolean passwordValid(String password, String confirmPassword) {
-        if (password.length() < Account.MINIMUM_PASSWORD_LENGTH || password.length() > Account.MAXIMUM_PASSWORD_LENGTH){
+    private boolean passwordValid(char[] password, char[] confirmPassword) {
+        if (password.length < Account.MINIMUM_PASSWORD_LENGTH || password.length > Account.MAXIMUM_PASSWORD_LENGTH){
             Toast.makeText(
                     this,
                     "Password must be between " + Account.MINIMUM_PASSWORD_LENGTH + " and " +
@@ -129,7 +134,7 @@ public class CreateAccountActivity extends Activity {
             return false;
         }
 
-        if (!password.equals(confirmPassword)){
+        if (!Arrays.equals(password, confirmPassword)){
             Toast.makeText(
                     this,
                     "Password and password confirmation must match.",
