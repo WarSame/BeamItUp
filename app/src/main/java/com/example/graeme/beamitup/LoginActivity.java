@@ -19,12 +19,12 @@ public class LoginActivity extends Activity
         super.onCreate(savedInstanceState);
 
         String email = getIntent().getStringExtra("email");
-        String password = getIntent().getStringExtra("password");
+        char[] password = (getIntent().getStringExtra("password")).toCharArray();
 
         login(email, password);
     }
 
-    private void login(String email, String password)
+    private void login(String email, char[] password)
     {
         if (!isValid(email, password)){
             onLoginFail();
@@ -72,7 +72,7 @@ public class LoginActivity extends Activity
         finish();
     }
 
-    boolean isValid(String email, String password)
+    boolean isValid(String email, char[] password)
     {
         return emailValid(email) && passwordValid(password);
     }
@@ -92,24 +92,25 @@ public class LoginActivity extends Activity
         return valid;
     }
 
-    private boolean passwordValid(String password)
+    private boolean passwordValid(char[] password)
     {
-        boolean valid = true;
+        boolean valid = password.length < Account.MINIMUM_PASSWORD_LENGTH
+                || password.length > Account.MAXIMUM_PASSWORD_LENGTH;
 
-        if (password.isEmpty() || password.length() < Account.MINIMUM_PASSWORD_LENGTH || password.length() > Account.MAXIMUM_PASSWORD_LENGTH){
+        if (valid){
             Toast.makeText(
                     this,
                     "Password must be between " + Account.MINIMUM_PASSWORD_LENGTH + " and " +
                     Account.MAXIMUM_PASSWORD_LENGTH + " characters.",
                     Toast.LENGTH_SHORT
             ).show();
-            valid = false;
+            return false;
         }
 
-        return valid;
+        return true;
     }
 
-    boolean isAuthentic(String email, String password) throws NoSuchAlgorithmException {
+    boolean isAuthentic(String email, char[] password) throws NoSuchAlgorithmException {
         AccountDbAdapter db = new AccountDbAdapter(this);
         boolean isAuthentic = db.isAuthentic(email, password);
         db.close();
