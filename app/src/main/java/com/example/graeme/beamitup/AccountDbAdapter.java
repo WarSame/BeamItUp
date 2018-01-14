@@ -140,7 +140,7 @@ class AccountDbAdapter extends DbAdapter {
                 new String[]{
                         AccountTable.ACCOUNT_EMAIL
                 },
-                AccountTable.ACCOUNT_EMAIL + " like ?",
+                AccountTable.ACCOUNT_EMAIL + "=?",
                 new String[]{email},
                 null,
                 null,

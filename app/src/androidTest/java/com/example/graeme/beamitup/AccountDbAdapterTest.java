@@ -2,13 +2,11 @@ package com.example.graeme.beamitup;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteConstraintException;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.test.InstrumentationRegistry;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.web3j.utils.Assertions;
 
 import java.util.NoSuchElementException;
 
@@ -20,13 +18,14 @@ public class AccountDbAdapterTest {
 
     private String insertedEmail = "someinsertedEmail@thisplace.com";
     private String insertedPassword = "someinsertedPassword";
+    private char[] insertedPasswordCharArray = insertedPassword.toCharArray();
     private Account insertedAccount;
 
     private Account otherInsertedAccount;
     private Eth otherInsertedEth;
 
     private String notInsertedEmail = "somenotInsertedemail@place.com";
-    private String notInsertedPassword = "somenotInsertedpassword";
+    private char[] notInsertedPassword = "somenotInsertedpassword".toCharArray();
     private Account notInsertedAccount;
 
     @Before
@@ -38,14 +37,14 @@ public class AccountDbAdapterTest {
         DbAdapter.DatabaseHelper dbHelper = new DbAdapter.DatabaseHelper(appContext);
         dbHelper.onUpgrade(accountDB.db, 0, 1);//Wipe db tables
 
-        long insertedAccountID = accountDB.createAccount(insertedEmail, insertedPassword);
+        long insertedAccountID = accountDB.createAccount(insertedEmail, insertedPasswordCharArray);
         insertedAccount = new Account(insertedEmail, insertedAccountID);
         Eth insertedEth = new Eth("someaddress", insertedAccountID);
         insertedAccount.addEth(insertedEth);
         ethDb.createEth(insertedEth, "someotherprivatekey");
 
         String otherInsertedEmail = "someotherinsertedemail@thisplace.com";
-        String otherInsertedPassword = "someotherinsertedpassword";
+        char[] otherInsertedPassword = "someotherinsertedpassword".toCharArray();
         long otherInsertedAccountID = accountDB.createAccount(otherInsertedEmail, otherInsertedPassword);
         otherInsertedAccount = new Account(otherInsertedEmail, otherInsertedAccountID);
         otherInsertedEth = new Eth("someaddress", otherInsertedAccountID);
@@ -67,7 +66,7 @@ public class AccountDbAdapterTest {
 
     @Test
     public void createAccount_InsertedAccountCreated_ShouldBeNegativeOne() throws Exception {
-        assertTrue(accountDB.createAccount(insertedEmail, insertedPassword) == -1);
+        assertTrue(accountDB.createAccount(insertedEmail, insertedPasswordCharArray) == -1);
     }
 
     @Test
@@ -128,7 +127,7 @@ public class AccountDbAdapterTest {
 
     @Test
     public void isAuthentic_InsertedAccountCheckedWithCorrectValues_ShouldBeTrue() throws Exception {
-        assertTrue(accountDB.isAuthentic(insertedEmail, insertedPassword));
+        assertTrue(accountDB.isAuthentic(insertedEmail, insertedPassword.toCharArray()));
     }
 
     @Test
