@@ -9,14 +9,21 @@ Working:
 * Ready transfer for sending with NFC
 * Receiving transfer with NFC and preparing reply
 * Receiving reply
+* Sending transfer through Ethereum network to peer's account
 * Basic encryption for security
 * Account session
 
 Todo:
-* Send funds after receiving reply
-* Combine above for easily finishing transfer
+* Fix up interface(especially avoid repeating transfer on screen rotation)
+* Put more testing
+* Avoid lag when sending transfer
+* Make it easier to input ethereum credentials (currently a huge pain and uncertain you'll type it correctly)
+* Allow users to modify app account and ethereum accounts more
+* Create a logout
+* Send push notifications when receiving transfer over the Ethereum network
+* Determine transfer fees when preparing transfer
 
 Wishlist:
 * Transfers in CAD
 * Implement light client to avoid Infura dependency (contingent on Ethereum light clients)
-* Announce likely transfer fees when preparing transfer
+* Lower transfer costs after PoS implemented
