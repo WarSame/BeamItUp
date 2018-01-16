@@ -16,12 +16,13 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class EthPickerFragment extends ListFragment {
     private static final String TAG = "EthPickerFragment";
 
-    ArrayList<Eth> eths;
+    List<Eth> eths;
     onEthSelectedListener ethListener;
 
     public EthPickerFragment(){

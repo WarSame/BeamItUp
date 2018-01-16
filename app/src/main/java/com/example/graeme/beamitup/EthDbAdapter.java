@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 class EthDbAdapter extends DbAdapter{
@@ -69,8 +70,8 @@ class EthDbAdapter extends DbAdapter{
         return eth;
     }
 
-    ArrayList<Eth> retrieveEthsByAccountId(long accountId){
-        ArrayList<Eth> eths = new ArrayList<>();
+    List<Eth> retrieveEthsByAccountId(long accountId){
+        List<Eth> eths = new ArrayList<>();
         Cursor res = retrieveEthCursorByAccountID(accountId);
         Log.i(TAG, "Eth cursor count: " + res.getCount());
         while (res.moveToNext()) {

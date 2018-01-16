@@ -10,6 +10,7 @@ import android.util.Log;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 class AccountDbAdapter extends DbAdapter {
@@ -69,14 +70,14 @@ class AccountDbAdapter extends DbAdapter {
             "Returning account email: " + email
             + " id: " + id
         );
-        ArrayList<Eth> eths = getEthsByAccountID(id);
+        List<Eth> eths = getEthsByAccountID(id);
         Log.i(TAG, "Number of eths: " + eths.size());
         return new Account(email, id, eths);
     }
 
-    private ArrayList<Eth> getEthsByAccountID(long id){
+    private List<Eth> getEthsByAccountID(long id){
         EthDbAdapter ethDb = new EthDbAdapter(context);
-        ArrayList<Eth> eths = ethDb.retrieveEthsByAccountId(id);
+        List<Eth> eths = ethDb.retrieveEthsByAccountId(id);
         ethDb.close();
         return eths;
     }

@@ -2,13 +2,14 @@ package com.example.graeme.beamitup;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 class Account implements Serializable {
     static final int MINIMUM_PASSWORD_LENGTH = 4;
     static final int MAXIMUM_PASSWORD_LENGTH = 16;
 
     private String email;
-    private ArrayList<Eth> eths;
+    private List<Eth> eths;
     private long id;
 
     Account(String email, long id){
@@ -17,7 +18,7 @@ class Account implements Serializable {
         this.eths = new ArrayList<>();
     }
 
-    Account(String email, long id, ArrayList<Eth> eths){
+    Account(String email, long id, List<Eth> eths){
         this.email = email;
         this.id = id;
         this.eths = eths;
@@ -31,11 +32,11 @@ class Account implements Serializable {
         this.email = email;
     }
 
-    ArrayList<Eth> getEths() {
+    List<Eth> getEths() {
         return this.eths;
     }
 
-    void setEths(ArrayList<Eth> eths){
+    void setEths(List<Eth> eths){
         this.eths = eths;
     }
 

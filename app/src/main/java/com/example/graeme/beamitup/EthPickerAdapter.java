@@ -9,12 +9,13 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EthPickerAdapter extends ArrayAdapter {
 
-    private ArrayList<Eth> eths;
+    private List<Eth> eths;
 
-    EthPickerAdapter(@NonNull Context context, @NonNull ArrayList<Eth> eths) {
+    EthPickerAdapter(@NonNull Context context, @NonNull List<Eth> eths) {
         super(context, 0, eths);
         this.eths = eths;
     }
