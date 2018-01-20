@@ -13,6 +13,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.SerializationUtils;
+import org.web3j.crypto.Credentials;
+import org.web3j.crypto.WalletUtils;
 
 import java.util.NoSuchElementException;
 import com.example.graeme.beamitup.TransferSenderService.TransferSenderBinder;
@@ -52,14 +54,13 @@ public class FinishTransferActivity extends Activity {
     }
 
     private void sendTransfer(long ethID, Transfer tran) throws Exception {
+        String senderPrivateKey = getSenderPrivateKey(ethID, tran.getSenderAddress());
+        Credentials credentials = Credentials.create(senderPrivateKey);
+
         //Run transfer in background
         Intent transferSender = new Intent(getApplicationContext(), TransferSenderService.class);
         bindService(transferSender, connection, Context.BIND_AUTO_CREATE);
-
-        if (bound){
-            int x = transferSenderService.getValue();
-            Log.i(TAG, "Value from service: " + x);
-        }
+        transferSenderService.send(credentials, tran.getReceiverAddress());
 
         String transferSucceededText = "Transfer to " + tran.getReceiverAddress() + " succeeded.";
         Toast.makeText(
@@ -89,6 +90,13 @@ public class FinishTransferActivity extends Activity {
             Toast.makeText(this, tran.toString(), Toast.LENGTH_LONG).show();
         }
         return tran;
+    }
+
+    String getSenderPrivateKey(long ethID, String senderAddress) throws Exception{
+        EthDbAdapter db = new EthDbAdapter(this);
+        String senderPrivateKey = db.retrieveSenderPrivateKey(ethID, senderAddress);
+        db.close();
+        return senderPrivateKey;
     }
 
     private ServiceConnection connection = new ServiceConnection() {

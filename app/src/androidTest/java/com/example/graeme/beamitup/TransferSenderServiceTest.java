@@ -7,12 +7,18 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ServiceTestRule;
+import android.util.Log;
+
 import com.example.graeme.beamitup.TransferSenderService.TransferSenderBinder;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.web3j.crypto.Credentials;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
+
+import java.util.concurrent.Future;
 
 import static org.junit.Assert.*;
 
@@ -54,17 +60,16 @@ public class TransferSenderServiceTest {
     }
 
     @Test
-    public void getSenderPrivateKey() throws Exception {
-    }
-
-    @Test
-    public void getValue() throws Exception {
-        serviceTestRule.bindService(transferSenderIntent, connection, Context.BIND_AUTO_CREATE);
-        assertTrue(transferSenderService.getValue() == 5);
-    }
-
-    @Test
     public void send() throws Exception {
+        Credentials credentials = Credentials.create("someprivatekey");
+        String receiverAddress = "0x31B98D14007bDEe637298086988A0bBd31184523";
+        serviceTestRule.bindService(transferSenderIntent, connection, Context.BIND_AUTO_CREATE);
+        Future<TransactionReceipt> future = transferSenderService.send(credentials, receiverAddress);
+        TransactionReceipt tr = future.get();
+
+        Log.i(TAG, tr.getFrom());
+
+        assertTrue( credentials.getAddress().equals( tr.getFrom() ) );
     }
 
 }

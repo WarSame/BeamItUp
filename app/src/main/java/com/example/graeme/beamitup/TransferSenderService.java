@@ -35,27 +35,23 @@ public class TransferSenderService extends Service {
         return binder;
     }
 
-    public int getValue(){
-        return 5;
-    }
-
-    /*
     Future<TransactionReceipt> send(final Credentials credentials, final String receiverAddress) throws Exception {
         Log.i(TAG, "Credentials address: " + credentials.getAddress());
         Callable<TransactionReceipt> task = new Callable<TransactionReceipt>() {
             @Override
             public TransactionReceipt call() throws Exception {
-                Web3j web3 = Web3jFactory.build(
+                Web3j web3j = Web3jFactory.build(
                         new HttpService("https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9")
                 );
 
-                Log.d(TAG, "Credentials address: " + credentials.getAddress());
-                BigInteger balance = web3.ethGetBalance(credentials.getAddress(), DefaultBlockParameterName.LATEST).
+                Log.d(TAG, "Sender address: " + credentials.getAddress());
+                BigInteger balance = web3j.
+                        ethGetBalance(credentials.getAddress(), DefaultBlockParameterName.LATEST).
                         sendAsync().get().getBalance();
-                Log.d(TAG, "Address balance: " + balance);
+                Log.d(TAG, "Sender balance: " + balance);
 
                 TransactionReceipt receipt = org.web3j.tx.Transfer.sendFunds(
-                        web3,
+                        web3j,
                         credentials,
                         receiverAddress,
                         BigDecimal.ONE,
@@ -69,12 +65,4 @@ public class TransferSenderService extends Service {
         };
         return Async.run(task);
     }
-
-    String getSenderPrivateKey(long ethID, String senderAddress) throws Exception{
-        EthDbAdapter db = new EthDbAdapter(this);
-        String senderPrivateKey = db.retrieveSenderPrivateKey(ethID, senderAddress);
-        db.close();
-        return senderPrivateKey;
-    }
-    */
 }
