@@ -6,14 +6,14 @@
     tools:context="com.example.graeme.beamitup.CreateTransferActivity"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:width = "0dp"
+    android:layout_margin="16dp"
     >
 
     <fragment
         android:id="@+id/frag_eth_picker"
         android:name="com.example.graeme.beamitup.EthPickerFragment"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="100dp"
         />
 
     <EditText
@@ -22,7 +22,6 @@
         android:layout_height="wrap_content"
         android:hint="@string/hint_reason"
         android:layout_margin="16dp"
-        android:layout_gravity="center_horizontal"
         android:inputType="textMultiLine" />
 
     <EditText
@@ -31,14 +30,12 @@
         android:layout_height="wrap_content"
         android:hint="@string/hint_amount"
         android:layout_margin="16dp"
-        android:layout_gravity="center_horizontal"
         android:inputType="numberDecimal" />
 
     <Button
         android:id="@+id/btn_ready_transfer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:text="@string/btn_ready_transfer"
         android:layout_margin="16dp" />
 

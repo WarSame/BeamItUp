@@ -49,5 +49,8 @@
 
     <string name="transfer_succeeded">Transfer succeeded.</string>
     <string name="transfer_failed">Transfer failed.</string>
+    <string name="tv_transfer_is_ready">Transfer is ready</string>
+    <string name="tv_eth_id_default">Eth ID</string>
+    <string name="tv_eth_address_default">Eth address</string>
 
 </resources>

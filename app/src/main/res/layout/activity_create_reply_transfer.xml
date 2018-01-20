@@ -6,33 +6,29 @@
     tools:context="com.example.graeme.beamitup.CreateTransferActivity"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:width = "0dp"
+    android:layout_margin="16dp"
     >
 
     <fragment
         android:id="@+id/frag_eth_picker"
         android:name="com.example.graeme.beamitup.EthPickerFragment"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="100dp"
         />
 
     <TextView
         android:id="@+id/tv_transfer_money_reason"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
         android:hint="@string/hint_reason"
-        android:layout_margin="16dp"
-        android:layout_gravity="center_horizontal" />
+        android:layout_margin="16dp"/>
 
     <TextView
         android:id="@+id/tv_transfer_money_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
         android:hint="@string/hint_amount"
-        android:layout_margin="16dp"
-        android:layout_gravity="center_horizontal" />
+        android:layout_margin="16dp" />
 
     <Button
         android:id="@+id/btn_ready_reply"
