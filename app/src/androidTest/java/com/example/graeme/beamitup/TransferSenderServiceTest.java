@@ -7,7 +7,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ServiceTestRule;
-import android.util.Log;
+import com.example.graeme.beamitup.TransferSenderService.TransferSenderBinder;
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,15 +20,14 @@ public class TransferSenderServiceTest {
     private static final String TAG = "TransferSenderServiceTest";
     private TransferSenderService transferSenderService;
     private boolean bound = false;
+    private Intent transferSenderIntent;
 
     private ServiceConnection connection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
-            TransferSenderService.TransferSenderBinder binder = (TransferSenderService.TransferSenderBinder) service;
+            TransferSenderBinder binder = (TransferSenderBinder) service;
             transferSenderService = binder.getService();
             bound = true;
-            Log.i(TAG, "Service value: " + transferSenderService.getValue());
         }
 
         @Override
@@ -43,8 +42,7 @@ public class TransferSenderServiceTest {
     @Before
     public void setUp() throws Exception {
         Context appContext = InstrumentationRegistry.getTargetContext();
-        Intent transferSenderIntent = new Intent(appContext, TransferSenderService.class);
-        serviceTestRule.bindService(transferSenderIntent, connection, Context.BIND_AUTO_CREATE);
+        transferSenderIntent = new Intent(appContext, TransferSenderService.class);
     }
 
     @After
@@ -61,7 +59,8 @@ public class TransferSenderServiceTest {
 
     @Test
     public void getValue() throws Exception {
-        //assertTrue(transferSenderService.getValue() == 5);
+        serviceTestRule.bindService(transferSenderIntent, connection, Context.BIND_AUTO_CREATE);
+        assertTrue(transferSenderService.getValue() == 5);
     }
 
     @Test
