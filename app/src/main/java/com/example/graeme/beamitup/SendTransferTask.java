@@ -6,22 +6,34 @@ import android.util.Log;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
-import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.utils.Convert;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 
-public class TransferSendTask extends AsyncTask<Transfer, Void, TransactionReceipt> {
-    private static final String TAG = "TransferSendTask";
+public class SendTransferTask extends AsyncTask<Transfer, Void, TransactionReceipt> {
+    private static final String TAG = "SendTransferTask";
+    private String receiverAddress;
+    private Credentials credentials;
+    private SendTransferResponse transactionReceipt;
+
+    SendTransferTask(
+            Credentials credentials,
+            String receiverAddress,
+            SendTransferResponse transactionReceipt
+    ){
+        this.credentials = credentials;
+        this.receiverAddress = receiverAddress;
+        this.transactionReceipt = transactionReceipt;
+    }
+
+    public interface SendTransferResponse {
+        void sendTransferFinish(TransactionReceipt transactionReceipt);
+    }
 
     @Override
     protected TransactionReceipt doInBackground(Transfer... transfer) {
-        final Credentials credentials = Credentials.create("");
-        final String receiverAddress = "0x31B98D14007bDEe637298086988A0bBd31184523".toLowerCase();
-
         try {
             Web3j web3j = Web3jFactory.build(
                     new HttpService("https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9")
@@ -45,12 +57,12 @@ public class TransferSendTask extends AsyncTask<Transfer, Void, TransactionRecei
         catch (Exception e){
             e.printStackTrace();
         }
-
         return null;
     }
 
     @Override
     protected void onPostExecute(TransactionReceipt res) {
         Log.i(TAG, "Transfer finished");
+        transactionReceipt.sendTransferFinish(res);
     }
 }

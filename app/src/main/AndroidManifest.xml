@@ -108,7 +108,6 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".TransferSenderService" />
     </application>
 
 </manifest>
