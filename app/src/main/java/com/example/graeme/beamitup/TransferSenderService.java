@@ -19,34 +19,30 @@ import org.web3j.utils.Convert;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-public class TransferSenderService extends IntentService {
-    public static final String TAG = "TransferSenderService";
+public class TransferSenderService extends Service {
+    private static final String TAG = "TransferSenderService";
+    private final IBinder binder = new TransferSenderBinder();
 
-    public TransferSenderService() {
-        super("TransferSenderService");
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return binder;
     }
 
-    @Override
-    protected void onHandleIntent(@Nullable Intent intent){
-        if (intent != null) {
-            String senderPrivateKey = intent.getStringExtra("senderPrivateKey");
-            String receiverAddress = intent.getStringExtra("receiverAddress");
-
-            Credentials credentials = Credentials.create(senderPrivateKey);
-            try {
-                Future<TransactionReceipt> future = send(credentials, receiverAddress);
-                future.get();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    class TransferSenderBinder extends Binder {
+        TransferSenderService getService(){
+            return TransferSenderService.this;
         }
     }
 
-    private Future<TransactionReceipt> send(final Credentials credentials, final String receiverAddress) throws Exception {
+    public int getValue(){
+        return 5;
+    }
+
+    public Future<TransactionReceipt> send(final Credentials credentials, final String receiverAddress) throws Exception {
         Log.i(TAG, "Credentials address: " + credentials.getAddress());
         Callable<TransactionReceipt> task = new Callable<TransactionReceipt>() {
             @Override
