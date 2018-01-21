@@ -33,7 +33,8 @@ public class SendTransferTask extends AsyncTask<Transfer, Void, TransactionRecei
     }
 
     @Override
-    protected TransactionReceipt doInBackground(Transfer... transfer) {
+    protected TransactionReceipt doInBackground(Transfer... transfers) {
+        Transfer transfer = transfers[0];
         try {
             Web3j web3j = Web3jFactory.build(
                     new HttpService("https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9")
@@ -45,7 +46,7 @@ public class SendTransferTask extends AsyncTask<Transfer, Void, TransactionRecei
                     web3j,
                     credentials,
                     receiverAddress,
-                    BigDecimal.ONE,
+                    new BigDecimal(transfer.getAmount()),
                     Convert.Unit.WEI
             ).send();
 

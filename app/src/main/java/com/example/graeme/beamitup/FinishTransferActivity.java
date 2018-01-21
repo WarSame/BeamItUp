@@ -1,5 +1,6 @@
 package com.example.graeme.beamitup;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.nfc.NdefMessage;
@@ -8,11 +9,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.tx.ManagedTransaction;
+
 import com.example.graeme.beamitup.SendTransferTask.*;
 
 import java.util.NoSuchElementException;
@@ -59,7 +63,7 @@ public class FinishTransferActivity extends Activity {
         if ( isReplyTransfer ){
             NdefMessage msg = (NdefMessage)intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)[0];
             tran = SerializationUtils.deserialize(msg.getRecords()[0].getPayload());
-            Toast.makeText(this, tran.toString(), Toast.LENGTH_LONG).show();
+            Log.i(TAG, tran.toString());
         }
         return tran;
     }
@@ -77,7 +81,7 @@ public class FinishTransferActivity extends Activity {
                     sendTransferFail(tran);
                 }
                 else {
-                    sendTransferSuccess(transactionReceipt);
+                    sendTransferSuccess(transactionReceipt, tran);
                 }
             }
         };
@@ -93,7 +97,8 @@ public class FinishTransferActivity extends Activity {
         return senderPrivateKey;
     }
 
-    private void sendTransferSuccess(TransactionReceipt transactionReceipt){
+    @SuppressLint("SetTextI18n")
+    private void sendTransferSuccess(TransactionReceipt transactionReceipt, Transfer tran){
         String transferSucceededText = "Transfer to " + transactionReceipt.getTo() + " succeeded.";
         Toast.makeText(
                 this,
@@ -101,6 +106,18 @@ public class FinishTransferActivity extends Activity {
                 Toast.LENGTH_SHORT
         ).show();
         Log.i(TAG, transferSucceededText);
+
+        TextView tvSenderAddress = (TextView)findViewById(R.id.tv_sender_address_value);
+        TextView tvReceiverAddress = (TextView)findViewById(R.id.tv_receiver_address_value);
+        TextView tvAmount = (TextView)findViewById(R.id.tv_amount_value);
+        TextView tvReason = (TextView)findViewById(R.id.tv_reason_value);
+        TextView tvGasUsed = (TextView)findViewById(R.id.tv_gas_used_value);
+
+        tvSenderAddress.setText(transactionReceipt.getFrom());
+        tvReceiverAddress.setText(transactionReceipt.getTo());
+        tvAmount.setText(tran.getAmount());
+        tvReason.setText(tran.getReason());
+        tvGasUsed.setText( transactionReceipt.getGasUsed().multiply(ManagedTransaction.GAS_PRICE).toString() );
     }
 
     private void sendTransferFail(Transfer tran){
@@ -111,5 +128,7 @@ public class FinishTransferActivity extends Activity {
                 Toast.LENGTH_SHORT
         ).show();
         Log.i(TAG, "Transfer failed.");
+        Intent landingPageIntent = new Intent(this, LandingPageActivity.class);
+        startActivity(landingPageIntent);
     }
 }

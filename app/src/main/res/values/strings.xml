@@ -52,5 +52,7 @@
     <string name="tv_transfer_is_ready">Transfer is ready</string>
     <string name="tv_eth_id_default">Eth ID</string>
     <string name="tv_eth_address_default">Eth address</string>
+    <string name="gas_used_label">Gas Used:</string>
+    <string name="gas_used_value">gas used</string>
 
 </resources>
