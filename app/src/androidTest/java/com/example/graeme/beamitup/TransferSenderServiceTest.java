@@ -23,7 +23,6 @@ import static org.junit.Assert.*;
 
 public class TransferSenderServiceTest {
     private static final String TAG = "TransferSenderServiceTest";
-    private Context appContext;
     private boolean bound = false;
     private TransferSenderService transferSenderService;
 
@@ -32,7 +31,7 @@ public class TransferSenderServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        appContext = InstrumentationRegistry.getTargetContext();
+        Context appContext = InstrumentationRegistry.getTargetContext();
         Intent transferSenderIntent = new Intent(appContext, TransferSenderService.class);
         serviceTestRule.bindService(transferSenderIntent, connection, Context.BIND_AUTO_CREATE);
     }
