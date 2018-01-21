@@ -1,9 +1,11 @@
 package com.example.graeme.beamitup;
 
+import android.app.IntentService;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.web3j.crypto.Credentials;
@@ -17,25 +19,34 @@ import org.web3j.utils.Convert;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-public class TransferSenderService extends Service {
+public class TransferSenderService extends IntentService {
     public static final String TAG = "TransferSenderService";
-    private final IBinder binder = new TransferSenderBinder();
 
-    class TransferSenderBinder extends Binder {
-        TransferSenderService getService(){
-            return TransferSenderService.this;
-        }
+    public TransferSenderService() {
+        super("TransferSenderService");
     }
 
     @Override
-    public IBinder onBind(Intent intent){
-        return binder;
+    protected void onHandleIntent(@Nullable Intent intent){
+        if (intent != null) {
+            String senderPrivateKey = intent.getStringExtra("senderPrivateKey");
+            String receiverAddress = intent.getStringExtra("receiverAddress");
+
+            Credentials credentials = Credentials.create(senderPrivateKey);
+            try {
+                Future<TransactionReceipt> future = send(credentials, receiverAddress);
+                future.get();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    Future<TransactionReceipt> send(final Credentials credentials, final String receiverAddress) throws Exception {
+    private Future<TransactionReceipt> send(final Credentials credentials, final String receiverAddress) throws Exception {
         Log.i(TAG, "Credentials address: " + credentials.getAddress());
         Callable<TransactionReceipt> task = new Callable<TransactionReceipt>() {
             @Override

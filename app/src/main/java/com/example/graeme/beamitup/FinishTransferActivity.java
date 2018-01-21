@@ -15,9 +15,10 @@ import android.widget.Toast;
 import org.apache.commons.lang3.SerializationUtils;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import java.util.NoSuchElementException;
-import com.example.graeme.beamitup.TransferSenderService.TransferSenderBinder;
+import java.util.concurrent.Future;
 
 public class FinishTransferActivity extends Activity {
     private static final String TAG = "FinishTransferActivity";
@@ -43,13 +44,7 @@ public class FinishTransferActivity extends Activity {
         }
         catch (Exception e){
             e.printStackTrace();
-            String transferFailedText = "Transfer to " + tran.getReceiverAddress() + " failed.";
-            Toast.makeText(
-                    this,
-                    transferFailedText,
-                    Toast.LENGTH_SHORT
-            ).show();
-            Log.i(TAG, "Transfer failed.");
+            sendTransferFail(tran);
         }
     }
 
@@ -57,11 +52,13 @@ public class FinishTransferActivity extends Activity {
         String senderPrivateKey = getSenderPrivateKey(ethID, tran.getSenderAddress());
         Credentials credentials = Credentials.create(senderPrivateKey);
 
-        //Run transfer in background
-        Intent transferSender = new Intent(getApplicationContext(), TransferSenderService.class);
-        bindService(transferSender, connection, Context.BIND_AUTO_CREATE);
-        transferSenderService.send(credentials, tran.getReceiverAddress());
+        //Future<TransactionReceipt> transactionFuture = transferSenderService.send(credentials, tran.getReceiverAddress());
+        //TransactionReceipt tr = transactionFuture.get();
 
+        //sendTransferSuccess(tran);
+    }
+
+    private void sendTransferSuccess(Transfer tran){
         String transferSucceededText = "Transfer to " + tran.getReceiverAddress() + " succeeded.";
         Toast.makeText(
                 this,
@@ -69,6 +66,16 @@ public class FinishTransferActivity extends Activity {
                 Toast.LENGTH_SHORT
         ).show();
         Log.i(TAG, transferSucceededText);
+    }
+
+    private void sendTransferFail(Transfer tran){
+        String transferFailedText = "Transfer to " + tran.getReceiverAddress() + " failed.";
+        Toast.makeText(
+                this,
+                transferFailedText,
+                Toast.LENGTH_SHORT
+        ).show();
+        Log.i(TAG, "Transfer failed.");
     }
 
     Eth selectEthFromAccountByAddress(Account account, String senderAddress) throws NoSuchElementException {
@@ -98,19 +105,4 @@ public class FinishTransferActivity extends Activity {
         db.close();
         return senderPrivateKey;
     }
-
-    private ServiceConnection connection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            TransferSenderBinder binder = (TransferSenderBinder) service;
-            transferSenderService = binder.getService();
-            bound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            bound = false;
-        }
-    };
-
 }
