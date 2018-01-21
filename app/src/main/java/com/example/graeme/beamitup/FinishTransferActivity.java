@@ -6,6 +6,8 @@ import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.SerializationUtils;
@@ -69,6 +71,8 @@ public class FinishTransferActivity extends Activity {
         SendTransferResponse sendTransferResponse = new SendTransferResponse() {
             @Override
             public void sendTransferFinish(TransactionReceipt transactionReceipt) {
+                ProgressBar pbSendTransfer = (ProgressBar)findViewById(R.id.pb_send_transfer);
+                pbSendTransfer.setVisibility(View.GONE);
                 if (transactionReceipt == null){
                     sendTransferFail(tran);
                 }
