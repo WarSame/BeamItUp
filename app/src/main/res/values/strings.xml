@@ -55,6 +55,6 @@
     <string name="gas_used_label">Gas Used:</string>
     <string name="gas_used_value">gas used</string>
     <string name="transaction_gas_cost_label">Transaction gas cost:</string>
-    <string name="transaction_gas_cost_value">transaction gas cost</string>
+    <string name="transaction_gas_cost_value">…</string>
 
 </resources>

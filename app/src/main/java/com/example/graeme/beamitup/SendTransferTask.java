@@ -16,16 +16,16 @@ public class SendTransferTask extends AsyncTask<Transfer, Void, TransactionRecei
     private static final String TAG = "SendTransferTask";
     private String receiverAddress;
     private Credentials credentials;
-    private SendTransferResponse transactionReceipt;
+    private SendTransferResponse sendTransferResponse;
 
     SendTransferTask(
             Credentials credentials,
             String receiverAddress,
-            SendTransferResponse transactionReceipt
+            SendTransferResponse sendTransferResponse
     ){
         this.credentials = credentials;
         this.receiverAddress = receiverAddress;
-        this.transactionReceipt = transactionReceipt;
+        this.sendTransferResponse = sendTransferResponse;
     }
 
     public interface SendTransferResponse {
@@ -64,6 +64,6 @@ public class SendTransferTask extends AsyncTask<Transfer, Void, TransactionRecei
     @Override
     protected void onPostExecute(TransactionReceipt res) {
         Log.i(TAG, "Transfer finished");
-        transactionReceipt.sendTransferFinish(res);
+        sendTransferResponse.sendTransferFinish(res);
     }
 }
