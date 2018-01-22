@@ -9,10 +9,10 @@ class Transfer implements Serializable {
     private String receiverAddress;
     private static final String TAG = "Transfer";
 
-    Transfer(String amount, String reason, String senderPublicKey){
+    Transfer(String amount, String reason, String senderAddress){
         this.amount = amount;
         this.reason = reason;
-        this.senderAddress = senderPublicKey;
+        this.senderAddress = senderAddress;
         this.receiverAddress = null;
     }
 
