@@ -20,12 +20,7 @@ public class AddEthActivity extends Activity {
         Button btn_add_eth = (Button) findViewById(R.id.btn_add_eth);
 
         btn_add_eth.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        createEth();
-                    }
-                }
+                (v) -> createEth()
         );
     }
 

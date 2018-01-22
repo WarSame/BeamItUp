@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -33,7 +32,31 @@ public class CreateTransferActivity extends FragmentActivity
         readyTransferIntent = new Intent(this, ReadyTransferActivity.class);
         final Button btn_ready_transfer = (Button) findViewById(R.id.btn_ready_transfer);
 
-        btn_ready_transfer.setOnClickListener(btnReadyOnClick);
+        btn_ready_transfer.setOnClickListener(
+                (v) -> {
+                    Button btnReadyTransfer = (Button)v;
+                    btnReadyTransfer.setEnabled(false);
+                    boolean isValidAmount = isValidAmount();
+                    if (eth == null) {
+                        Log.d(TAG, "No ethereum account selected.");
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "You must select a valid ethereum account.",
+                                Toast.LENGTH_LONG
+                        ).show();
+                        enableReadyButton(btnReadyTransfer);
+                    } else if (!isValidAmount) {
+                        Log.d(TAG, "No valid amount selected.");
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "You must select a valid amount.",
+                                Toast.LENGTH_LONG
+                        ).show();
+                        enableReadyButton(btnReadyTransfer);
+                    } else {
+                        onCreateTransferSuccess(btnReadyTransfer);
+                    }
+                });
 
         try {
             getCurrentGasCostAsync();
@@ -42,42 +65,8 @@ public class CreateTransferActivity extends FragmentActivity
         }
     }
 
-    private View.OnClickListener btnReadyOnClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            v.setEnabled(false);
-            boolean isValidAmount = isValidAmount();
-            if (eth == null){
-                Log.d(TAG, "No ethereum account selected.");
-                Toast.makeText(
-                        getApplicationContext(),
-                        "You must select a valid ethereum account.",
-                        Toast.LENGTH_LONG
-                ).show();
-                enableReadyButton();
-            }
-            else if (!isValidAmount){
-                Log.d(TAG, "No valid amount selected.");
-                Toast.makeText(
-                        getApplicationContext(),
-                        "You must select a valid amount.",
-                        Toast.LENGTH_LONG
-                ).show();
-                enableReadyButton();
-            }
-            else {
-                onCreateTransferSuccess();
-            }
-        }
-    };
-
     private void getCurrentGasCostAsync() throws Exception {
-        DetermineGasPriceResponse determineGasPriceResponse = new DetermineGasPriceResponse() {
-            @Override
-            public void determineGasPriceFinish(EthGasPrice ethGasPrice) {
-                updateGasCost( ethGasPrice );
-            }
-        };
+        DetermineGasPriceResponse determineGasPriceResponse = this::updateGasCost;
 
         new DetermineGasPriceTask(determineGasPriceResponse).execute();
     }
@@ -109,8 +98,8 @@ public class CreateTransferActivity extends FragmentActivity
         this.eth = eth;
     }
 
-    private void onCreateTransferSuccess(){
-        enableReadyButton();
+    private void onCreateTransferSuccess(Button btnReadyTransfer){
+        enableReadyButton(btnReadyTransfer);
 
         String amount = ((EditText)findViewById(R.id.et_transfer_money_amount)).getText().toString();
 
@@ -119,9 +108,8 @@ public class CreateTransferActivity extends FragmentActivity
         startActivity(readyTransferIntent);
     }
 
-    void enableReadyButton(){
-        Button btn_ready_transfer = (Button) findViewById(R.id.btn_ready_transfer);
-        btn_ready_transfer.setEnabled(true);
+    void enableReadyButton(Button btnReadyTransfer){
+        btnReadyTransfer.setEnabled(true);
     }
 
 }

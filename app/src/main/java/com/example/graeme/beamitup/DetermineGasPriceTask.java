@@ -8,8 +8,6 @@ import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.core.methods.response.EthGasPrice;
 import org.web3j.protocol.http.HttpService;
 
-import java.util.concurrent.ExecutionException;
-
 public class DetermineGasPriceTask extends AsyncTask<Void, Void, EthGasPrice> {
     private static final String TAG = "DetermineGasPriceTask";
     private DetermineGasPriceResponse determineGasPriceResponse;
