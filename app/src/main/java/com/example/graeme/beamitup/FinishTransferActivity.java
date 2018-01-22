@@ -18,6 +18,7 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.core.Request;
 import org.web3j.protocol.core.methods.response.EthTransaction;
+import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.ManagedTransaction;
@@ -122,26 +123,28 @@ public class FinishTransferActivity extends Activity {
 
         tvSenderAddress.setText(transactionReceipt.getFrom());
         tvReceiverAddress.setText(transactionReceipt.getTo());
-        tvGasUsed.setText( getTransactionGasCost(transactionReceipt) );
+        Web3j web3j = Web3jFactory.build(
+                new HttpService("https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9")
+        );
         try {
-            tvAmount.setText( getTransactionAmount(transactionReceipt) );
+            Transaction transaction = web3j.ethGetTransactionByHash(transactionReceipt.getTransactionHash())
+                    .sendAsync().get().getTransaction();
+            tvGasUsed.setText( getTransactionGasCost(transaction, transactionReceipt) );
+            tvAmount.setText( getTransactionAmount(transaction, transactionReceipt) );
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private String getTransactionGasCost(TransactionReceipt transactionReceipt){
+    private String getTransactionGasCost(Transaction transaction, TransactionReceipt transactionReceipt) throws Exception{
         BigInteger gasUsed = transactionReceipt.getGasUsed();
-        BigInteger gasCost = gasUsed.multiply(ManagedTransaction.GAS_PRICE);
+        BigInteger gasPrice = transaction.getGasPrice();
+        BigInteger gasCost = gasUsed.multiply(gasPrice);
         return Convert.fromWei(new BigDecimal(gasCost), Convert.Unit.ETHER ).toString();
     }
 
-    private String getTransactionAmount(TransactionReceipt transactionReceipt) throws Exception{
-        Web3j web3j = Web3jFactory.build(
-                new HttpService("https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9")
-        );
-        Request<?, EthTransaction> request = web3j.ethGetTransactionByHash(transactionReceipt.getTransactionHash());
-        BigInteger amount = request.sendAsync().get().getTransaction().getValue();
+    private String getTransactionAmount(Transaction transaction, TransactionReceipt transactionReceipt) throws Exception{
+        BigInteger amount = transaction.getValue();
         BigDecimal amountInEth = Convert.fromWei(new BigDecimal(amount), Convert.Unit.ETHER);
         return amountInEth.toString();
     }

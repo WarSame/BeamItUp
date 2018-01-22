@@ -10,7 +10,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.web3j.tx.ManagedTransaction;
+import org.web3j.protocol.Web3j;
+import org.web3j.protocol.Web3jFactory;
+import org.web3j.protocol.http.HttpService;
+import org.web3j.tx.*;
 import org.web3j.utils.Convert;
 
 import java.math.BigDecimal;
@@ -34,8 +37,12 @@ public class CreateTransferActivity extends FragmentActivity
         final Button btn_ready_transfer = (Button) findViewById(R.id.btn_ready_transfer);
 
         TextView tvGasCost = (TextView)findViewById(R.id.tv_gas_cost_value);
-        String gasCost = getTransactionGasCost();
-        tvGasCost.setText(gasCost);
+        try {
+            String gasCost = getTransactionGasCost();
+            tvGasCost.setText(gasCost);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         btn_ready_transfer.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -67,9 +74,13 @@ public class CreateTransferActivity extends FragmentActivity
         });
     }
 
-    private String getTransactionGasCost() {
+    private String getTransactionGasCost() throws Exception {
+        Web3j web3j = Web3jFactory.build(
+                new HttpService("https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9")
+        );
         BigInteger gasUsed = org.web3j.tx.Transfer.GAS_LIMIT;
-        BigInteger gasCost = gasUsed.multiply(ManagedTransaction.GAS_PRICE);
+        BigInteger currentGasPrice = web3j.ethGasPrice().sendAsync().get().getGasPrice();
+        BigInteger gasCost = gasUsed.multiply(currentGasPrice);
         return Convert.fromWei(new BigDecimal(gasCost), Convert.Unit.ETHER ).toString();
     }
 
