@@ -15,8 +15,6 @@ import org.web3j.protocol.http.HttpService;
 
 import com.example.graeme.beamitup.SendTransferTask.SendTransferResponse;
 
-import java.util.concurrent.ExecutionException;
-
 import static org.junit.Assert.*;
 
 public class SendTransferTaskTest {

@@ -7,7 +7,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.web3j.tx.ManagedTransaction;
+import org.web3j.utils.Convert;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 
 public class CreateTransferActivity extends FragmentActivity
@@ -25,6 +32,10 @@ public class CreateTransferActivity extends FragmentActivity
 
         readyTransferIntent = new Intent(this, ReadyTransferActivity.class);
         final Button btn_ready_transfer = (Button) findViewById(R.id.btn_ready_transfer);
+
+        TextView tvGasCost = (TextView)findViewById(R.id.tv_gas_cost_value);
+        String gasCost = getTransactionGasCost();
+        tvGasCost.setText(gasCost);
 
         btn_ready_transfer.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -56,9 +67,15 @@ public class CreateTransferActivity extends FragmentActivity
         });
     }
 
+    private String getTransactionGasCost() {
+        BigInteger gasUsed = org.web3j.tx.Transfer.GAS_LIMIT;
+        BigInteger gasCost = gasUsed.multiply(ManagedTransaction.GAS_PRICE);
+        return Convert.fromWei(new BigDecimal(gasCost), Convert.Unit.ETHER ).toString();
+    }
+
     boolean isValidAmount(){
         String amount = ((EditText)findViewById(R.id.et_transfer_money_amount)).getText().toString();
-        return !amount.equals("") && Integer.valueOf(amount) > 0;
+        return !amount.equals("") && Float.valueOf(amount) > 0;
     }
 
     public void onEthSelected(Eth eth){

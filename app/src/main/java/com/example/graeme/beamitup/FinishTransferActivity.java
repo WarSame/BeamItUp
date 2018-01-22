@@ -21,12 +21,10 @@ import org.web3j.protocol.core.methods.response.EthTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.ManagedTransaction;
-import org.web3j.utils.Async;
 import org.web3j.utils.Convert;
 
 import com.example.graeme.beamitup.SendTransferTask.*;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.NoSuchElementException;
@@ -143,7 +141,9 @@ public class FinishTransferActivity extends Activity {
                 new HttpService("https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9")
         );
         Request<?, EthTransaction> request = web3j.ethGetTransactionByHash(transactionReceipt.getTransactionHash());
-        return request.sendAsync().get().getTransaction().getValue().toString();
+        BigInteger amount = request.sendAsync().get().getTransaction().getValue();
+        BigDecimal amountInEth = Convert.fromWei(new BigDecimal(amount), Convert.Unit.ETHER);
+        return amountInEth.toString();
     }
 
     private void sendTransferFail(Transfer tran){
