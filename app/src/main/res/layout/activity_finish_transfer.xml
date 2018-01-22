@@ -91,30 +91,6 @@
         android:layout_height="wrap_content"
         android:weightSum="2"
         android:layout_margin="16dp"
-        android:id="@+id/ll_reason"
-        >
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_reason_label"
-            android:text="@string/reason_label"
-            android:layout_weight="1"
-            />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_reason_value"
-            android:text="@string/reason_value"
-            android:layout_weight="1"
-            />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="2"
-        android:layout_margin="16dp"
         android:id="@+id/ll_gas_used"
         >
         <TextView

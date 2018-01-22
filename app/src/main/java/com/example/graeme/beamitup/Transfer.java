@@ -4,20 +4,14 @@ import java.io.Serializable;
 
 class Transfer implements Serializable {
     private String amount;
-    private String reason;
     private String senderAddress;
     private String receiverAddress;
     private static final String TAG = "Transfer";
 
-    Transfer(String amount, String reason, String senderAddress){
+    Transfer(String amount, String senderAddress){
         this.amount = amount;
-        this.reason = reason;
         this.senderAddress = senderAddress;
         this.receiverAddress = null;
-    }
-
-    String getReason() {
-        return reason;
     }
 
     String getAmount() {
@@ -26,7 +20,6 @@ class Transfer implements Serializable {
 
     public String toString (){
         return "Amount: " + amount + "\n"
-                + "reason: " + reason + "\n"
                 + "sender public key: " + senderAddress + "\n"
                 + "receiver public key: " + receiverAddress;
     }

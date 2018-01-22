@@ -39,29 +39,6 @@
         android:layout_margin="16dp"
         >
         <TextView
-            android:id="@+id/tv_transfer_money_reason_label"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/reason_label"
-            android:layout_weight="1"
-            />
-
-        <TextView
-            android:id="@+id/tv_transfer_money_reason"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/reason_value"
-            android:layout_weight="1"
-            />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="2"
-        android:layout_margin="16dp"
-        >
-        <TextView
             android:id="@+id/tv_transfer_money_amount_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

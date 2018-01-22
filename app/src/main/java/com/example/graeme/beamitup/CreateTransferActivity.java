@@ -70,11 +70,9 @@ public class CreateTransferActivity extends FragmentActivity
         enableReadyButton();
 
         String amount = ((EditText)findViewById(R.id.et_transfer_money_amount)).getText().toString();
-        String reason = ((EditText)findViewById(R.id.et_transfer_money_reason)).getText().toString();
 
         readyTransferIntent.putExtra("senderAddress", eth.getAddress());
         readyTransferIntent.putExtra("amount", amount);
-        readyTransferIntent.putExtra("reason", reason);
         startActivity(readyTransferIntent);
     }
 

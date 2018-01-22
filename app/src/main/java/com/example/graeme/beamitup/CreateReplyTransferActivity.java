@@ -52,10 +52,8 @@ public class CreateReplyTransferActivity extends FragmentActivity
     }
 
     void displayTransferDetails(Transfer tran){
-        TextView tv_transfer_money_reason = (TextView)findViewById(R.id.tv_transfer_money_reason);
         TextView tv_transfer_money_amount = (TextView)findViewById(R.id.tv_transfer_money_amount);
         tv_transfer_money_amount.setText(tran.getAmount());
-        tv_transfer_money_reason.setText(tran.getReason());
     }
 
     Transfer getReadyTransferMessage(){
