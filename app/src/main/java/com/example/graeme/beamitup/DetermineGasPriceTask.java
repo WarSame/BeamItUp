@@ -4,9 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.core.methods.response.EthGasPrice;
-import org.web3j.protocol.http.HttpService;
 
 public class DetermineGasPriceTask extends AsyncTask<Void, Void, EthGasPrice> {
     private static final String TAG = "DetermineGasPriceTask";
@@ -19,9 +17,7 @@ public class DetermineGasPriceTask extends AsyncTask<Void, Void, EthGasPrice> {
     @Override
     protected EthGasPrice doInBackground(Void... voids) {
         Log.i(TAG, "Determining gas price async");
-        Web3j web3j = Web3jFactory.build(
-                new HttpService("https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9")
-        );
+        Web3j web3j = Session.getWeb3j();
         try {
             return web3j.ethGasPrice().sendAsync().get();
         } catch ( Exception e ){

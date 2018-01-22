@@ -17,10 +17,8 @@ import com.example.graeme.beamitup.SendTransferTask.SendTransferResponse;
 import org.apache.commons.lang3.SerializationUtils;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
-import org.web3j.protocol.http.HttpService;
 import org.web3j.utils.Convert;
 
 import java.math.BigDecimal;
@@ -78,17 +76,14 @@ public class FinishTransferActivity extends Activity {
         String senderPrivateKey = getSenderPrivateKey(ethID, tran.getSenderAddress());
         Credentials credentials = Credentials.create(senderPrivateKey);
 
-        SendTransferResponse sendTransferResponse = new SendTransferResponse() {
-            @Override
-            public void sendTransferFinish(TransactionReceipt transactionReceipt) {
-                ProgressBar pbSendTransfer = (ProgressBar)findViewById(R.id.pb_send_transfer);
-                pbSendTransfer.setVisibility(View.GONE);
-                if (transactionReceipt == null){
-                    sendTransferFail(tran);
-                }
-                else {
-                    sendTransferSuccess(transactionReceipt);
-                }
+        SendTransferResponse sendTransferResponse = transactionReceipt -> {
+            ProgressBar pbSendTransfer = (ProgressBar)findViewById(R.id.pb_send_transfer);
+            pbSendTransfer.setVisibility(View.GONE);
+            if (transactionReceipt == null){
+                sendTransferFail(tran);
+            }
+            else {
+                sendTransferSuccess(transactionReceipt);
             }
         };
 
@@ -120,9 +115,7 @@ public class FinishTransferActivity extends Activity {
 
         tvSenderAddress.setText(transactionReceipt.getFrom());
         tvReceiverAddress.setText(transactionReceipt.getTo());
-        Web3j web3j = Web3jFactory.build(
-                new HttpService("https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9")
-        );
+        Web3j web3j = Session.getWeb3j();
         try {
             Transaction transaction = web3j.ethGetTransactionByHash(transactionReceipt.getTransactionHash())
                     .sendAsync().get().getTransaction();
