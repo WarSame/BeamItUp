@@ -1,7 +1,9 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.transfer;
 
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.example.graeme.beamitup.Session;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
@@ -16,7 +18,7 @@ public class SendTransferTask extends AsyncTask<Transfer, Void, TransactionRecei
     private Credentials credentials;
     private SendTransferResponse sendTransferResponse;
 
-    SendTransferTask(
+    public SendTransferTask(
             Credentials credentials,
             String receiverAddress,
             SendTransferResponse sendTransferResponse

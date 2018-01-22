@@ -1,22 +1,25 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.eth;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import com.example.graeme.beamitup.DbAdapter;
+import com.example.graeme.beamitup.Encryption;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-class EthDbAdapter extends DbAdapter{
+public class EthDbAdapter extends DbAdapter {
     private static final String TAG = "EthDbAdapter";
 
-    EthDbAdapter(Context context) {
+    public EthDbAdapter(Context context) {
         super(context);
     }
 
-    long createEth(Eth eth, String privateKey) {
+    public long createEth(Eth eth, String privateKey) {
         Encryption.Encryptor encryptor = encryptPrivateKey(eth.getAddress(), privateKey);
 
         long ethID = createEthInDB(eth, encryptor.getEncryption(), encryptor.getIv());
@@ -70,7 +73,7 @@ class EthDbAdapter extends DbAdapter{
         return eth;
     }
 
-    List<Eth> retrieveEthsByAccountId(long accountId){
+    public List<Eth> retrieveEthsByAccountId(long accountId){
         List<Eth> eths = new ArrayList<>();
         Cursor res = retrieveEthCursorByAccountID(accountId);
         Log.i(TAG, "Eth cursor count: " + res.getCount());
@@ -110,7 +113,7 @@ class EthDbAdapter extends DbAdapter{
         );
     }
 
-    String retrieveSenderPrivateKey(long ethID, String senderAddress) throws Exception {
+    public String retrieveSenderPrivateKey(long ethID, String senderAddress) throws Exception {
         Encryption.Encryptor encryptor = retrieveEncryptor(ethID);
         byte[] encPrivateKey = encryptor.getEncryption();
         byte[] iv = encryptor.getIv();

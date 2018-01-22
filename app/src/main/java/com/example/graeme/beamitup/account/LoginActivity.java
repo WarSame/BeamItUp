@@ -1,4 +1,4 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.account;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
 import android.widget.Toast;
+
+import com.example.graeme.beamitup.Session;
 
 import java.security.NoSuchAlgorithmException;
 

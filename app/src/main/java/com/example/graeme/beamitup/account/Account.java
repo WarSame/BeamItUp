@@ -1,10 +1,12 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.account;
+
+import com.example.graeme.beamitup.eth.Eth;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-class Account implements Serializable {
+public class Account implements Serializable {
     static final int MINIMUM_PASSWORD_LENGTH = 4;
     static final int MAXIMUM_PASSWORD_LENGTH = 16;
 
@@ -12,39 +14,39 @@ class Account implements Serializable {
     private List<Eth> eths;
     private long id;
 
-    Account(String email, long id){
+    public Account(String email, long id){
         this.email = email;
         this.id = id;
         this.eths = new ArrayList<>();
     }
 
-    Account(String email, long id, List<Eth> eths){
+    public Account(String email, long id, List<Eth> eths){
         this.email = email;
         this.id = id;
         this.eths = eths;
     }
 
-    String getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    void setEmail(String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    List<Eth> getEths() {
+    public List<Eth> getEths() {
         return this.eths;
     }
 
-    void setEths(List<Eth> eths){
+    public void setEths(List<Eth> eths){
         this.eths = eths;
     }
 
-    void addEth(Eth ethId){
+    public void addEth(Eth ethId){
         this.eths.add(ethId);
     }
 
-    void removeEth(Eth eth){
+    public void removeEth(Eth eth){
         this.eths.remove(eth);
     }
 

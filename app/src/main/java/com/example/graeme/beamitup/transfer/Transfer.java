@@ -1,20 +1,20 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.transfer;
 
 import java.io.Serializable;
 
-class Transfer implements Serializable {
+public class Transfer implements Serializable {
     private String amount;
     private String senderAddress;
     private String receiverAddress;
     private static final String TAG = "Transfer";
 
-    Transfer(String amount, String senderAddress){
+    public Transfer(String amount, String senderAddress){
         this.amount = amount;
         this.senderAddress = senderAddress;
         this.receiverAddress = null;
     }
 
-    String getAmount() {
+    public String getAmount() {
         return amount;
     }
 
@@ -24,19 +24,19 @@ class Transfer implements Serializable {
                 + "receiver public key: " + receiverAddress;
     }
 
-    String getReceiverAddress() {
+    public String getReceiverAddress() {
         return receiverAddress;
     }
 
-    void setReceiverAddress(String receiverAddress) {
+    public void setReceiverAddress(String receiverAddress) {
         this.receiverAddress = receiverAddress;
     }
 
-    String getSenderAddress() {
+    public String getSenderAddress() {
         return senderAddress;
     }
 
-    void setSenderAddress(String senderAddress) {
+    public void setSenderAddress(String senderAddress) {
         this.senderAddress = senderAddress;
     }
 }

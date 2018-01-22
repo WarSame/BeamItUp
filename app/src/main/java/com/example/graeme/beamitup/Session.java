@@ -1,41 +1,54 @@
 package com.example.graeme.beamitup;
 
+import com.example.graeme.beamitup.account.Account;
+
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.http.HttpService;
 
-class Session {
+public class Session {
     static private Account account;
 
     static private boolean isAlive;
 
     static private Web3j web3j;
 
+    static private String INFURA_URL = "https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9";
+
     private Session(){
     }
 
-    static void createSession(Account account){
+    static void createSession(){//For testing
+        Session.web3j = buildWeb3j();
+    }
+
+    public static void createSession(Account account){
         Session.account = account;
         Session.isAlive = true;
-        Session.web3j = Web3jFactory.build(
-                new HttpService("https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9")
+        Session.web3j = buildWeb3j();
+    }
+
+    private static Web3j buildWeb3j(){
+        return Web3jFactory.build(
+                new HttpService(INFURA_URL)
         );
     }
 
-    static void killSession(){
+    public static void killSession(){
         Session.account = null;
         Session.isAlive = false;
+        Session.web3j = null;
     }
 
-    static Account getUserDetails(){
+    public static Account getUserDetails(){
         return Session.account;
     }
 
-    static Web3j getWeb3j() {
+    public static Web3j getWeb3j() {
         return Session.web3j;
     }
 
-    static boolean isAlive(){
+    public static boolean isAlive(){
         return Session.isAlive;
     }
 }

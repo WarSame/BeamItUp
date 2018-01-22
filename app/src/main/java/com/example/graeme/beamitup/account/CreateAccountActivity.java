@@ -1,4 +1,4 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.account;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,10 +6,12 @@ import android.database.SQLException;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.graeme.beamitup.R;
+import com.example.graeme.beamitup.Session;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -24,12 +26,7 @@ public class CreateAccountActivity extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         Button btn_create_account = (Button)findViewById(R.id.btn_create_account);
-        btn_create_account.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v){
-                    createAccount();
-                }
-        });
+        btn_create_account.setOnClickListener(v -> createAccount());
     }
 
     private void createAccount() {

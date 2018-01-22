@@ -1,30 +1,30 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.eth;
 
 import java.io.Serializable;
 
-class Eth implements Serializable{
+public class Eth implements Serializable{
     private String nickname;
     private String address;
     private long id;
     private long accountId;
 
-    Eth(String address, long id, long accountId){
+    public Eth(String address, long id, long accountId){
         this.address = address;
         this.id = id;
         this.accountId = accountId;
     }
 
-    Eth(String address, long accountId){
+    public Eth(String address, long accountId){
         this.address = address;
         this.id = -1;
         this.accountId = accountId;
     }
 
-    String getAddress() {
+    public String getAddress() {
         return address;
     }
 
-    void setAddress(String address) {
+    public void setAddress(String address) {
         this.address = address;
     }
 
@@ -32,7 +32,7 @@ class Eth implements Serializable{
         return id;
     }
 
-    void setId(long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -40,7 +40,7 @@ class Eth implements Serializable{
         return accountId;
     }
 
-    void setAccountId(long accountId) {
+    public void setAccountId(long accountId) {
         this.accountId = accountId;
     }
 

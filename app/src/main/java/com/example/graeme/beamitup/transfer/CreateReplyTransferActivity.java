@@ -1,4 +1,4 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.transfer;
 
 import android.content.Intent;
 import android.nfc.NdefMessage;
@@ -6,10 +6,13 @@ import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.graeme.beamitup.eth.Eth;
+import com.example.graeme.beamitup.eth.EthPickerFragment;
+import com.example.graeme.beamitup.R;
 
 import org.apache.commons.lang3.SerializationUtils;
 
@@ -30,23 +33,20 @@ public class CreateReplyTransferActivity extends FragmentActivity
 
         final Button btn_ready_reply = (Button)findViewById(R.id.btn_ready_reply);
         replyTransferIntent = new Intent(this, ReplyTransferActivity.class);
-        btn_ready_reply.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                btn_ready_reply.setEnabled(false);
+        btn_ready_reply.setOnClickListener(v -> {
+            btn_ready_reply.setEnabled(false);
 
-                if (eth == null){
-                    Log.d(TAG, "No ethereum account selected.");
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "You must select a valid ethereum account.",
-                            Toast.LENGTH_LONG
-                    ).show();
-                    enableReadyButton();
-                }
-                else {
-                    onCreateReplySuccess();
-                }
+            if (eth == null){
+                Log.d(TAG, "No ethereum account selected.");
+                Toast.makeText(
+                        getApplicationContext(),
+                        "You must select a valid ethereum account.",
+                        Toast.LENGTH_LONG
+                ).show();
+                enableReadyButton();
+            }
+            else {
+                onCreateReplySuccess();
             }
         });
     }

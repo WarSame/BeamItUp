@@ -9,15 +9,15 @@ import java.sql.SQLException;
 
 import static com.example.graeme.beamitup.DbAdapter.AccountTable.ACCOUNT_TABLE_NAME;
 
-class DbAdapter {
+public class DbAdapter {
     //If changing schema, must update db version
     static final int DATABASE_VERSION = 10;
     static final String DATABASE_NAME = "BeamItUp.db";
 
     private DatabaseHelper DbHelper;
-    SQLiteDatabase db;
+    protected SQLiteDatabase db;
 
-    DbAdapter(Context context){
+    public DbAdapter(Context context){
         this.DbHelper = new DatabaseHelper(context);
         try {
             open();
@@ -57,16 +57,16 @@ class DbAdapter {
         this.db = this.DbHelper.getWritableDatabase();
     }
 
-    void close()
+    public void close()
     {
         this.DbHelper.close();
     }
 
-    static class AccountTable implements BaseColumns {
-        static final String ACCOUNT_TABLE_NAME = "account";
-        static final String ACCOUNT_EMAIL = "email";
-        static final String ACCOUNT_PASSWORD_HASH = "password";
-        static final String ACCOUNT_SALT = "salt";
+    protected static class AccountTable implements BaseColumns {
+        public static final String ACCOUNT_TABLE_NAME = "account";
+        public static final String ACCOUNT_EMAIL = "email";
+        public static final String ACCOUNT_PASSWORD_HASH = "password";
+        public static final String ACCOUNT_SALT = "salt";
 
         static final String SQL_CREATE_TABLE = "CREATE TABLE " + ACCOUNT_TABLE_NAME +
                 " (" + _ID + " INTEGER PRIMARY KEY,"
@@ -80,12 +80,12 @@ class DbAdapter {
         static final String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " + ACCOUNT_TABLE_NAME;
     }
 
-    static class EthTable implements  BaseColumns {
-        static final String ETH_TABLE_NAME = "eth";
-        static final String ETH_ACCOUNT_ID = "account_id";
-        static final String ETH_ADDRESS = "address";
-        static final String ETH_ENC_PRIVATE_KEY = "enc_private_key";
-        static final String ETH_IV = "iv";
+    protected static class EthTable implements  BaseColumns {
+        public static final String ETH_TABLE_NAME = "eth";
+        public static final String ETH_ACCOUNT_ID = "account_id";
+        public static final String ETH_ADDRESS = "address";
+        public static final String ETH_ENC_PRIVATE_KEY = "enc_private_key";
+        public static final String ETH_IV = "iv";
 
         static final String SQL_CREATE_TABLE = "CREATE TABLE " + ETH_TABLE_NAME +
             " (" + _ID + " INTEGER PRIMARY KEY,"

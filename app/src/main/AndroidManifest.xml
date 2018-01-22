@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.graeme.beamitup">
 
     <uses-feature
@@ -10,48 +11,49 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".LoginActivity"
+            android:name=".account.LoginActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
             />
         <activity
-            android:name=".CreateTransferActivity"
+            android:name=".transfer.CreateTransferActivity"
             android:label="@string/title_activity_transfer_money"
             android:screenOrientation="portrait"
-            android:parentActivityName=".LandingPageActivity">
+            android:parentActivityName=".transfer.LandingPageActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.graeme.beamitup.LandingPageActivity" />
+                android:value="com.example.graeme.beamitup.transfer.LandingPageActivity" />
         </activity>
         <activity
-            android:name=".ReadyTransferActivity"
+            android:name=".transfer.ReadyTransferActivity"
             android:label="@string/title_activity_ready_transfer"
             android:screenOrientation="portrait"
-            android:parentActivityName=".CreateTransferActivity">
+            android:parentActivityName=".transfer.CreateTransferActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.graeme.beamitup.CreateTransferActivity" />
+                android:value="com.example.graeme.beamitup.transfer.CreateTransferActivity" />
         </activity>
         <activity
-            android:name=".ReplyTransferActivity"
+            android:name=".transfer.ReplyTransferActivity"
             android:label="@string/title_activity_reply_transfer"
             android:screenOrientation="portrait"
-            android:parentActivityName=".LandingPageActivity">
+            android:parentActivityName=".transfer.LandingPageActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.graeme.beamitup.LandingPageActivity" />
+                android:value="com.example.graeme.beamitup.transfer.LandingPageActivity" />
         </activity>
         <activity
-            android:name=".FinishTransferActivity"
+            android:name=".transfer.FinishTransferActivity"
             android:label="@string/title_activity_finish_transfer"
             android:screenOrientation="portrait"
-            android:parentActivityName=".LandingPageActivity">
+            android:parentActivityName=".transfer.LandingPageActivity">
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
                 <data android:mimeType="application/com.example.graeme.beamitup/reply_transfer" />
@@ -60,34 +62,34 @@
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.graeme.beamitup.LandingPageActivity" />
+                android:value="com.example.graeme.beamitup.transfer.LandingPageActivity" />
         </activity>
         <activity
-            android:name=".CreateAccountActivity"
+            android:name=".account.CreateAccountActivity"
             android:label="@string/title_activity_create_account"
             android:screenOrientation="portrait"
-            android:parentActivityName=".LoginActivity">
+            android:parentActivityName=".account.LoginActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.graeme.beamitup.LoginActivity" />
+                android:value="com.example.graeme.beamitup.account.LoginActivity" />
         </activity>
         <activity
-            android:name=".LandingPageActivity"
+            android:name=".transfer.LandingPageActivity"
             android:label="@string/title_activity_landing_page"
             android:screenOrientation="portrait"
             />
         <activity
-            android:name=".AddEthActivity"
+            android:name=".eth.AddEthActivity"
             android:label="@string/title_activity_add_eth"
             android:screenOrientation="portrait"
             />
         <activity
-            android:name=".ReceiveTransferActivity"
+            android:name=".transfer.ReceiveTransferActivity"
             android:label="@string/title_activity_receive_transfer"
             android:screenOrientation="portrait"
             />
         <activity
-            android:name=".MainActivity"
+            android:name=".account.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             >
@@ -97,7 +99,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CreateReplyTransferActivity"
+            android:name=".transfer.CreateReplyTransferActivity"
             android:label="@string/title_activity_create_reply_transfer"
             android:screenOrientation="portrait"
             >

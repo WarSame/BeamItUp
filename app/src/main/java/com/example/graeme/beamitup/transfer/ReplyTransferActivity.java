@@ -1,4 +1,4 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.transfer;
 
 import android.app.Activity;
 import android.nfc.NdefMessage;
@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.graeme.beamitup.eth.Eth;
+import com.example.graeme.beamitup.R;
 
 import org.apache.commons.lang3.SerializationUtils;
 

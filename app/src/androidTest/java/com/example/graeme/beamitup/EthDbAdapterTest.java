@@ -3,11 +3,14 @@ package com.example.graeme.beamitup;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 
+import com.example.graeme.beamitup.eth.Eth;
+import com.example.graeme.beamitup.eth.EthDbAdapter;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class EthDbAdapterTest {
     private EthDbAdapter ethDB;

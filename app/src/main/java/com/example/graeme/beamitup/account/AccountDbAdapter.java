@@ -1,4 +1,4 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.account;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,21 +7,26 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteConstraintException;
 import android.util.Log;
 
+import com.example.graeme.beamitup.DbAdapter;
+import com.example.graeme.beamitup.Encryption;
+import com.example.graeme.beamitup.eth.Eth;
+import com.example.graeme.beamitup.eth.EthDbAdapter;
+
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-class AccountDbAdapter extends DbAdapter {
+public class AccountDbAdapter extends DbAdapter {
     private static final String TAG = "AccountDbAdapter";
     private Context context;
 
-    AccountDbAdapter(Context context) {
+    public AccountDbAdapter(Context context) {
         super(context);
         this.context = context;
     }
 
-    long createAccount(String email, char[] password) throws SQLException, NoSuchAlgorithmException {
+    public long createAccount(String email, char[] password) throws SQLException, NoSuchAlgorithmException {
         byte[] salt = Encryption.generateSalt();
         byte[] passwordHash = Encryption.hashPassword(password, salt);
         ContentValues contentValues = new ContentValues();
@@ -56,7 +61,7 @@ class AccountDbAdapter extends DbAdapter {
         return res;
     }
 
-    Account retrieveAccount(String email){
+    public Account retrieveAccount(String email){
         Log.i(TAG, "Retrieving account associated with " + email);
         Cursor res = getAccountCursor(email);
         if (res.getCount() == 0){
@@ -81,7 +86,7 @@ class AccountDbAdapter extends DbAdapter {
         return eths;
     }
 
-    void updateAccount(Account account) throws SQLiteConstraintException {
+    public void updateAccount(Account account) throws SQLiteConstraintException {
         if (!updateAccountInAccountTable(account)){
             throw new NoSuchElementException();
         }
@@ -98,7 +103,7 @@ class AccountDbAdapter extends DbAdapter {
         ) > 0;
     }
 
-    boolean deleteAccount(Account account){
+    public boolean deleteAccount(Account account){
         Log.i(TAG, "Deleting account: " + account.getEmail());
         return this.db.delete(
                 AccountTable.ACCOUNT_TABLE_NAME,
@@ -107,7 +112,7 @@ class AccountDbAdapter extends DbAdapter {
         ) > 0;
     }
 
-    boolean isAuthentic(String email, char[] password) throws NoSuchAlgorithmException {
+    public boolean isAuthentic(String email, char[] password) throws NoSuchAlgorithmException {
         Log.i(TAG, "Checking if email " + email + " is authentic.");
         Cursor res = this.db.query(
                 AccountTable.ACCOUNT_TABLE_NAME,
@@ -134,7 +139,7 @@ class AccountDbAdapter extends DbAdapter {
         return Arrays.equals(storedHash, passwordHash);
     }
 
-    boolean isEmailInUse(String email){
+    public boolean isEmailInUse(String email){
         Log.i(TAG, "Determining whether the email " + email + " is in use");
         Cursor res = this.db.query(AccountTable.ACCOUNT_TABLE_NAME,
                 new String[]{

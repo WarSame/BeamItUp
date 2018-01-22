@@ -4,13 +4,19 @@ import android.content.Context;
 import android.database.sqlite.SQLiteConstraintException;
 import android.support.test.InstrumentationRegistry;
 
+import com.example.graeme.beamitup.account.Account;
+import com.example.graeme.beamitup.account.AccountDbAdapter;
+import com.example.graeme.beamitup.eth.Eth;
+import com.example.graeme.beamitup.eth.EthDbAdapter;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.NoSuchElementException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class AccountDbAdapterTest {
     private AccountDbAdapter accountDB;

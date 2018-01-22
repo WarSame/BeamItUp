@@ -1,4 +1,4 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.transfer;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -12,7 +12,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.graeme.beamitup.SendTransferTask.SendTransferResponse;
+import com.example.graeme.beamitup.account.Account;
+import com.example.graeme.beamitup.account.MainActivity;
+import com.example.graeme.beamitup.eth.Eth;
+import com.example.graeme.beamitup.eth.EthDbAdapter;
+import com.example.graeme.beamitup.R;
+import com.example.graeme.beamitup.Session;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.web3j.crypto.Credentials;
@@ -76,7 +81,7 @@ public class FinishTransferActivity extends Activity {
         String senderPrivateKey = getSenderPrivateKey(ethID, tran.getSenderAddress());
         Credentials credentials = Credentials.create(senderPrivateKey);
 
-        SendTransferResponse sendTransferResponse = transactionReceipt -> {
+        SendTransferTask.SendTransferResponse sendTransferResponse = transactionReceipt -> {
             ProgressBar pbSendTransfer = (ProgressBar)findViewById(R.id.pb_send_transfer);
             pbSendTransfer.setVisibility(View.GONE);
             if (transactionReceipt == null){

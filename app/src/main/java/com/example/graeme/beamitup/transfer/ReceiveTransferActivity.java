@@ -1,13 +1,16 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.transfer;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.graeme.beamitup.account.Account;
+import com.example.graeme.beamitup.account.LoginActivity;
+import com.example.graeme.beamitup.R;
 
 public class ReceiveTransferActivity extends Activity {
     private static final int REQUEST_LOGIN = 0;
@@ -19,24 +22,21 @@ public class ReceiveTransferActivity extends Activity {
         setContentView(R.layout.activity_receive_transfer);
         Button btn_sign_in = (Button)findViewById(R.id.btn_sign_in);
 
-        btn_sign_in.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
-                Button btn_sign_in = (Button)findViewById(R.id.btn_sign_in);
-                btn_sign_in.setEnabled(false);
+        btn_sign_in.setOnClickListener(v -> {
+            Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
+            Button btn_sign_in1 = (Button)findViewById(R.id.btn_sign_in);
+            btn_sign_in1.setEnabled(false);
 
-                EditText et_email = (EditText)findViewById(R.id.et_email);
-                EditText et_password = (EditText)findViewById(R.id.et_password);
+            EditText et_email = (EditText)findViewById(R.id.et_email);
+            EditText et_password = (EditText)findViewById(R.id.et_password);
 
-                String email = et_email.getText().toString();
-                String password = et_password.getText().toString();
+            String email = et_email.getText().toString();
+            String password = et_password.getText().toString();
 
-                loginIntent.putExtra("email", email);
-                loginIntent.putExtra("password", password);
+            loginIntent.putExtra("email", email);
+            loginIntent.putExtra("password", password);
 
-                startActivityForResult(loginIntent, REQUEST_LOGIN);
-            }
+            startActivityForResult(loginIntent, REQUEST_LOGIN);
         });
     }
 
