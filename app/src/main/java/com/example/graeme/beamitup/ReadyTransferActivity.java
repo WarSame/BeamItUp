@@ -20,20 +20,23 @@ public class ReadyTransferActivity extends Activity {
         setContentView(R.layout.activity_ready_transfer);
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        prepareReadyTransferMessage();
-    }
-
-    private void prepareReadyTransferMessage() {
         String amount = getIntent().getStringExtra("amount");
+        String senderAddress = getIntent().getStringExtra("senderAddress");
+
         TextView tv_amount_value = (TextView)findViewById(R.id.tv_amount_value);
         tv_amount_value.setText(amount);
 
-        String senderPublicKey = getIntent().getStringExtra("senderAddress");
+        TextView tv_sender_address = (TextView)findViewById(R.id.tv_sender_address_value);
+        tv_sender_address.setText(senderAddress);
 
-        Transfer tran = new Transfer(amount, senderPublicKey);
+        Transfer tran = new Transfer(amount, senderAddress);
 
-        Log.i(TAG, "Sending transfer with amount: " + amount
-                + " senderAddress: " + senderPublicKey);
+        prepareReadyTransferMessage(tran);
+    }
+
+    private void prepareReadyTransferMessage(Transfer tran) {
+        Log.i(TAG, "Sending transfer with amount: " + tran.getAmount()
+                + " senderAddress: " + tran.getSenderAddress());
 
         NfcAdapter mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
