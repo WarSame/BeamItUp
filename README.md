@@ -14,16 +14,12 @@ Working:
 * Account session
 
 Todo:
-* Fix up interface(especially avoid repeating transfer on screen rotation)
-* Put more testing
-* Avoid lag when sending transfer
-* Make it easier to input ethereum credentials (currently a huge pain and uncertain you'll type it correctly)
+* Make it easier to input ethereum credentials (currently a huge pain and uncertain you'll type it correctly) - wallet?
 * Allow users to modify app account and ethereum accounts more
-* Create a logout
-* Send push notifications when receiving transfer over the Ethereum network
 * Determine transfer fees when preparing transfer
 
 Wishlist:
 * Transfers in CAD
 * Implement light client to avoid Infura dependency (contingent on Ethereum light clients)
+* Send push notifications when receiving transfer over the Ethereum network
 * Lower transfer costs after PoS implemented
