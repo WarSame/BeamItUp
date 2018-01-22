@@ -5,9 +5,7 @@ import android.util.Log;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
-import org.web3j.protocol.http.HttpService;
 import org.web3j.utils.Convert;
 
 import java.math.BigDecimal;
@@ -16,16 +14,16 @@ public class SendTransferTask extends AsyncTask<Transfer, Void, TransactionRecei
     private static final String TAG = "SendTransferTask";
     private String receiverAddress;
     private Credentials credentials;
-    private SendTransferResponse transactionReceipt;
+    private SendTransferResponse sendTransferResponse;
 
     SendTransferTask(
             Credentials credentials,
             String receiverAddress,
-            SendTransferResponse transactionReceipt
+            SendTransferResponse sendTransferResponse
     ){
         this.credentials = credentials;
         this.receiverAddress = receiverAddress;
-        this.transactionReceipt = transactionReceipt;
+        this.sendTransferResponse = sendTransferResponse;
     }
 
     public interface SendTransferResponse {
@@ -36,9 +34,7 @@ public class SendTransferTask extends AsyncTask<Transfer, Void, TransactionRecei
     protected TransactionReceipt doInBackground(Transfer... transfers) {
         Transfer transfer = transfers[0];
         try {
-            Web3j web3j = Web3jFactory.build(
-                    new HttpService("https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9")
-            );
+            Web3j web3j = Session.getWeb3j();
 
             Log.d(TAG, "Sender address: " + credentials.getAddress());
 
@@ -64,6 +60,6 @@ public class SendTransferTask extends AsyncTask<Transfer, Void, TransactionRecei
     @Override
     protected void onPostExecute(TransactionReceipt res) {
         Log.i(TAG, "Transfer finished");
-        transactionReceipt.sendTransferFinish(res);
+        sendTransferResponse.sendTransferFinish(res);
     }
 }

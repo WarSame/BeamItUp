@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -20,12 +19,7 @@ public class AddEthActivity extends Activity {
         Button btn_add_eth = (Button) findViewById(R.id.btn_add_eth);
 
         btn_add_eth.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        createEth();
-                    }
-                }
+                (v) -> createEth()
         );
     }
 
