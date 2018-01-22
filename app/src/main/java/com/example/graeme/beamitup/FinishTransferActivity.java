@@ -12,19 +12,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.graeme.beamitup.SendTransferTask.SendTransferResponse;
+
 import org.apache.commons.lang3.SerializationUtils;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
-import org.web3j.protocol.core.Request;
-import org.web3j.protocol.core.methods.response.EthTransaction;
 import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.tx.ManagedTransaction;
 import org.web3j.utils.Convert;
-
-import com.example.graeme.beamitup.SendTransferTask.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

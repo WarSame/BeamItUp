@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.util.Log;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;

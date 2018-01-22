@@ -11,8 +11,6 @@ import android.widget.Toast;
 
 import org.apache.commons.lang3.SerializationUtils;
 
-import java.util.Arrays;
-
 public class ReplyTransferActivity extends Activity {
     private static final String TAG = "ReplyTransferActivity";
     Transfer tran;

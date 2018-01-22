@@ -9,9 +9,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.graeme.beamitup.DetermineGasPriceTask.DetermineGasPriceResponse;
+
 import org.web3j.protocol.core.methods.response.EthGasPrice;
 import org.web3j.utils.Convert;
-import com.example.graeme.beamitup.DetermineGasPriceTask.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

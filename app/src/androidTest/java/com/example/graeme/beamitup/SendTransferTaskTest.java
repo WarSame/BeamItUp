@@ -2,7 +2,6 @@ package com.example.graeme.beamitup;
 
 import android.util.Log;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.web3j.crypto.Credentials;
@@ -21,11 +20,14 @@ public class SendTransferTaskTest {
     private static final String TAG = "SendTransferTaskTest";
     private static Transfer transfer;
     private static TransactionReceipt transactionReceipt;
+    private static final String TRANSACTION_VALUE = "55";
+    private static final String SENDER_ADDRESS = "0x6861b070f43842fc16ead07854ee5d91b9d27c13";
+    private static final String RECEIVER_ADDRESS = "0x31b98d14007bdee637298086988a0bbd31184523";
 
     @BeforeClass
     public static void oneTimeSetUp() throws Exception{
-        transfer = new Transfer("55", "0x6861b070f43842fc16ead07854ee5d91b9d27c13");
-        transfer.setReceiverAddress("0x31b98d14007bdee637298086988a0bbd31184523");
+        transfer = new Transfer(TRANSACTION_VALUE, SENDER_ADDRESS);
+        transfer.setReceiverAddress(RECEIVER_ADDRESS);
 
         Credentials credentials = Credentials.create("");
 
@@ -35,12 +37,21 @@ public class SendTransferTaskTest {
     }
 
     @Test
-    public void doInBackground() throws Exception {
-        Log.i(TAG, "Sender address: " + transactionReceipt.getFrom());
-        Log.i(TAG, "Receiver address: " + transactionReceipt.getTo());
+    public void checkSenderAddress() throws Exception{
+        Log.i(TAG, "Sender address in transfer: " + transfer.getSenderAddress());
+        Log.i(TAG, "Sender address in TransactionReceipt: " + transactionReceipt.getFrom());
         assertTrue( transactionReceipt.getFrom().equals( transfer.getSenderAddress() ) );
-        assertTrue( transactionReceipt.getTo().equals( transfer.getReceiverAddress() ) );
+    }
 
+    @Test
+    public void checkReceiverAddress() throws Exception{
+        Log.i(TAG, "Receiver address in transfer: " + transfer.getReceiverAddress());
+        Log.i(TAG, "Receiver address in TransactionReceipt: " + transactionReceipt.getTo());
+        assertTrue( transactionReceipt.getTo().equals( transfer.getReceiverAddress() ) );
+    }
+
+    @Test
+    public void checkValue() throws Exception {
         Web3j web3j = Web3jFactory.build(
                 new HttpService("https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9")
         );
@@ -48,11 +59,8 @@ public class SendTransferTaskTest {
         Log.i(TAG, "Transaction value: " + request.send().getTransaction().getValue());
     }
 
-    private static SendTransferResponse sendTransferResponse = new SendTransferResponse() {
-        @Override
-        public void sendTransferFinish(TransactionReceipt transactionReceipt) {
-            //Empty because we are running sync
-        }
+    private static SendTransferResponse sendTransferResponse = transactionReceipt -> {
+        //Empty because we are running sync
     };
 
 }
