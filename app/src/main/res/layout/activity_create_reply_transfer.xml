@@ -17,13 +17,6 @@
         />
 
     <TextView
-        android:id="@+id/tv_transfer_money_reason"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="@string/hint_reason"
-        android:layout_margin="16dp"/>
-
-    <TextView
         android:id="@+id/tv_transfer_money_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

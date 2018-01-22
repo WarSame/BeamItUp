@@ -32,11 +32,9 @@ public class ReplyTransferActivity extends Activity {
     }
 
     private void displayTransferDetails() {
-        TextView tv_reply_transfer_reason = (TextView)findViewById(R.id.tv_transfer_money_reason);
         TextView tv_reply_transfer_amount = (TextView)findViewById(R.id.tv_transfer_money_amount);
         TextView tv_reply_transfer_receiver_address = (TextView)findViewById(R.id.tv_transfer_money_receiver_address);
         tv_reply_transfer_amount.setText(tran.getAmount());
-        tv_reply_transfer_reason.setText(tran.getReason());
         tv_reply_transfer_receiver_address.setText(tran.getReceiverAddress());
     }
 

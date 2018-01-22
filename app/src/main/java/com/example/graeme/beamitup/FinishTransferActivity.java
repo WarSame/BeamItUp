@@ -14,11 +14,19 @@ import android.widget.Toast;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.web3j.crypto.Credentials;
+import org.web3j.protocol.Web3j;
+import org.web3j.protocol.Web3jFactory;
+import org.web3j.protocol.core.Request;
+import org.web3j.protocol.core.methods.response.EthTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.ManagedTransaction;
+import org.web3j.utils.Convert;
 
 import com.example.graeme.beamitup.SendTransferTask.*;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.NoSuchElementException;
 
 public class FinishTransferActivity extends Activity {
@@ -81,7 +89,7 @@ public class FinishTransferActivity extends Activity {
                     sendTransferFail(tran);
                 }
                 else {
-                    sendTransferSuccess(transactionReceipt, tran);
+                    sendTransferSuccess(transactionReceipt);
                 }
             }
         };
@@ -98,7 +106,7 @@ public class FinishTransferActivity extends Activity {
     }
 
     @SuppressLint("SetTextI18n")
-    private void sendTransferSuccess(TransactionReceipt transactionReceipt, Transfer tran){
+    private void sendTransferSuccess(TransactionReceipt transactionReceipt){
         String transferSucceededText = "Transfer to " + transactionReceipt.getTo() + " succeeded.";
         Toast.makeText(
                 this,
@@ -110,14 +118,32 @@ public class FinishTransferActivity extends Activity {
         TextView tvSenderAddress = (TextView)findViewById(R.id.tv_sender_address_value);
         TextView tvReceiverAddress = (TextView)findViewById(R.id.tv_receiver_address_value);
         TextView tvAmount = (TextView)findViewById(R.id.tv_amount_value);
-        TextView tvReason = (TextView)findViewById(R.id.tv_reason_value);
         TextView tvGasUsed = (TextView)findViewById(R.id.tv_gas_used_value);
 
         tvSenderAddress.setText(transactionReceipt.getFrom());
         tvReceiverAddress.setText(transactionReceipt.getTo());
-        tvAmount.setText(tran.getAmount());
-        tvReason.setText(tran.getReason());
-        tvGasUsed.setText( transactionReceipt.getGasUsed().multiply(ManagedTransaction.GAS_PRICE).toString() );
+        tvGasUsed.setText( getTransactionGasCost(transactionReceipt) );
+        try {
+            tvAmount.setText( getTransactionAmount(transactionReceipt) );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getTransactionGasCost(TransactionReceipt transactionReceipt){
+        BigInteger gasUsed = transactionReceipt.getGasUsed();
+        BigInteger gasCost = gasUsed.multiply(ManagedTransaction.GAS_PRICE);
+        return Convert.fromWei(new BigDecimal(gasCost), Convert.Unit.ETHER ).toString();
+    }
+
+    private String getTransactionAmount(TransactionReceipt transactionReceipt) throws Exception{
+        Web3j web3j = Web3jFactory.build(
+                new HttpService("https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9")
+        );
+        Request<?, EthTransaction> request = web3j.ethGetTransactionByHash(transactionReceipt.getTransactionHash());
+        BigInteger amount = request.sendAsync().get().getTransaction().getValue();
+        BigDecimal amountInEth = Convert.fromWei(new BigDecimal(amount), Convert.Unit.ETHER);
+        return amountInEth.toString();
     }
 
     private void sendTransferFail(Transfer tran){

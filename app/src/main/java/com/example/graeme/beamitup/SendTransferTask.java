@@ -47,7 +47,7 @@ public class SendTransferTask extends AsyncTask<Transfer, Void, TransactionRecei
                     credentials,
                     receiverAddress,
                     new BigDecimal(transfer.getAmount()),
-                    Convert.Unit.WEI
+                    Convert.Unit.ETHER
             ).send();
 
             Log.d(TAG, "Transfer from: " + receipt.getFrom());
