@@ -12,11 +12,11 @@ Working:
 * Sending transfer through Ethereum network to peer's account
 * Basic encryption for security
 * Account session
+* Determine transfer fees when preparing transfer
 
 Todo:
 * Make it easier to input ethereum credentials (currently a huge pain and uncertain you'll type it correctly) - wallet?
 * Allow users to modify app account and ethereum accounts more
-* Determine transfer fees when preparing transfer
 
 Wishlist:
 * Transfers in CAD
