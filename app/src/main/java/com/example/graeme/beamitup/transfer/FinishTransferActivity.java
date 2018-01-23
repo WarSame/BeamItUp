@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.graeme.beamitup.account.Account;
-import com.example.graeme.beamitup.account.MainActivity;
+import com.example.graeme.beamitup.account.LoginActivity;
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthDbAdapter;
 import com.example.graeme.beamitup.R;
@@ -40,7 +40,7 @@ public class FinishTransferActivity extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (!Session.isAlive()){
-            final Intent loginIntent = new Intent(getApplicationContext(), MainActivity.class);
+            final Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(loginIntent);
         }
 

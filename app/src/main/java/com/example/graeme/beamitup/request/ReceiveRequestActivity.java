@@ -3,13 +3,14 @@ package com.example.graeme.beamitup.request;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.Session;
-import com.example.graeme.beamitup.account.MainActivity;
+import com.example.graeme.beamitup.account.LoginActivity;
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthPickerFragment;
 import com.example.graeme.beamitup.transfer.LandingPageActivity;
@@ -24,7 +25,8 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (!Session.isAlive()){
-            Intent loginIntent = new Intent(this, MainActivity.class);
+            Log.i(TAG, "Session is dead when receiving request");
+            Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivity(loginIntent);
             return;
         }

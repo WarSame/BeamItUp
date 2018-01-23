@@ -64,11 +64,11 @@
         <activity
             android:name=".account.CreateAccountActivity"
             android:label="@string/title_activity_create_account"
-            android:parentActivityName=".account.MainActivity"
+            android:parentActivityName=".account.LoginActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.graeme.beamitup.account.MainActivity" />
+                android:value="com.example.graeme.beamitup.account.LoginActivity" />
         </activity>
         <activity
             android:name=".transfer.LandingPageActivity"
@@ -83,7 +83,7 @@
             android:label="@string/title_activity_receive_transfer"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".account.MainActivity"
+            android:name=".account.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>

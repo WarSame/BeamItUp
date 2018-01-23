@@ -10,8 +10,8 @@ import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.Session;
 import com.example.graeme.beamitup.transfer.LandingPageActivity;
 
-public class MainActivity extends Activity {
-    private static final String TAG = "MainActivity";
+public class LoginActivity extends Activity {
+    private static final String TAG = "LoginActivity";
     Button btn_create_account;
 
     @Override
