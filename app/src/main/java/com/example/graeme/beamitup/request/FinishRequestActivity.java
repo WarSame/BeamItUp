@@ -9,8 +9,7 @@ import android.widget.ProgressBar;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthDbAdapter;
-import com.example.graeme.beamitup.transfer.SendTransferTask;
-import com.example.graeme.beamitup.transfer.Transfer;
+import com.example.graeme.beamitup.transfer.SendTransactionTask.SendTransferResponse;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
@@ -36,7 +35,7 @@ public class FinishRequestActivity extends Activity {
         String senderPrivateKey = getSenderPrivateKey(ethID, request.getFromAddress());
         Credentials credentials = Credentials.create(senderPrivateKey);
 
-        SendTransferTask.SendTransferResponse sendTransferResponse = transactionReceipt -> {
+         SendTransferResponse sendTransferResponse = transactionReceipt -> {
             ProgressBar pbSendTransfer = (ProgressBar)findViewById(R.id.pb_send_transfer);
             pbSendTransfer.setVisibility(View.GONE);
             if (transactionReceipt == null){

@@ -12,7 +12,7 @@ import org.web3j.utils.Convert;
 
 import java.math.BigDecimal;
 
-public class SendTransactionTask<Transaction extends Amountable> extends AsyncTask<Transaction, Void, TransactionReceipt> {
+public class SendTransactionTask<T extends Transaction> extends AsyncTask<T, Void, TransactionReceipt> {
     private static final String TAG = "SendTransactionTask";
     private String receiverAddress;
     private Credentials credentials;
@@ -34,7 +34,7 @@ public class SendTransactionTask<Transaction extends Amountable> extends AsyncTa
 
     @SafeVarargs
     @Override
-    protected final TransactionReceipt doInBackground(Transaction... transactions) {
+    protected final TransactionReceipt doInBackground(T... transactions) {
         Transaction transaction = transactions[0];
         try {
             Web3j web3j = Session.getWeb3j();
