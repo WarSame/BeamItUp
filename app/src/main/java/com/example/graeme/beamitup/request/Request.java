@@ -10,11 +10,12 @@ public class Request implements Serializable {
     private String toAddress;//Requester
 
     Request(String toAddress, String amount){
-        this.toAddress = toAddress;
         this.amount = amount;
+        this.fromAddress = null;
+        this.toAddress = toAddress;
     }
 
-    public String getToAddress() {
+    String getToAddress() {
         return toAddress;
     }
 
@@ -26,11 +27,11 @@ public class Request implements Serializable {
         return fromAddress;
     }
 
-    public void setFromAddress(String fromAddress) {
+    void setFromAddress(String fromAddress) {
         this.fromAddress = fromAddress;
     }
 
-    public String getAmount() {
+    String getAmount() {
         return amount;
     }
 

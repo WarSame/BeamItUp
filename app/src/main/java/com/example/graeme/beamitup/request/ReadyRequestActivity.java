@@ -34,7 +34,7 @@ public class ReadyRequestActivity extends Activity {
 
     private void prepareRequestMessage(Request request){
         Log.i(TAG, "Preparing request message of " + request.toString());
-        NdefMessaging.preparePushMessage(request, this, getPackageName() + "/ready_request");
+        NdefMessaging.preparePushMessage(request, this, getPackageName() + "/request");
     }
 
 

@@ -63,5 +63,7 @@
     <string name="btn_create_request">Create Request</string>
     <string name="to_address_label">To address:</string>
     <string name="to_address_value">to</string>
+    <string name="btn_accept_request">Accept Request</string>
+    <string name="btn_decline_request">Decline Request</string>
 
 </resources>

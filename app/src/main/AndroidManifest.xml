@@ -123,7 +123,7 @@
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
-                <data android:mimeType="./receive_request" />
+                <data android:mimeType="com.example.graeme.beamitup/request" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
