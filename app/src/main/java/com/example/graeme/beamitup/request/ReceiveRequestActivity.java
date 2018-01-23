@@ -15,28 +15,37 @@ import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthPickerFragment;
 import com.example.graeme.beamitup.transfer.LandingPageActivity;
 
+import org.web3j.abi.datatypes.Int;
+
 import static com.example.graeme.beamitup.ndef.NdefMessaging.handlePushMessage;
 
 public class ReceiveRequestActivity extends Activity implements EthPickerFragment.onEthSelectedListener{
     private static final String TAG = "ReceiveRequestActivity";
+    static final int LOGIN_REQUEST = 0;
     Eth eth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (!Session.isAlive()){
             Log.i(TAG, "Session is dead when receiving request");
             Intent loginIntent = new Intent(this, LoginActivity.class);
-            startActivity(loginIntent);
-            return;
+            startActivityForResult(loginIntent, LOGIN_REQUEST);
         }
+        else {
+            handleRequest();
+        }
+    }
 
+    private void handleRequest() {
         setContentView(R.layout.activity_receive_request);
 
         Request request = handlePushMessage(getIntent());
 
         TextView tvAmount = (TextView)findViewById(R.id.tv_amount_value);
         TextView tvToAddress = (TextView)findViewById(R.id.tv_to_address_value);
+
         if (request != null){
             tvAmount.setText(request.getAmount());
             tvToAddress.setText(request.getToAddress());
@@ -67,6 +76,24 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
             v.setEnabled(true);
             startActivity(finishRequestIntent);
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (requestCode == LOGIN_REQUEST){
+            switch (resultCode){
+                case RESULT_OK:
+                    Log.i(TAG, "User logged in.");
+                    handleRequest();
+                    break;
+                case RESULT_CANCELED:
+                    //Just send them to the log in
+                    Log.i(TAG, "User did not log in.");
+                    Intent loginIntent = new Intent(this, LoginActivity.class);
+                    startActivity(loginIntent);
+                    break;
+            }
+        }
     }
 
     @Override

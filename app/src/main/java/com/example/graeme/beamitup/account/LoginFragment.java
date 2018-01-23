@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.Session;
+import com.example.graeme.beamitup.request.ReceiveRequestActivity;
 import com.example.graeme.beamitup.transfer.LandingPageActivity;
 
 import java.security.NoSuchAlgorithmException;
@@ -37,7 +38,6 @@ public class LoginFragment extends Fragment
         EditText et_email = (EditText) view.findViewById(R.id.et_email);
         EditText et_password = (EditText) view.findViewById(R.id.et_password);
         btn_sign_in = (Button) view.findViewById(R.id.btn_sign_in);
-
 
         btn_sign_in.setOnClickListener(v -> {
             btn_sign_in.setEnabled(false);
@@ -83,8 +83,18 @@ public class LoginFragment extends Fragment
     private void onLoginSuccess(Account account)
     {
         Session.createSession(account);
-        final Intent landingPageIntent = new Intent(getActivity(), LandingPageActivity.class);
-        startActivity(landingPageIntent);
+        boolean isStartedForResult = getActivity().getCallingActivity() != null;
+        if (isStartedForResult) {
+            Log.i(TAG, "Returning login result to calling activity: " + getActivity().getCallingActivity());
+            Intent returnIntent = new Intent(getActivity(), getActivity().getCallingActivity().getClass());
+            getActivity().setResult(ReceiveRequestActivity.RESULT_OK, returnIntent);
+            getActivity().finish();
+        }
+        else {
+            Log.i(TAG, "Logging in regularly");
+            final Intent landingPageIntent = new Intent(getActivity(), LandingPageActivity.class);
+            startActivity(landingPageIntent);
+        }
         btn_sign_in.setEnabled(true);
     }
 

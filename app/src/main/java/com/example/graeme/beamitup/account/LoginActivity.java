@@ -8,6 +8,7 @@ import android.widget.Button;
 
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.Session;
+import com.example.graeme.beamitup.request.ReceiveRequestActivity;
 import com.example.graeme.beamitup.transfer.LandingPageActivity;
 
 public class LoginActivity extends Activity {
@@ -20,9 +21,22 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         btn_create_account = (Button)findViewById(R.id.btn_create_account);
+
+        Log.i(TAG, "here");
+
+        boolean isStartedForResult = getCallingActivity() != null;
         btn_create_account.setOnClickListener(v->{
-            Intent createAccountIntent = new Intent(this, CreateAccountActivity.class);
-            startActivity(createAccountIntent);
+            if (isStartedForResult) {
+                Log.i(TAG, "Returning login result to calling activity: " + getCallingActivity().getClass());
+                Intent returnIntent = new Intent(this, getCallingActivity().getClass());
+                setResult(ReceiveRequestActivity.RESULT_OK, returnIntent);
+                finish();
+            }
+            else {
+                Log.i(TAG, "Logging in without a result");
+                Intent createAccountIntent = new Intent(this, CreateAccountActivity.class);
+                startActivity(createAccountIntent);
+            }
         });
     }
 
