@@ -11,7 +11,7 @@
         android:name="com.example.graeme.beamitup.eth.EthPickerFragment"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        tools:layout="@layout/list_item_eth" />
+        tools:layout="@layout/frag_list_item_eth" />
 
     <LinearLayout
         android:layout_width="match_parent"
