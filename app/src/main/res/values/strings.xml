@@ -61,5 +61,7 @@
     <string name="title_activity_receive_request">ReceiveRequestActivity</string>
     <string name="title_activity_finish_request">FinishRequestActivity</string>
     <string name="btn_create_request">Create Request</string>
+    <string name="to_address_label">To address:</string>
+    <string name="to_address_value">to</string>
 
 </resources>
