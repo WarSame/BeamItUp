@@ -2,7 +2,7 @@ package com.example.graeme.beamitup.transfer;
 
 import java.io.Serializable;
 
-public class Transfer implements Serializable {
+public class Transfer implements Serializable, Amountable {
     private String amount;
     private String senderAddress;
     private String receiverAddress;

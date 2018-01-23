@@ -1,8 +1,9 @@
 package com.example.graeme.beamitup.request;
 
 import java.io.Serializable;
+import com.example.graeme.beamitup.transfer.Amountable;
 
-public class Request implements Serializable {
+public class Request implements Serializable, Amountable {
     private static final String TAG = "Request";
 
     private String amount;
@@ -31,7 +32,7 @@ public class Request implements Serializable {
         this.fromAddress = fromAddress;
     }
 
-    String getAmount() {
+    public String getAmount() {
         return amount;
     }
 

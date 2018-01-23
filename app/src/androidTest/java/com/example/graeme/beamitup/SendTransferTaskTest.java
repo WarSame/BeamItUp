@@ -3,7 +3,7 @@ package com.example.graeme.beamitup;
 import android.util.Log;
 
 import com.example.graeme.beamitup.transfer.SendTransferTask;
-import com.example.graeme.beamitup.transfer.SendTransferTask.SendTransferResponse;
+import com.example.graeme.beamitup.transfer.SendTransactionTask.SendTransferResponse;
 import com.example.graeme.beamitup.transfer.Transfer;
 
 import org.junit.BeforeClass;

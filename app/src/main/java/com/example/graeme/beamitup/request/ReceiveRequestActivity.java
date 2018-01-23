@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.graeme.beamitup.R;
@@ -23,6 +24,13 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
         setContentView(R.layout.activity_receive_request);
 
         Request request = handlePushMessage(getIntent());
+
+        TextView tvAmount = (TextView)findViewById(R.id.tv_amount_value);
+        TextView tvToAddress = (TextView)findViewById(R.id.tv_to_address_value);
+        if (request != null){
+            tvAmount.setText(request.getAmount());
+            tvToAddress.setText(request.getToAddress());
+        }
 
         Button btnDeclineRequest = (Button)findViewById(R.id.btn_decline_request);
         Button btnAcceptRequest = (Button)findViewById(R.id.btn_accept_request);
