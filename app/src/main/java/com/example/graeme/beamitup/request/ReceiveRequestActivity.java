@@ -8,6 +8,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.graeme.beamitup.R;
+import com.example.graeme.beamitup.Session;
+import com.example.graeme.beamitup.account.MainActivity;
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthPickerFragment;
 import com.example.graeme.beamitup.transfer.LandingPageActivity;
@@ -21,6 +23,12 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!Session.isAlive()){
+            Intent loginIntent = new Intent(this, MainActivity.class);
+            startActivity(loginIntent);
+            return;
+        }
+
         setContentView(R.layout.activity_receive_request);
 
         Request request = handlePushMessage(getIntent());
