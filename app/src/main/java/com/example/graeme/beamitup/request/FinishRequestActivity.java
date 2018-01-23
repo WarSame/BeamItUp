@@ -52,7 +52,7 @@ public class FinishRequestActivity extends Activity {
             }
         };
 
-        FulfillRequestTask task = new FulfillRequestTask(credentials, request.getFromAddress(), sendTransferResponse);
+        FulfillRequestTask task = new FulfillRequestTask(credentials, request.getToAddress(), sendTransferResponse);
         task.execute(request);
     }
 
