@@ -36,12 +36,12 @@ public class ReplyTransferActivity extends Activity {
         TextView tv_reply_transfer_amount = (TextView)findViewById(R.id.tv_transfer_money_amount);
         TextView tv_reply_transfer_receiver_address = (TextView)findViewById(R.id.tv_transfer_money_receiver_address);
         tv_reply_transfer_amount.setText(tran.getAmount());
-        tv_reply_transfer_receiver_address.setText(tran.getReceiverAddress());
+        tv_reply_transfer_receiver_address.setText(tran.getToAddress());
     }
 
     void prepareReplyTransfer(Transfer tran, Eth eth){
         NfcAdapter mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        tran.setReceiverAddress(eth.getAddress());
+        tran.setToAddress(eth.getAddress());
 
         if (mNfcAdapter == null) {
             Toast.makeText(

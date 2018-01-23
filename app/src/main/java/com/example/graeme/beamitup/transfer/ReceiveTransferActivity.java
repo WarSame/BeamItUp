@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.graeme.beamitup.account.Account;
-import com.example.graeme.beamitup.account.LoginActivity;
+import com.example.graeme.beamitup.account.LoginFragment;
 import com.example.graeme.beamitup.R;
 
 public class ReceiveTransferActivity extends Activity {
@@ -23,7 +23,7 @@ public class ReceiveTransferActivity extends Activity {
         Button btn_sign_in = (Button)findViewById(R.id.btn_sign_in);
 
         btn_sign_in.setOnClickListener(v -> {
-            Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
+            Intent loginIntent = new Intent(getApplicationContext(), LoginFragment.class);
             Button btn_sign_in1 = (Button)findViewById(R.id.btn_sign_in);
             btn_sign_in1.setEnabled(false);
 

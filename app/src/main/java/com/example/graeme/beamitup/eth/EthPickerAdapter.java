@@ -42,7 +42,7 @@ public class EthPickerAdapter extends ArrayAdapter {
         Eth eth = (Eth)getItem(position);
         if (convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(
-                    R.layout.list_item_eth,
+                    R.layout.frag_list_item_eth,
                     parent,
                     false
             );

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.graeme.beamitup.request.ReceiveRequestActivity">
+
+    <fragment
+        android:id="@+id/frag_eth_picker"
+        android:name="com.example.graeme.beamitup.eth.EthPickerFragment"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        tools:layout="@layout/frag_list_item_eth" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/amount_label"
+            android:layout_weight="1"
+            android:layout_margin="16dp"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/amount_value"
+            android:id="@+id/tv_amount_value"
+            android:layout_weight="1"
+            android:layout_margin="16dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/to_address_label"
+            android:layout_weight="1"
+            android:layout_margin="16dp"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/to_address_value"
+            android:id="@+id/tv_to_address_value"
+            android:layout_weight="1"
+            android:layout_margin="16dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2" >
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_decline_request"
+            android:text="@string/btn_decline_request"
+            android:layout_margin="16dp"
+            android:layout_weight="1"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_accept_request"
+            android:text="@string/btn_accept_request"
+            android:layout_margin="16dp"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+</LinearLayout>

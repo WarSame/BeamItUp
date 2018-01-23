@@ -38,7 +38,7 @@ public class ReadyTransferActivity extends Activity {
 
     private void prepareReadyTransferMessage(Transfer tran) {
         Log.i(TAG, "Sending transfer with amount: " + tran.getAmount()
-                + " senderAddress: " + tran.getSenderAddress());
+                + " senderAddress: " + tran.getFromAddress());
 
         NfcAdapter mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 

@@ -56,5 +56,14 @@
     <string name="gas_used_value">gas used</string>
     <string name="transaction_gas_cost_label">Transaction gas cost:</string>
     <string name="transaction_gas_cost_value">…</string>
+    <string name="title_activity_create_request">CreateRequestActivity</string>
+    <string name="title_activity_ready_request">ReadyRequestActivity</string>
+    <string name="title_activity_receive_request">ReceiveRequestActivity</string>
+    <string name="title_activity_finish_request">FinishRequestActivity</string>
+    <string name="btn_create_request">Create Request</string>
+    <string name="to_address_label">To address:</string>
+    <string name="to_address_value">to</string>
+    <string name="btn_accept_request">Accept Request</string>
+    <string name="btn_decline_request">Decline Request</string>
 
 </resources>

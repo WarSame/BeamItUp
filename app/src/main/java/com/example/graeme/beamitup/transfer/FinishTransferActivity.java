@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.graeme.beamitup.account.Account;
-import com.example.graeme.beamitup.account.MainActivity;
+import com.example.graeme.beamitup.account.LoginActivity;
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthDbAdapter;
 import com.example.graeme.beamitup.R;
@@ -40,14 +40,14 @@ public class FinishTransferActivity extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (!Session.isAlive()){
-            final Intent loginIntent = new Intent(getApplicationContext(), MainActivity.class);
+            final Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(loginIntent);
         }
 
         Transfer tran = getReplyTransferMessage();
         Account account = Session.getUserDetails();
         try {
-            Eth eth = selectEthFromAccountByAddress(account, tran.getSenderAddress());
+            Eth eth = selectEthFromAccountByAddress(account, tran.getFromAddress());
             sendTransfer(eth.getId(), tran);
         }
         catch (Exception e){
@@ -78,7 +78,7 @@ public class FinishTransferActivity extends Activity {
     }
 
     private void sendTransfer(final long ethID, final Transfer tran) throws Exception {
-        String senderPrivateKey = getSenderPrivateKey(ethID, tran.getSenderAddress());
+        String senderPrivateKey = getSenderPrivateKey(ethID, tran.getFromAddress());
         Credentials credentials = Credentials.create(senderPrivateKey);
 
         SendTransferTask.SendTransferResponse sendTransferResponse = transactionReceipt -> {
@@ -92,7 +92,7 @@ public class FinishTransferActivity extends Activity {
             }
         };
 
-        SendTransferTask task = new SendTransferTask(credentials, tran.getReceiverAddress(), sendTransferResponse);
+        SendTransferTask task = new SendTransferTask(credentials, tran.getToAddress(), sendTransferResponse);
         task.execute(tran);
     }
 
@@ -125,7 +125,7 @@ public class FinishTransferActivity extends Activity {
             Transaction transaction = web3j.ethGetTransactionByHash(transactionReceipt.getTransactionHash())
                     .sendAsync().get().getTransaction();
             tvGasUsed.setText( getTransactionGasCost(transaction, transactionReceipt) );
-            tvAmount.setText( getTransactionAmount(transaction, transactionReceipt) );
+            tvAmount.setText( getTransactionAmount(transaction) );
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -138,14 +138,14 @@ public class FinishTransferActivity extends Activity {
         return Convert.fromWei(new BigDecimal(gasCost), Convert.Unit.ETHER ).toString();
     }
 
-    private String getTransactionAmount(Transaction transaction, TransactionReceipt transactionReceipt) throws Exception{
+    private String getTransactionAmount(Transaction transaction) throws Exception{
         BigInteger amount = transaction.getValue();
         BigDecimal amountInEth = Convert.fromWei(new BigDecimal(amount), Convert.Unit.ETHER);
         return amountInEth.toString();
     }
 
     private void sendTransferFail(Transfer tran){
-        String transferFailedText = "Transfer to " + tran.getReceiverAddress() + " failed.";
+        String transferFailedText = "Transfer to " + tran.getToAddress() + " failed.";
         Toast.makeText(
                 this,
                 transferFailedText,
