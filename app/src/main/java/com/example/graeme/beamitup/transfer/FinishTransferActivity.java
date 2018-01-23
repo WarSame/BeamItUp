@@ -125,7 +125,7 @@ public class FinishTransferActivity extends Activity {
             Transaction transaction = web3j.ethGetTransactionByHash(transactionReceipt.getTransactionHash())
                     .sendAsync().get().getTransaction();
             tvGasUsed.setText( getTransactionGasCost(transaction, transactionReceipt) );
-            tvAmount.setText( getTransactionAmount(transaction, transactionReceipt) );
+            tvAmount.setText( getTransactionAmount(transaction) );
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -138,7 +138,7 @@ public class FinishTransferActivity extends Activity {
         return Convert.fromWei(new BigDecimal(gasCost), Convert.Unit.ETHER ).toString();
     }
 
-    private String getTransactionAmount(Transaction transaction, TransactionReceipt transactionReceipt) throws Exception{
+    private String getTransactionAmount(Transaction transaction) throws Exception{
         BigInteger amount = transaction.getValue();
         BigDecimal amountInEth = Convert.fromWei(new BigDecimal(amount), Convert.Unit.ETHER);
         return amountInEth.toString();
