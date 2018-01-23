@@ -1,4 +1,4 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.eth;
 
 import android.app.ListFragment;
 import android.content.Context;
@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
+
+import com.example.graeme.beamitup.R;
+import com.example.graeme.beamitup.Session;
 
 import java.util.List;
 

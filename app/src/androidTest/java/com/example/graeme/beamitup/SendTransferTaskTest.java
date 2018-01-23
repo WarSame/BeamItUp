@@ -2,6 +2,10 @@ package com.example.graeme.beamitup;
 
 import android.util.Log;
 
+import com.example.graeme.beamitup.transfer.SendTransferTask;
+import com.example.graeme.beamitup.transfer.SendTransferTask.SendTransferResponse;
+import com.example.graeme.beamitup.transfer.Transfer;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.web3j.crypto.Credentials;
@@ -12,24 +16,25 @@ import org.web3j.protocol.core.methods.response.EthTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 
-import com.example.graeme.beamitup.SendTransferTask.SendTransferResponse;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class SendTransferTaskTest {
     private static final String TAG = "SendTransferTaskTest";
     private static Transfer transfer;
     private static TransactionReceipt transactionReceipt;
-    private static final String TRANSACTION_VALUE = "55";
+    private static final String TRANSACTION_VALUE = "0.005";
     private static final String SENDER_ADDRESS = "0x6861b070f43842fc16ead07854ee5d91b9d27c13";
     private static final String RECEIVER_ADDRESS = "0x31b98d14007bdee637298086988a0bbd31184523";
+
+    private static final String SENDER_PRIVATE_KEY = "";
 
     @BeforeClass
     public static void oneTimeSetUp() throws Exception{
         transfer = new Transfer(TRANSACTION_VALUE, SENDER_ADDRESS);
         transfer.setReceiverAddress(RECEIVER_ADDRESS);
 
-        Credentials credentials = Credentials.create("");
+        Credentials credentials = Credentials.create(SENDER_PRIVATE_KEY);
+        Session.createSession();//Empty session for testing
 
         SendTransferTask task = new SendTransferTask(credentials, transfer.getReceiverAddress(), sendTransferResponse);
         task.execute(transfer);

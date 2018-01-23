@@ -1,4 +1,4 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.transfer;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +9,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.graeme.beamitup.DetermineGasPriceTask.DetermineGasPriceResponse;
+import com.example.graeme.beamitup.eth.Eth;
+import com.example.graeme.beamitup.eth.EthPickerFragment;
+import com.example.graeme.beamitup.R;
 
 import org.web3j.protocol.core.methods.response.EthGasPrice;
 import org.web3j.utils.Convert;
@@ -67,7 +69,7 @@ public class CreateTransferActivity extends FragmentActivity
     }
 
     private void getCurrentGasCostAsync() throws Exception {
-        DetermineGasPriceResponse determineGasPriceResponse = this::updateGasCost;
+        DetermineGasPriceTask.DetermineGasPriceResponse determineGasPriceResponse = this::updateGasCost;
 
         new DetermineGasPriceTask(determineGasPriceResponse).execute();
     }

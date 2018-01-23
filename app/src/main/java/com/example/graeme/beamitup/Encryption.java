@@ -24,24 +24,14 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 
-class Encryption {
+public class Encryption {
     private static final String TAG = "Encryption";
     private static final String HASHING_ALGORITHM = "SHA-256";
     private static final String KEY_PROVIDER = "AndroidKeyStore";
     private static final String TRANSFORMATION = "AES/GCM/NoPadding";
     private static final String TEXT_FORMAT = "UTF-8";
 
-    static private byte[] toBytes(char[] chars) {
-        CharBuffer charBuffer = CharBuffer.wrap(chars);
-        ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
-        byte[] bytes = Arrays.copyOfRange(byteBuffer.array(),
-                byteBuffer.position(), byteBuffer.limit());
-        Arrays.fill(charBuffer.array(), '\u0000');
-        Arrays.fill(byteBuffer.array(), (byte) 0);
-        return bytes;
-    }
-
-    static byte[] hashPassword(char[] password, byte[] salt) throws NoSuchAlgorithmException{
+    public static byte[] hashPassword(char[] password, byte[] salt) throws NoSuchAlgorithmException{
         MessageDigest md;
         byte[] passwordHash;
 
@@ -58,21 +48,31 @@ class Encryption {
         return passwordHash;
     }
 
-    static byte[] generateSalt(){
+    private static byte[] toBytes(char[] chars) {
+        CharBuffer charBuffer = CharBuffer.wrap(chars);
+        ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
+        byte[] bytes = Arrays.copyOfRange(byteBuffer.array(),
+                byteBuffer.position(), byteBuffer.limit());
+        Arrays.fill(charBuffer.array(), '\u0000');
+        Arrays.fill(byteBuffer.array(), (byte) 0);
+        return bytes;
+    }
+
+    public static byte[] generateSalt(){
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[20];
         random.nextBytes(salt);
         return salt;
     }
 
-    static class Encryptor {
+    public static class Encryptor {
         private byte[] encryption;
         private byte[] iv;
 
-        Encryptor(){
+        public Encryptor(){
         }
 
-        void encryptPrivateKey(String ethAddress, String privateKeyString) throws Exception {
+        public void encryptPrivateKey(String ethAddress, String privateKeyString) throws Exception {
             this.encryptText(ethAddress, privateKeyString);
         }
 
@@ -100,32 +100,32 @@ class Encryption {
             return keyGenerator.generateKey();
         }
 
-        byte[] getEncryption(){
+        public byte[] getEncryption(){
             return this.encryption;
         }
 
-        void setEncryption(byte[] encryption){
+        public void setEncryption(byte[] encryption){
             this.encryption = encryption;
         }
 
-        byte[] getIv(){
+        public byte[] getIv(){
             return this.iv;
         }
 
-        void setIv(byte[] iv){
+        public void setIv(byte[] iv){
             this.iv = iv;
         }
     }
 
-    static class Decryptor {
+    public static class Decryptor {
         private KeyStore ks;
 
-        Decryptor() throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException {
+        public Decryptor() throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException {
             ks = KeyStore.getInstance(KEY_PROVIDER);
             ks.load(null);
         }
 
-        String decryptPrivateKey(String ethAddress, byte[] privateKeyEnc, byte[] iv) throws Exception {
+        public String decryptPrivateKey(String ethAddress, byte[] privateKeyEnc, byte[] iv) throws Exception {
             return this.decryptText(ethAddress, privateKeyEnc, iv);
         }
 

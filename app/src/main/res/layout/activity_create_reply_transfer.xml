@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.graeme.beamitup.CreateTransferActivity"
+    tools:context="com.example.graeme.beamitup.transfer.CreateTransferActivity"
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:layout_margin="16dp"
@@ -11,7 +11,7 @@
 
     <fragment
         android:id="@+id/frag_eth_picker"
-        android:name="com.example.graeme.beamitup.EthPickerFragment"
+        android:name="com.example.graeme.beamitup.eth.EthPickerFragment"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         />

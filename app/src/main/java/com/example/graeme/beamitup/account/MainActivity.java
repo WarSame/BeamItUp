@@ -1,12 +1,15 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.account;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.example.graeme.beamitup.R;
+import com.example.graeme.beamitup.Session;
+import com.example.graeme.beamitup.transfer.LandingPageActivity;
 
 public class MainActivity extends Activity {
     private static final int REQUEST_LOGIN = 0;
@@ -21,29 +24,22 @@ public class MainActivity extends Activity {
         Button btn_sign_in = (Button)findViewById(R.id.btn_sign_in);
         Button btn_create_account = (Button)findViewById(R.id.btn_create_account);
 
-        btn_sign_in.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
-                Button btn_sign_in = (Button)findViewById(R.id.btn_sign_in);
-                btn_sign_in.setEnabled(false);
+        btn_sign_in.setOnClickListener(v -> {
+            Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
+            btn_sign_in.setEnabled(false);
 
-                EditText et_email = (EditText)findViewById(R.id.et_email);
-                EditText et_password = (EditText)findViewById(R.id.et_password);
+            EditText et_email = (EditText)findViewById(R.id.et_email);
+            EditText et_password = (EditText)findViewById(R.id.et_password);
 
-                loginIntent.putExtra("email", et_email.getText().toString());
-                loginIntent.putExtra("password", et_password.getText().toString());
+            loginIntent.putExtra("email", et_email.getText().toString());
+            loginIntent.putExtra("password", et_password.getText().toString());
 
-                startActivityForResult(loginIntent, REQUEST_LOGIN);
-            }
+            startActivityForResult(loginIntent, REQUEST_LOGIN);
         });
 
-        btn_create_account.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent createAccountIntent = new Intent(getApplicationContext(), CreateAccountActivity.class);
-                startActivityForResult(createAccountIntent, REQUEST_SIGNUP);
-            }
+        btn_create_account.setOnClickListener(v -> {
+            Intent createAccountIntent = new Intent(getApplicationContext(), CreateAccountActivity.class);
+            startActivityForResult(createAccountIntent, REQUEST_SIGNUP);
         });
     }
 

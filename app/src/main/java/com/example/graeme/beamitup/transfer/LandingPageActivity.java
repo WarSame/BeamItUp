@@ -1,10 +1,12 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.transfer;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
+
+import com.example.graeme.beamitup.eth.AddEthActivity;
+import com.example.graeme.beamitup.R;
 
 public class LandingPageActivity extends Activity {
 
@@ -19,19 +21,9 @@ public class LandingPageActivity extends Activity {
         final Intent createTransferIntent = new Intent(this, CreateTransferActivity.class);
         final Intent addEthIntent = new Intent(this, AddEthActivity.class);
 
-        btn_transfer_money.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                startActivity(createTransferIntent);
-            }
-        });
+        btn_transfer_money.setOnClickListener(v -> startActivity(createTransferIntent));
 
-        btn_add_eth.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                startActivity(addEthIntent);
-            }
-        });
+        btn_add_eth.setOnClickListener(v -> startActivity(addEthIntent));
     }
 
 }
