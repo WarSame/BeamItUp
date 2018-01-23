@@ -4,8 +4,8 @@ import com.example.graeme.beamitup.transfer.SendTransactionTask;
 
 import org.web3j.crypto.Credentials;
 
-class FulfillRequestTask extends SendTransactionTask<Request> {
-    FulfillRequestTask(Credentials credentials, String toAddress, SendTransferResponse sendTransferResponse) {
-        super(credentials, toAddress, sendTransferResponse);
+public class FulfillRequestTask extends SendTransactionTask<Request> {
+    public FulfillRequestTask(Credentials credentials, String toAddress, SendTransactionResponse sendTransactionResponse) {
+        super(credentials, toAddress, sendTransactionResponse);
     }
 }

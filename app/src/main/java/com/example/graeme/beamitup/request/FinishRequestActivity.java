@@ -14,7 +14,7 @@ import com.example.graeme.beamitup.account.Account;
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthDbAdapter;
 import com.example.graeme.beamitup.transfer.LandingPageActivity;
-import com.example.graeme.beamitup.transfer.SendTransactionTask.SendTransferResponse;
+import com.example.graeme.beamitup.transfer.SendTransactionTask.SendTransactionResponse;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
@@ -50,7 +50,7 @@ public class FinishRequestActivity extends Activity {
         String senderPrivateKey = getSenderPrivateKey(eth.getId(), request.getFromAddress());
         Credentials credentials = Credentials.create(senderPrivateKey);
 
-         SendTransferResponse sendTransferResponse = transactionReceipt -> {
+         SendTransactionResponse sendTransactionResponse = transactionReceipt -> {
             if (transactionReceipt == null){
                 finishRequestFail(request);
             }
@@ -60,7 +60,7 @@ public class FinishRequestActivity extends Activity {
             }
         };
 
-        FulfillRequestTask task = new FulfillRequestTask(credentials, request.getToAddress(), sendTransferResponse);
+        FulfillRequestTask task = new FulfillRequestTask(credentials, request.getToAddress(), sendTransactionResponse);
         task.execute(request);
     }
 

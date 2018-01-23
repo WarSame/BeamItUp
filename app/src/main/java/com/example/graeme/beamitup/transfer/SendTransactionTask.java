@@ -16,20 +16,20 @@ public class SendTransactionTask<T extends Transaction> extends AsyncTask<T, Voi
     private static final String TAG = "SendTransactionTask";
     private String toAddress;
     private Credentials credentials;
-    private SendTransferResponse sendTransferResponse;
+    private SendTransactionResponse sendTransactionResponse;
 
     public SendTransactionTask(
             Credentials credentials,
             String toAddress,
-            SendTransferResponse sendTransferResponse
+            SendTransactionResponse sendTransactionResponse
     ){
         this.credentials = credentials;
         this.toAddress = toAddress;
-        this.sendTransferResponse = sendTransferResponse;
+        this.sendTransactionResponse = sendTransactionResponse;
     }
 
-    public interface SendTransferResponse {
-        void sendTransferFinish(TransactionReceipt transactionReceipt);
+    public interface SendTransactionResponse {
+        void sendTransactionFinish(TransactionReceipt transactionReceipt);
     }
 
     @SafeVarargs
@@ -40,7 +40,6 @@ public class SendTransactionTask<T extends Transaction> extends AsyncTask<T, Voi
             Web3j web3j = Session.getWeb3j();
 
             Log.d(TAG, "Sender address: " + credentials.getAddress());
-
             TransactionReceipt receipt = org.web3j.tx.Transfer.sendFunds(
                     web3j,
                     credentials,
@@ -49,8 +48,8 @@ public class SendTransactionTask<T extends Transaction> extends AsyncTask<T, Voi
                     Convert.Unit.ETHER
             ).send();
 
-            Log.d(TAG, "Transfer from: " + receipt.getFrom());
-            Log.d(TAG, "Transfer to: " + receipt.getTo());
+            Log.d(TAG, "Transaction from: " + receipt.getFrom());
+            Log.d(TAG, "Transaction to: " + receipt.getTo());
 
             return receipt;
         }
@@ -62,7 +61,7 @@ public class SendTransactionTask<T extends Transaction> extends AsyncTask<T, Voi
 
     @Override
     protected void onPostExecute(TransactionReceipt res) {
-        Log.i(TAG, "Transfer finished");
-        sendTransferResponse.sendTransferFinish(res);
+        Log.i(TAG, "Transaction finished");
+        sendTransactionResponse.sendTransactionFinish(res);
     }
 }

@@ -81,7 +81,7 @@ public class FinishTransferActivity extends Activity {
         String senderPrivateKey = getSenderPrivateKey(ethID, tran.getFromAddress());
         Credentials credentials = Credentials.create(senderPrivateKey);
 
-        SendTransferTask.SendTransferResponse sendTransferResponse = transactionReceipt -> {
+        SendTransactionTask.SendTransactionResponse sendTransactionResponse = transactionReceipt -> {
             ProgressBar pbSendTransfer = (ProgressBar)findViewById(R.id.pb_send_transfer);
             pbSendTransfer.setVisibility(View.GONE);
             if (transactionReceipt == null){
@@ -92,7 +92,7 @@ public class FinishTransferActivity extends Activity {
             }
         };
 
-        SendTransferTask task = new SendTransferTask(credentials, tran.getToAddress(), sendTransferResponse);
+        SendTransferTask task = new SendTransferTask(credentials, tran.getToAddress(), sendTransactionResponse);
         task.execute(tran);
     }
 
