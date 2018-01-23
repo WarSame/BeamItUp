@@ -2,6 +2,7 @@ package com.example.graeme.beamitup.eth;
 
 import android.app.ListFragment;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,8 +43,10 @@ public class EthPickerFragment extends ListFragment {
 
         EthPickerAdapter adapter = new EthPickerAdapter(getActivity(), eths);
         setListAdapter(adapter);
-        getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        getListView().setSelector(R.color.colorAccent);
+        ListView lv_ethPicker = getListView();
+        lv_ethPicker.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        lv_ethPicker.setSelector(R.color.colorAccent);
+        lv_ethPicker.setBackground(getResources().getDrawable(R.drawable.pickerback, null));
     }
 
     @Override
