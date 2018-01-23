@@ -1,29 +1,50 @@
 package com.example.graeme.beamitup.account;
 
-import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.Session;
+import com.example.graeme.beamitup.transfer.LandingPageActivity;
 
 import java.security.NoSuchAlgorithmException;
 
-public class LoginActivity extends Activity
+public class LoginFragment extends Fragment
 {
-    private static final String TAG = "LoginActivity";
+    private static final String TAG = "LoginFragment";
+    private Button btn_sign_in;
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.frag_login, container);
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        String email = getIntent().getStringExtra("email");
-        char[] password = (getIntent().getStringExtra("password")).toCharArray();
+        EditText et_email = (EditText) view.findViewById(R.id.et_email);
+        EditText et_password = (EditText) view.findViewById(R.id.et_password);
+        btn_sign_in = (Button) view.findViewById(R.id.btn_sign_in);
 
-        login(email, password);
+
+        btn_sign_in.setOnClickListener(v -> {
+            btn_sign_in.setEnabled(false);
+            String email = et_email.getText().toString();
+            char[] password = et_password.getText().toString().toCharArray();
+            login(email, password);
+        });
     }
 
     private void login(String email, char[] password)
@@ -47,13 +68,13 @@ public class LoginActivity extends Activity
         }
         else {
             Log.v(TAG, "Authentication failed.");
-            Toast.makeText(this, "Username and password combination not found.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Username and password combination not found.", Toast.LENGTH_LONG).show();
             onLoginFail();
         }
     }
 
     Account retrieveAccount(String email){
-        AccountDbAdapter db = new AccountDbAdapter(this);
+        AccountDbAdapter db = new AccountDbAdapter(getContext());
         Account account = db.retrieveAccount(email);
         db.close();
         return account;
@@ -62,16 +83,14 @@ public class LoginActivity extends Activity
     private void onLoginSuccess(Account account)
     {
         Session.createSession(account);
-        Intent resultIntent = new Intent();
-        setResult(RESULT_OK, resultIntent);
-        finish();
+        final Intent landingPageIntent = new Intent(getActivity(), LandingPageActivity.class);
+        startActivity(landingPageIntent);
+        btn_sign_in.setEnabled(true);
     }
 
     private void onLoginFail()
     {
-        Intent resultIntent = new Intent();
-        setResult(RESULT_CANCELED, resultIntent);
-        finish();
+        btn_sign_in.setEnabled(true);
     }
 
     boolean isValid(String email, char[] password)
@@ -83,12 +102,12 @@ public class LoginActivity extends Activity
     {
         boolean valid = true;
         if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            Toast.makeText(this, "Enter a valid email.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Enter a valid email.", Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (!isEmailInUse(email)){
-            Toast.makeText(this, "Email not in use.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Email not in use.", Toast.LENGTH_SHORT).show();
             valid = false;
         }
         return valid;
@@ -101,7 +120,7 @@ public class LoginActivity extends Activity
 
         if (valid){
             Toast.makeText(
-                    this,
+                    getContext(),
                     "Password must be between " + Account.MINIMUM_PASSWORD_LENGTH + " and " +
                     Account.MAXIMUM_PASSWORD_LENGTH + " characters.",
                     Toast.LENGTH_SHORT
@@ -113,7 +132,7 @@ public class LoginActivity extends Activity
     }
 
     boolean isAuthentic(String email, char[] password) throws NoSuchAlgorithmException {
-        AccountDbAdapter db = new AccountDbAdapter(this);
+        AccountDbAdapter db = new AccountDbAdapter(getContext());
         boolean isAuthentic = db.isAuthentic(email, password);
         db.close();
 
@@ -122,7 +141,7 @@ public class LoginActivity extends Activity
 
     boolean isEmailInUse(String email)
     {
-        AccountDbAdapter db = new AccountDbAdapter(this);
+        AccountDbAdapter db = new AccountDbAdapter(getContext());
         boolean inUse = db.isEmailInUse(email);
         db.close();
         return inUse;

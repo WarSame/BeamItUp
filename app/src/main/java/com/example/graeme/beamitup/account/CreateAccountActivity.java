@@ -12,12 +12,14 @@ import android.widget.Toast;
 
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.Session;
+import com.example.graeme.beamitup.transfer.LandingPageActivity;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 public class CreateAccountActivity extends Activity {
     private static final String TAG = "CreateAccountActivity";
+    Button btn_create_account;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +27,7 @@ public class CreateAccountActivity extends Activity {
         setContentView(R.layout.activity_create_account);
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Button btn_create_account = (Button)findViewById(R.id.btn_create_account);
+        btn_create_account = (Button)findViewById(R.id.btn_create_account);
         btn_create_account.setOnClickListener(v -> createAccount());
     }
 
@@ -68,24 +70,12 @@ public class CreateAccountActivity extends Activity {
     }
 
     private void onCreateAccountSuccess(Account account){
-        Button btn_create_account = (Button) findViewById(R.id.btn_create_account);
+        Log.v(TAG, "Successfully created account.");
         btn_create_account.setEnabled(true);
 
-        AccountDbAdapter db = new AccountDbAdapter(this);
-        Intent resultIntent = new Intent();
-        try {
-            Log.v(TAG, "Successfully created account.");
-            Session.createSession(account);
-            setResult(RESULT_OK, resultIntent);
-        } catch (SQLException e){
-            Log.e(TAG, "Account creation error.");
-            e.printStackTrace();
-            setResult(RESULT_CANCELED, resultIntent);
-        }
-        finally {
-            db.close();
-            finish();
-        }
+        Session.createSession(account);
+        Intent landingPageIntent = new Intent(this, LandingPageActivity.class);
+        startActivity(landingPageIntent);
     }
 
     private void onCreateAccountFail(){

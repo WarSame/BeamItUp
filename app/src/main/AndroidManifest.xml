@@ -18,10 +18,6 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".account.LoginActivity"
-            android:label="@string/title_activity_login"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".transfer.CreateTransferActivity"
             android:label="@string/title_activity_transfer_money"
             android:parentActivityName=".transfer.LandingPageActivity"
@@ -68,11 +64,11 @@
         <activity
             android:name=".account.CreateAccountActivity"
             android:label="@string/title_activity_create_account"
-            android:parentActivityName=".account.LoginActivity"
+            android:parentActivityName=".account.MainActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.graeme.beamitup.account.LoginActivity" />
+                android:value="com.example.graeme.beamitup.account.MainActivity" />
         </activity>
         <activity
             android:name=".transfer.LandingPageActivity"

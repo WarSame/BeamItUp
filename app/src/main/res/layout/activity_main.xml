@@ -17,7 +17,7 @@
         android:layout_gravity="right"/>
 
     <fragment
-        android:name="com.example.graeme.beamitup.account.LoginActivity"
+        android:name="com.example.graeme.beamitup.account.LoginFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/frag_login"
