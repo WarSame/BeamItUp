@@ -92,7 +92,12 @@ public class FinishTransferActivity extends Activity {
             }
         };
 
-        SendTransferTask task = new SendTransferTask(credentials, tran.getToAddress(), sendTransactionResponse);
+        SendTransferTask task = new SendTransferTask(
+                Session.getWeb3j(),
+                credentials,
+                tran.getToAddress(),
+                sendTransactionResponse
+        );
         task.execute(tran);
     }
 

@@ -41,6 +41,4 @@ public class WalletUnitTest {
 
         System.out.println(transactionReceipt.getFrom());
     }
-
-    private SendTransactionTask.SendTransactionResponse sendTransactionResponse = transactionReceipt -> System.out.println("Receiving response from SendTransactionTask");
 }
