@@ -6,30 +6,30 @@ import android.util.Log;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.tx.Transfer;
+import org.web3j.utils.Convert;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.math.BigDecimal;
 
 public class WalletTest {
     private static final String TAG = "WalletTest";
+    private static final String TO_ADDRESS = "0x31B98D14007bDEe637298086988A0bBd31184523";
+
     private static Context appContext;
-    private static File walletsDir;
+    private static String walletLocation;
 
     @BeforeClass
     public static void setUpOneTime() throws Exception{
         appContext = InstrumentationRegistry.getTargetContext();
+        Session.createSession();
 
-        walletsDir = new File(appContext.getFilesDir(), "/wallets");
+        File walletsDir = new File(appContext.getFilesDir(), "/wallets");
         Log.i(TAG, "files dir " + appContext.getFilesDir());
-
-        walletsDir.mkdirs();
-
-        if (walletsDir.exists()){
-            Log.i(TAG, "app file location exists");
-        }
-        else {
-            Log.i(TAG, "app file location doesn't exist");
-        }
 
         if (!walletsDir.exists()){
             Log.i(TAG, "walletsDir not found");
@@ -38,18 +38,30 @@ public class WalletTest {
             }
             else {
                 Log.i(TAG, "walletsDir not made");
+                throw new FileNotFoundException();
             }
         }
 
-        String walletLocation = WalletUtils.generateLightNewWalletFile(
+        String walletName = WalletUtils.generateLightNewWalletFile(
                 "somepass",
                 walletsDir
         );
-        Log.i(TAG, "walletLocation: " + walletLocation);
+        walletLocation = walletsDir + "/" + walletName;
+        Log.i(TAG, "walletLocation: " + walletName);
     }
 
     @Test
     public void loadWallet() throws Exception{
+        Credentials credentials = WalletUtils.loadCredentials("somepass", new File(walletLocation));
 
+        TransactionReceipt transactionReceipt = Transfer.sendFunds(
+                Session.getWeb3j(),
+                credentials,
+                TO_ADDRESS,
+                new BigDecimal("0.001"),
+                Convert.Unit.ETHER
+        ).send();
+
+        System.out.println(transactionReceipt.getFrom());
     }
 }
