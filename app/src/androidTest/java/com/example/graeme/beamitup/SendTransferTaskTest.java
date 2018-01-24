@@ -38,7 +38,12 @@ public class SendTransferTaskTest {
         Credentials credentials = Credentials.create(SENDER_PRIVATE_KEY);
         Session.createSession();//Empty session for testing
 
-        SendTransferTask task = new SendTransferTask(credentials, transfer.getToAddress(), sendTransactionResponse);
+        SendTransferTask task = new SendTransferTask(
+                Session.getWeb3j(),
+                credentials,
+                transfer.getToAddress(),
+                sendTransactionResponse
+        );
         task.execute(transfer);
         transactionReceipt = task.get();
     }

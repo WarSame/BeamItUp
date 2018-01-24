@@ -39,7 +39,12 @@ public class FulfillRequestTaskTest {
         Credentials credentials = Credentials.create(SENDER_PRIVATE_KEY);
         Session.createSession();//Empty session for testing
 
-        FulfillRequestTask task = new FulfillRequestTask(credentials, request.getToAddress(), sendTransactionResponse);
+        FulfillRequestTask task = new FulfillRequestTask(
+                Session.getWeb3j(),
+                credentials,
+                request.getToAddress(),
+                sendTransactionResponse
+        );
         task.execute(request);
         transactionReceipt = task.get();
     }
