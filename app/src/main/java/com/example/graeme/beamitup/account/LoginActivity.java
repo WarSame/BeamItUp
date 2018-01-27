@@ -22,8 +22,6 @@ public class LoginActivity extends Activity {
 
         btn_create_account = (Button)findViewById(R.id.btn_create_account);
 
-        Log.i(TAG, "here");
-
         boolean isStartedForResult = getCallingActivity() != null;
         btn_create_account.setOnClickListener(v->{
             if (isStartedForResult) {
