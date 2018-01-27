@@ -13,6 +13,7 @@ import com.example.graeme.beamitup.Session;
 import com.example.graeme.beamitup.account.Account;
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthDbAdapter;
+import com.example.graeme.beamitup.eth.WalletHelper;
 import com.example.graeme.beamitup.transfer.LandingPageActivity;
 import com.example.graeme.beamitup.transfer.SendTransactionTask.SendTransactionResponse;
 
@@ -35,20 +36,24 @@ public class FinishRequestActivity extends Activity {
 
         Intent incomingIntent = getIntent();
         Request request = (Request)incomingIntent.getSerializableExtra("request");
+        String password = incomingIntent.getStringExtra("password");
         try {
-            sendTransfer(request);
+            sendTransfer(request, password);
         } catch (Exception e) {
             e.printStackTrace();
             finishRequestFail(request);
         }
     }
 
-    private void sendTransfer(final Request request) throws Exception {
+    private void sendTransfer(final Request request, final String password) throws Exception {
         Account account = Session.getUserDetails();
         Eth eth = selectEthFromAccountByAddress( account, request.getFromAddress() );
 
-        String senderPrivateKey = getSenderPrivateKey(eth.getId(), eth.getWalletName());
-        Credentials credentials = Credentials.create(senderPrivateKey);
+        Credentials credentials = WalletHelper.retrieveCredentials(
+                this,
+                password,
+                eth.getWalletName()
+        );
 
          SendTransactionResponse sendTransactionResponse = transactionReceipt -> {
             if (transactionReceipt == null){

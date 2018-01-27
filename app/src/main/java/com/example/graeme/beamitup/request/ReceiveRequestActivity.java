@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,6 +74,10 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
             Intent finishRequestIntent = new Intent(this, FinishRequestActivity.class);
             request.setFromAddress(eth.getAddress());
             finishRequestIntent.putExtra("request", request);
+
+            EditText etPassword = (EditText)findViewById(R.id.et_password);
+            String password = etPassword.getText().toString();
+            finishRequestIntent.putExtra("password", password);
             v.setEnabled(true);
             startActivity(finishRequestIntent);
         });

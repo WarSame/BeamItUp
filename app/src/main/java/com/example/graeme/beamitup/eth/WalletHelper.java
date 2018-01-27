@@ -12,21 +12,25 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 
-class WalletHelper {
-    static Credentials retrieveCredentials(Context context, String password, String walletName) throws IOException, CipherException {
+public class WalletHelper {
+    public static Credentials retrieveCredentials(Context context, String password, String walletName) throws IOException, CipherException {
         File walletFile = new File( getWalletDir(context) + "/" + walletName);
         return WalletUtils.loadCredentials(password, walletFile);
     }
 
-    static String generateWallet(Context context, String password) throws CipherException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException, IOException {
+    public static String generateWallet(Context context, String password) throws CipherException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException, IOException {
         return WalletUtils.generateLightNewWalletFile(password, getWalletDir(context));
     }
 
-    private static File getWalletDir(Context context){
+    private static File getWalletDir(Context context) throws IOException {
         File walletDir = new File(context.getFilesDir() + "/wallets");
         if (!walletDir.exists()){
-            walletDir.mkdir();
+            if ( !walletDir.mkdir() ){
+                throw new IOException();
+            }
         }
         return walletDir;
     }
+
+
 }

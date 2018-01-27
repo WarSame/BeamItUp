@@ -68,5 +68,7 @@
     <string name="et_eth_nickname">Nickname</string>
     <string name="et_eth_password">Password</string>
     <string name="tv_eth_nickname">Eth Nickname</string>
+    <string name="tv_password">Password:</string>
+    <string name="et_password">password</string>
 
 </resources>
