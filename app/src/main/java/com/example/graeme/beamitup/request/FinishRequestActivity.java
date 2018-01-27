@@ -47,7 +47,7 @@ public class FinishRequestActivity extends Activity {
         Account account = Session.getUserDetails();
         Eth eth = selectEthFromAccountByAddress( account, request.getFromAddress() );
 
-        String senderPrivateKey = getSenderPrivateKey(eth.getId(), request.getFromAddress());
+        String senderPrivateKey = getSenderPrivateKey(eth.getId(), eth.getWalletName());
         Credentials credentials = Credentials.create(senderPrivateKey);
 
          SendTransactionResponse sendTransactionResponse = transactionReceipt -> {
@@ -116,9 +116,9 @@ public class FinishRequestActivity extends Activity {
         pbSendTransfer.setVisibility(View.GONE);
     }
 
-    String getSenderPrivateKey(long ethID, String senderAddress) throws Exception{
+    String getSenderPrivateKey(long ethID, String walletName) throws Exception{
         EthDbAdapter db = new EthDbAdapter(this);
-        String senderPrivateKey = db.retrieveSenderPrivateKey(ethID, senderAddress);
+        String senderPrivateKey = db.retrieveSenderPrivateKey(ethID, walletName);
         db.close();
         return senderPrivateKey;
     }

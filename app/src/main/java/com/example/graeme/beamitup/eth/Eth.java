@@ -4,28 +4,25 @@ import java.io.Serializable;
 
 public class Eth implements Serializable{
     private String nickname;
+    private String walletName;
     private String address;
     private long id;
     private long accountId;
 
-    public Eth(String address, long id, long accountId){
+    public Eth(String nickname, String walletName, String address, long id, long accountId){
+        this.nickname = nickname;
+        this.walletName = walletName;
         this.address = address;
         this.id = id;
         this.accountId = accountId;
     }
 
-    public Eth(String address, long accountId){
+    public Eth(String nickname, String walletName, String address, long accountId){
+        this.nickname = nickname;
+        this.walletName = walletName;
         this.address = address;
         this.id = -1;
         this.accountId = accountId;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public long getId() {
@@ -44,4 +41,27 @@ public class Eth implements Serializable{
         this.accountId = accountId;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getWalletName() {
+        return walletName;
+    }
+
+    public void setWalletName(String walletName) {
+        this.walletName = walletName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }

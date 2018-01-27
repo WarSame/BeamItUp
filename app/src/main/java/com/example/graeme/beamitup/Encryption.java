@@ -3,6 +3,7 @@ package com.example.graeme.beamitup;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -72,8 +73,9 @@ public class Encryption {
         public Encryptor(){
         }
 
-        public void encryptPrivateKey(String ethAddress, String privateKeyString) throws Exception {
-            this.encryptText(ethAddress, privateKeyString);
+        public void encryptPrivateKey(String walletName, String password) throws Exception {
+            Log.i(TAG, "Encrypting password with alias of: " + walletName);
+            this.encryptText(walletName, password);
         }
 
         void encryptText(final String alias, final String textToEncrypt) throws Exception {
@@ -125,8 +127,8 @@ public class Encryption {
             ks.load(null);
         }
 
-        public String decryptPrivateKey(String ethAddress, byte[] privateKeyEnc, byte[] iv) throws Exception {
-            return this.decryptText(ethAddress, privateKeyEnc, iv);
+        public String decryptPrivateKey(String walletName, byte[] privateKeyEnc, byte[] iv) throws Exception {
+            return this.decryptText(walletName, privateKeyEnc, iv);
         }
 
         String decryptText(final String alias, final byte[] encryptedData, final byte[] encryptionIV) throws Exception {

@@ -19,8 +19,8 @@ public class EthDbAdapter extends DbAdapter {
         super(context);
     }
 
-    public long createEth(Eth eth, String privateKey) {
-        Encryption.Encryptor encryptor = encryptPrivateKey(eth.getAddress(), privateKey);
+    public long createEth(Eth eth, String password) {
+        Encryption.Encryptor encryptor = encryptPrivateKey(eth.getWalletName(), password);
 
         long ethID = createEthInDB(eth, encryptor.getEncryption(), encryptor.getIv());
         Log.i(TAG, "Returning eth id: " + ethID);
@@ -37,6 +37,14 @@ public class EthDbAdapter extends DbAdapter {
         contentValues.put(
                 EthTable.ETH_ADDRESS,
                 eth.getAddress()
+        );
+        contentValues.put(
+                EthTable.ETH_NICKNAME,
+                eth.getNickname()
+        );
+        contentValues.put(
+                EthTable.ETH_WALLET_NAME,
+                eth.getWalletName()
         );
         contentValues.put(
                 EthTable.ETH_ENC_PRIVATE_KEY,
@@ -92,6 +100,8 @@ public class EthDbAdapter extends DbAdapter {
                 EthTable.ETH_TABLE_NAME,
                 new String[]{
                         EthTable._ID,
+                        EthTable.ETH_NICKNAME,
+                        EthTable.ETH_WALLET_NAME,
                         EthTable.ETH_ACCOUNT_ID,
                         EthTable.ETH_ADDRESS,
                         EthTable.ETH_ENC_PRIVATE_KEY,
@@ -107,6 +117,8 @@ public class EthDbAdapter extends DbAdapter {
 
     private Eth retrieveEthFromCursor(Cursor res){
         return new Eth(
+                res.getString(res.getColumnIndex(EthTable.ETH_NICKNAME)),
+                res.getString(res.getColumnIndex(EthTable.ETH_WALLET_NAME)),
                 res.getString(res.getColumnIndex(EthTable.ETH_ADDRESS)),
                 res.getLong(res.getColumnIndex(EthTable._ID)),
                 res.getInt(res.getColumnIndex(EthTable.ETH_ACCOUNT_ID))
@@ -192,10 +204,10 @@ public class EthDbAdapter extends DbAdapter {
 
     }
 
-    private Encryption.Encryptor encryptPrivateKey(String address, String privateKey){
+    private Encryption.Encryptor encryptPrivateKey(String walletName, String password){
         Encryption.Encryptor encryptor = new Encryption.Encryptor();
         try {
-            encryptor.encryptPrivateKey(address, privateKey);
+            encryptor.encryptPrivateKey(walletName, password);
         } catch (Exception e) {
             e.printStackTrace();
         }

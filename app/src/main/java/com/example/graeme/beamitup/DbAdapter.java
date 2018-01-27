@@ -11,7 +11,7 @@ import static com.example.graeme.beamitup.DbAdapter.AccountTable.ACCOUNT_TABLE_N
 
 public class DbAdapter {
     //If changing schema, must update db version
-    static final int DATABASE_VERSION = 10;
+    static final int DATABASE_VERSION = 11;
     static final String DATABASE_NAME = "BeamItUp.db";
 
     private DatabaseHelper DbHelper;
@@ -84,6 +84,8 @@ public class DbAdapter {
         public static final String ETH_TABLE_NAME = "eth";
         public static final String ETH_ACCOUNT_ID = "account_id";
         public static final String ETH_ADDRESS = "address";
+        public static final String ETH_WALLET_NAME = "wallet_name";
+        public static final String ETH_NICKNAME = "nickname";
         public static final String ETH_ENC_PRIVATE_KEY = "enc_private_key";
         public static final String ETH_IV = "iv";
 
@@ -91,6 +93,8 @@ public class DbAdapter {
             " (" + _ID + " INTEGER PRIMARY KEY,"
                 + ETH_ACCOUNT_ID + " INTEGER,"
                 + ETH_ADDRESS + " TEXT,"
+                + ETH_WALLET_NAME + " TEXT,"
+                + ETH_NICKNAME + " TEXT,"
                 + ETH_ENC_PRIVATE_KEY + " BLOB,"
                 + ETH_IV + " BLOB,"
                 + "FOREIGN KEY (" + ETH_ACCOUNT_ID + ") REFERENCES "
