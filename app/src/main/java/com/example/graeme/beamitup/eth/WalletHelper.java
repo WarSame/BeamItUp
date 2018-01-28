@@ -13,6 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 
 public class WalletHelper {
+    private static final String WALLET_DIR_RELATIVE_PATH = "/wallets";
     public static Credentials retrieveCredentials(Context context, String password, String walletName) throws IOException, CipherException {
         File walletFile = new File( getWalletDir(context) + "/" + walletName);
         return WalletUtils.loadCredentials(password, walletFile);
@@ -23,7 +24,7 @@ public class WalletHelper {
     }
 
     private static File getWalletDir(Context context) throws IOException {
-        File walletDir = new File(context.getFilesDir() + "/wallets");
+        File walletDir = new File(context.getFilesDir() + WALLET_DIR_RELATIVE_PATH);
         if (!walletDir.exists()){
             if ( !walletDir.mkdir() ){
                 throw new IOException();
