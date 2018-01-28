@@ -10,6 +10,7 @@ import com.example.graeme.beamitup.request.Request;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
@@ -19,38 +20,57 @@ public class WalletTest {
     private static final String TAG = "WalletTest";
     private static final String TO_ADDRESS = "0x31B98D14007bDEe637298086988A0bBd31184523";
     private static final String WALLET_PASSWORD = "somepass";
+    private static final String WRONG_WALLET_PASSWORD = "someotherpass";
     private static final String TRANSACTION_VALUE = "0.01";
+    private static String walletName;
+    private static Request request;
 
     private static Context appContext;
-    private static Credentials credentials;
 
     @BeforeClass
     public static void setUpOneTime() throws Exception{
         appContext = InstrumentationRegistry.getTargetContext();
         Session.createSession();
 
-        String walletName = WalletHelper.generateWallet(appContext, WALLET_PASSWORD);
+        walletName = WalletHelper.generateWallet(appContext, WALLET_PASSWORD);
         Log.i(TAG, "walletName: " + walletName);
 
-        credentials = WalletHelper.retrieveCredentials(
+        request = new Request(TO_ADDRESS, TRANSACTION_VALUE);
+    }
+
+    @Test
+    public void sendFundsFromEmptyWallet_ShouldBeNullTransactionReceipt() throws Exception{
+        Credentials credentials = WalletHelper.retrieveCredentials(
                 appContext,
                 WALLET_PASSWORD,
                 walletName
         );
         Log.i(TAG, "credentials address: " + credentials.getAddress());
-    }
 
-    @Test
-    public void sendFundsFromEmptyWallet_ShouldBeNullTransactionReceipt() throws Exception{
         FulfillRequestTask fulfillRequestTask = new FulfillRequestTask(
                 Session.getWeb3j(),
                 credentials,
                 sendTransactionResponse
         );
-        Request request = new Request(TO_ADDRESS, TRANSACTION_VALUE);
         fulfillRequestTask.execute(request);
         TransactionReceipt transactionReceipt = fulfillRequestTask.get();
         assertTrue(transactionReceipt == null);
+    }
+
+    @Test(expected = CipherException.class)
+    public void sendFundsWithWrongPassword_ShouldBeCipherException() throws Exception{
+        Credentials credentials = WalletHelper.retrieveCredentials(
+                appContext,
+                WRONG_WALLET_PASSWORD,
+                walletName
+        );
+
+        FulfillRequestTask task = new FulfillRequestTask(
+                Session.getWeb3j(),
+                credentials,
+                sendTransactionResponse
+        );
+        task.execute(request);
     }
 
     private SendTransactionTask.SendTransactionResponse sendTransactionResponse = (response) -> {
