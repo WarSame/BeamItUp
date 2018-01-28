@@ -42,7 +42,6 @@ public class FulfillRequestTaskTest {
         FulfillRequestTask task = new FulfillRequestTask(
                 Session.getWeb3j(),
                 credentials,
-                request.getToAddress(),
                 sendTransactionResponse
         );
         task.execute(request);

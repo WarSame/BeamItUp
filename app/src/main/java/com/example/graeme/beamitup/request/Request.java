@@ -5,7 +5,7 @@ import com.example.graeme.beamitup.transfer.Transaction;
 public class Request extends Transaction {
     private static final String TAG = "Request";
 
-    Request(String toAddress, String amount) {
+    public Request(String toAddress, String amount) {
         super(toAddress, amount);
     }
 

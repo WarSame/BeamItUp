@@ -68,7 +68,6 @@ public class FinishRequestActivity extends Activity {
         FulfillRequestTask task = new FulfillRequestTask(
                 Session.getWeb3j(),
                 credentials,
-                request.getToAddress(),
                 sendTransactionResponse
         );
         task.execute(request);

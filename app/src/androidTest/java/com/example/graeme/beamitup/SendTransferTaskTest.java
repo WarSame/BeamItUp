@@ -41,7 +41,6 @@ public class SendTransferTaskTest {
         SendTransferTask task = new SendTransferTask(
                 Session.getWeb3j(),
                 credentials,
-                transfer.getToAddress(),
                 sendTransactionResponse
         );
         task.execute(transfer);

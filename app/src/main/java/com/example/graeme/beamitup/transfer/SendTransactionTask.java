@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 
 public class SendTransactionTask<T extends Transaction> extends AsyncTask<T, Void, TransactionReceipt> {
     private static final String TAG = "SendTransactionTask";
-    private String toAddress;
     private Web3j web3j;
     private Credentials credentials;
     private SendTransactionResponse sendTransactionResponse;
@@ -22,12 +21,10 @@ public class SendTransactionTask<T extends Transaction> extends AsyncTask<T, Voi
     public SendTransactionTask(
             Web3j web3j,
             Credentials credentials,
-            String toAddress,
             SendTransactionResponse sendTransactionResponse
     ){
         this.web3j = web3j;
         this.credentials = credentials;
-        this.toAddress = toAddress;
         this.sendTransactionResponse = sendTransactionResponse;
     }
 
@@ -44,7 +41,7 @@ public class SendTransactionTask<T extends Transaction> extends AsyncTask<T, Voi
             TransactionReceipt receipt = org.web3j.tx.Transfer.sendFunds(
                     web3j,
                     credentials,
-                    toAddress,
+                    transaction.getToAddress(),
                     new BigDecimal(transaction.getAmount()),
                     Convert.Unit.ETHER
             ).send();
