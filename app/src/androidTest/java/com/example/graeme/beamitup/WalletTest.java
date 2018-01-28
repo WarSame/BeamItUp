@@ -24,7 +24,6 @@ public class WalletTest {
     private static final String WALLET_PASSWORD = "somepass";
 
     private static Context appContext;
-    private static String walletLocation;
     private static Credentials credentials;
 
     @BeforeClass
