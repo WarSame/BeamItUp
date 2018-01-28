@@ -7,7 +7,6 @@ import android.util.Log;
 import com.example.graeme.beamitup.eth.WalletHelper;
 import com.example.graeme.beamitup.request.FulfillRequestTask;
 import com.example.graeme.beamitup.request.Request;
-import com.example.graeme.beamitup.transfer.SendTransactionTask;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -41,22 +40,17 @@ public class WalletTest {
         Log.i(TAG, "credentials address: " + credentials.getAddress());
     }
 
-    @Test(expected = RuntimeException.class)
-    public void sendFundsFromEmptyWallet_ShouldBeRuntimeException() throws Exception{
+    @Test
+    public void sendFundsFromEmptyWallet_ShouldBeNullTransactionReceipt() throws Exception{
         FulfillRequestTask fulfillRequestTask = new FulfillRequestTask(
                 Session.getWeb3j(),
                 credentials,
                 sendTransactionResponse
         );
         Request request = new Request(TO_ADDRESS, TRANSACTION_VALUE);
-        try {
-            fulfillRequestTask.execute(request);
-            TransactionReceipt transactionReceipt = fulfillRequestTask.get();
-            Log.i(TAG, "Transaction receipt from: " + transactionReceipt.getFrom());
-        } catch (Exception e){
-            e.printStackTrace();
-            assertTrue(e instanceof RuntimeException);
-        }
+        fulfillRequestTask.execute(request);
+        TransactionReceipt transactionReceipt = fulfillRequestTask.get();
+        assertTrue(transactionReceipt == null);
     }
 
     private SendTransactionTask.SendTransactionResponse sendTransactionResponse = (response) -> {

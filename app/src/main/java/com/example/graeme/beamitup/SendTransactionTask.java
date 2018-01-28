@@ -1,9 +1,10 @@
-package com.example.graeme.beamitup.transfer;
+package com.example.graeme.beamitup;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.graeme.beamitup.Session;
+import com.example.graeme.beamitup.transfer.Transaction;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
@@ -53,8 +54,8 @@ public class SendTransactionTask<T extends Transaction> extends AsyncTask<T, Voi
         }
         catch (Exception e){
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     @Override

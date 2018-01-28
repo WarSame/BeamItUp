@@ -1,5 +1,7 @@
 package com.example.graeme.beamitup.transfer;
 
+import com.example.graeme.beamitup.SendTransactionTask;
+
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 

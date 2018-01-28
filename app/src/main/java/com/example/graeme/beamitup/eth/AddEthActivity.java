@@ -11,19 +11,9 @@ import android.widget.Toast;
 import com.example.graeme.beamitup.account.Account;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.Session;
-import com.example.graeme.beamitup.request.FulfillRequestTask;
-import com.example.graeme.beamitup.request.Request;
 import com.example.graeme.beamitup.transfer.LandingPageActivity;
-import com.example.graeme.beamitup.transfer.SendTransactionTask;
 
-import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
-
-import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 
 public class AddEthActivity extends Activity {
     private static final String TAG = "AddEthActivity";

@@ -4,10 +4,9 @@ import android.util.Log;
 
 import com.example.graeme.beamitup.request.Request;
 import com.example.graeme.beamitup.request.FulfillRequestTask;
-import com.example.graeme.beamitup.transfer.SendTransactionTask.SendTransactionResponse;
+import com.example.graeme.beamitup.SendTransactionTask.SendTransactionResponse;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.web3j.crypto.Credentials;

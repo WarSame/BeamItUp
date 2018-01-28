@@ -15,7 +15,7 @@ import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthDbAdapter;
 import com.example.graeme.beamitup.eth.WalletHelper;
 import com.example.graeme.beamitup.transfer.LandingPageActivity;
-import com.example.graeme.beamitup.transfer.SendTransactionTask.SendTransactionResponse;
+import com.example.graeme.beamitup.SendTransactionTask.SendTransactionResponse;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;

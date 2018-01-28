@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.graeme.beamitup.SendTransactionTask;
 import com.example.graeme.beamitup.account.Account;
 import com.example.graeme.beamitup.account.LoginActivity;
 import com.example.graeme.beamitup.eth.Eth;
