@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.util.Log;
 
+import com.example.graeme.beamitup.eth.WalletHelper;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.web3j.crypto.Credentials;
@@ -19,41 +21,30 @@ import java.math.BigDecimal;
 public class WalletTest {
     private static final String TAG = "WalletTest";
     private static final String TO_ADDRESS = "0x31B98D14007bDEe637298086988A0bBd31184523";
+    private static final String WALLET_PASSWORD = "somepass";
 
     private static Context appContext;
     private static String walletLocation;
+    private static Credentials credentials;
 
     @BeforeClass
     public static void setUpOneTime() throws Exception{
         appContext = InstrumentationRegistry.getTargetContext();
         Session.createSession();
 
-        File walletsDir = new File(appContext.getFilesDir(), "/wallets");
-        Log.i(TAG, "files dir " + appContext.getFilesDir());
+        String walletName = WalletHelper.generateWallet(appContext, WALLET_PASSWORD);
+        Log.i(TAG, "walletName: " + walletName);
 
-        if (!walletsDir.exists()){
-            Log.i(TAG, "walletsDir not found");
-            if ( walletsDir.mkdirs() ){
-                Log.i(TAG, "walletsDir made: " + walletsDir.getAbsolutePath());
-            }
-            else {
-                Log.i(TAG, "walletsDir not made");
-                throw new FileNotFoundException();
-            }
-        }
-
-        String walletName = WalletUtils.generateLightNewWalletFile(
-                "somepass",
-                walletsDir
+        credentials = WalletHelper.retrieveCredentials(
+                appContext,
+                WALLET_PASSWORD,
+                walletName
         );
-        walletLocation = walletsDir + "/" + walletName;
-        Log.i(TAG, "walletLocation: " + walletName);
+        Log.i(TAG, "credentials address: " + credentials.getAddress());
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void loadWallet() throws Exception{
-        Credentials credentials = WalletUtils.loadCredentials("somepass", new File(walletLocation));
-
         TransactionReceipt transactionReceipt = Transfer.sendFunds(
                 Session.getWeb3j(),
                 credentials,

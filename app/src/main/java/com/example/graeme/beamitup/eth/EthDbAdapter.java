@@ -20,7 +20,7 @@ public class EthDbAdapter extends DbAdapter {
     }
 
     public long createEth(Eth eth, String password) {
-        Encryption.Encryptor encryptor = encryptPrivateKey(eth.getWalletName(), password);
+        Encryption.Encryptor encryptor = encryptPassword(eth.getWalletName(), password);
 
         long ethID = createEthInDB(eth, encryptor.getEncryption(), encryptor.getIv());
         Log.i(TAG, "Returning eth id: " + ethID);
@@ -168,7 +168,7 @@ public class EthDbAdapter extends DbAdapter {
     }
 
     boolean updateEth(Eth eth, String privateKey){
-        Encryption.Encryptor encryptor = encryptPrivateKey(eth.getAddress(), privateKey);
+        Encryption.Encryptor encryptor = encryptPassword(eth.getAddress(), privateKey);
         return updateEthInDB(eth, encryptor.getEncryption(), encryptor.getIv());
     }
 
@@ -204,7 +204,7 @@ public class EthDbAdapter extends DbAdapter {
 
     }
 
-    private Encryption.Encryptor encryptPrivateKey(String walletName, String password){
+    private Encryption.Encryptor encryptPassword(String walletName, String password){
         Encryption.Encryptor encryptor = new Encryption.Encryptor();
         try {
             encryptor.encryptPrivateKey(walletName, password);

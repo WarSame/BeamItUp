@@ -25,8 +25,8 @@ public class EthDbAdapterTest {
         DbAdapter.DatabaseHelper dbHelper = new DbAdapter.DatabaseHelper(appContext);
         dbHelper.onUpgrade(ethDB.db, 0, 1);//Wipe db tables
 
-        insertedEth = new Eth("insertedaddress", 15);
-        insertedEthWithID = new Eth("insertedaddresswithid", 2, 12);
+        insertedEth = new Eth("nickname","insertedaddress", "walletname", 15);
+        insertedEthWithID = new Eth("nickname2", "walletname2", "insertedaddresswithid", 2, 12);
     }
 
     @After
