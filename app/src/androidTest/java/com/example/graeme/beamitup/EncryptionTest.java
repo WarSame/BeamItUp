@@ -2,6 +2,8 @@ package com.example.graeme.beamitup;
 
 import android.util.Log;
 
+import com.example.graeme.beamitup.wallet.EncryptedWallet;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,8 +32,7 @@ public class EncryptionTest {
     @Test
     public void storeWalletFile() throws Exception {
         String longPassword = Encryption.generateLongRandomString();
-        byte[] IV = Encryption.generateIV();
-        byte[] encryptedLongPassword = Encryption.encryptWalletPassword("somewallet", longPassword, IV);
+        EncryptedWallet encryptedWallet = Encryption.encryptWalletPassword("somewallet", longPassword);
     }
 
 }

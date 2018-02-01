@@ -41,10 +41,11 @@ public class WalletHelper {
     }
 
     public static String generateWallet(Context context, long ethID) throws Exception {
-        byte[] IV = Encryption.generateIV();
         String longPassword = Encryption.generateLongRandomString();
         String walletName = WalletUtils.generateLightNewWalletFile(longPassword, getWalletDir(context));
-        byte[] encryptedLongPassword = Encryption.encryptWalletPassword(walletName, longPassword, IV);
+        EncryptedWallet encryptedWallet = Encryption.encryptWalletPassword(walletName, longPassword);
+        byte[] IV = encryptedWallet.getIV();
+        byte[] encryptedLongPassword = encryptedWallet.getEncryptedLongPassword();
         addEncryptedWalletToDB(context, walletName, IV, encryptedLongPassword, ethID);
         return walletName;
     }

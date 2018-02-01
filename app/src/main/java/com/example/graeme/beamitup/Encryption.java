@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.graeme.beamitup.eth.EthDbAdapter;
+import com.example.graeme.beamitup.wallet.EncryptedWallet;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -167,9 +168,12 @@ public class Encryption {
     //Generate a key in the keystore with alias walletName
     //Encrypt long password with key
     //Store encrypted blob in DB
-    public static byte[] encryptWalletPassword(String walletName, String longPassword, byte[] IV) throws Exception {
+    public static EncryptedWallet encryptWalletPassword(String walletName, String longPassword) throws Exception {
         SecretKey secretKey = generateKey(walletName);
-        return encryptAES(longPassword.getBytes(), secretKey, IV);
+        Cipher cipher = createEncryptionCipher(secretKey);
+        byte[] longPasswordBytes = longPassword.getBytes();
+        byte[] encryptedLongPassword = cipher.doFinal(longPasswordBytes);
+        return new EncryptedWallet(encryptedLongPassword, cipher.getIV(), walletName);
     }
 
     public static byte[] generateIV(){
@@ -206,8 +210,6 @@ public class Encryption {
                 KeyProperties.PURPOSE_ENCRYPT
                         | KeyProperties.PURPOSE_DECRYPT
         )
-                .setCertificateSubject(new X500Principal("CN = Secured Preference Store, O = Devliving Online"))
-                .setCertificateSerialNumber(BigInteger.ONE)
                 .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
                 .setRandomizedEncryptionRequired(true)
@@ -217,11 +219,10 @@ public class Encryption {
         return keyGen.generateKey();
     }
 
-    private static byte[] encryptAES(final byte[] bytes, final Key aesKey, byte[] IV) throws Exception {
+    private static Cipher createEncryptionCipher(final Key aesKey) throws Exception {
         Cipher cipher = Cipher.getInstance(AES_CIPHER);
-        cipher.init(Cipher.ENCRYPT_MODE, aesKey, new GCMParameterSpec(GCM_TAG_LENGTH, IV));
-
-        return cipher.doFinal(bytes);
+        cipher.init(Cipher.ENCRYPT_MODE, aesKey);
+        return cipher;
     }
 
     //Retrieve encrypted blob from DB

@@ -5,7 +5,7 @@ public class EncryptedWallet {
     private byte[] IV;
     private String walletName;
 
-    EncryptedWallet(byte[] encryptedLongPassword, byte[] IV, String walletName){
+    public EncryptedWallet(byte[] encryptedLongPassword, byte[] IV, String walletName){
         this.encryptedLongPassword = encryptedLongPassword;
         this.IV = IV;
         this.walletName = walletName;
