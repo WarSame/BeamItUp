@@ -125,12 +125,12 @@ public class EthDbAdapter extends DbAdapter {
         );
     }
 
-    public String retrieveSenderPrivateKey(long ethID, String senderAddress) throws Exception {
+    public String retrieveSenderPassword(long ethID, String senderAddress) throws Exception {
         Encryption.Encryptor encryptor = retrieveEncryptor(ethID);
         byte[] encPrivateKey = encryptor.getEncryption();
         byte[] iv = encryptor.getIv();
         Encryption.Decryptor decryptor = new Encryption.Decryptor();
-        return decryptor.decryptPrivateKey(senderAddress, encPrivateKey, iv);
+        return decryptor.decryptPassword(senderAddress, encPrivateKey, iv);
     }
 
     private Encryption.Encryptor retrieveEncryptor(long ethID){
@@ -207,7 +207,7 @@ public class EthDbAdapter extends DbAdapter {
     private Encryption.Encryptor encryptPassword(String walletName, String password){
         Encryption.Encryptor encryptor = new Encryption.Encryptor();
         try {
-            encryptor.encryptPrivateKey(walletName, password);
+            encryptor.encryptPassword(walletName, password);
         } catch (Exception e) {
             e.printStackTrace();
         }
