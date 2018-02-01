@@ -45,15 +45,15 @@ public class AccountDbAdapterTest {
 
         long insertedAccountID = accountDB.createAccount(insertedEmail, insertedPasswordCharArray);
         insertedAccount = new Account(insertedEmail, insertedAccountID);
-        Eth insertedEth = new Eth("somenick", "walletname", "someaddress", insertedAccountID);
+        Eth insertedEth = new Eth("somenick", "someaddress", insertedAccountID);
         insertedAccount.addEth(insertedEth);
-        ethDb.createEth(insertedEth, "someotherprivatekey");
+        ethDb.createEth(insertedEth);
 
         String otherInsertedEmail = "someotherinsertedemail@thisplace.com";
         char[] otherInsertedPassword = "someotherinsertedpassword".toCharArray();
         long otherInsertedAccountID = accountDB.createAccount(otherInsertedEmail, otherInsertedPassword);
         otherInsertedAccount = new Account(otherInsertedEmail, otherInsertedAccountID);
-        otherInsertedEth = new Eth("somenick","somewallet","someaddress", otherInsertedAccountID);
+        otherInsertedEth = new Eth("someothernick","someotheraddress", otherInsertedAccountID);
 
         notInsertedAccount = new Account(notInsertedEmail, 17);
     }
@@ -96,7 +96,7 @@ public class AccountDbAdapterTest {
     public void retrieveAccount_InsertedAccountAndExtraEthCount_ShouldBeTwo() throws Exception {
         otherInsertedEth.setAccountId(insertedAccount.getId());
         insertedAccount.addEth(otherInsertedEth);
-        ethDb.createEth(otherInsertedEth, "someprivatekey");
+        ethDb.createEth(otherInsertedEth);
 
         Account updatedInsertedAccount = accountDB.retrieveAccount(insertedAccount.getEmail());
         assertTrue(updatedInsertedAccount.getEths().size() == 2);

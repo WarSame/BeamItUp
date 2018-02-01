@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.util.Log;
 
-import com.example.graeme.beamitup.eth.WalletHelper;
+import com.example.graeme.beamitup.wallet.WalletHelper;
 import com.example.graeme.beamitup.request.FulfillRequestTask;
 import com.example.graeme.beamitup.request.Request;
 
@@ -19,9 +19,8 @@ import static junit.framework.Assert.assertTrue;
 public class WalletTest {
     private static final String TAG = "WalletTest";
     private static final String TO_ADDRESS = "0x31B98D14007bDEe637298086988A0bBd31184523";
-    private static final String WALLET_PASSWORD = "somepass";
-    private static final String WRONG_WALLET_PASSWORD = "someotherpass";
     private static final String TRANSACTION_VALUE = "0.01";
+    private static final long ETH_ID = 1;
     private static String walletName;
     private static Request request;
 
@@ -32,7 +31,7 @@ public class WalletTest {
         appContext = InstrumentationRegistry.getTargetContext();
         Session.createSession();
 
-        walletName = WalletHelper.generateWallet(appContext, WALLET_PASSWORD);
+        walletName = WalletHelper.generateWallet(appContext, ETH_ID);
         Log.i(TAG, "walletName: " + walletName);
 
         request = new Request(TO_ADDRESS, TRANSACTION_VALUE);
@@ -42,8 +41,7 @@ public class WalletTest {
     public void sendFundsFromEmptyWallet_ShouldBeNullTransactionReceipt() throws Exception{
         Credentials credentials = WalletHelper.retrieveCredentials(
                 appContext,
-                WALLET_PASSWORD,
-                walletName
+                ETH_ID
         );
         Log.i(TAG, "credentials address: " + credentials.getAddress());
 
@@ -61,8 +59,7 @@ public class WalletTest {
     public void sendFundsWithWrongPassword_ShouldBeCipherException() throws Exception{
         Credentials credentials = WalletHelper.retrieveCredentials(
                 appContext,
-                WRONG_WALLET_PASSWORD,
-                walletName
+                ETH_ID
         );
 
         FulfillRequestTask task = new FulfillRequestTask(

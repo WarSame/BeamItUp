@@ -102,10 +102,7 @@ public class FinishTransferActivity extends Activity {
     }
 
     String getSenderPrivateKey(long ethID, String senderAddress) throws Exception{
-        EthDbAdapter db = new EthDbAdapter(this);
-        String senderPrivateKey = db.retrieveSenderPrivateKey(ethID, senderAddress);
-        db.close();
-        return senderPrivateKey;
+        return "";
     }
 
     @SuppressLint("SetTextI18n")

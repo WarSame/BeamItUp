@@ -12,6 +12,7 @@ import com.example.graeme.beamitup.account.Account;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.Session;
 import com.example.graeme.beamitup.transfer.LandingPageActivity;
+import com.example.graeme.beamitup.wallet.WalletHelper;
 
 import org.web3j.crypto.Credentials;
 
@@ -34,17 +35,17 @@ public class AddEthActivity extends Activity {
         btn_add_eth.setEnabled(false);
 
         EditText et_eth_nickname = (EditText) findViewById(R.id.et_eth_nickname);
-        EditText et_eth_password = (EditText) findViewById(R.id.et_eth_password);
 
         String nickname = et_eth_nickname.getText().toString();
-        String password = et_eth_password.getText().toString();
+
+        Eth eth = new Eth(nickname, "", -1);
 
         try {
-            String walletName = WalletHelper.generateWallet(this, password);
+            String walletName = WalletHelper.generateWallet(this, eth.getId());
             Log.i(TAG, "Walletname: " + walletName);
-            Credentials credentials = WalletHelper.retrieveCredentials(this, password, walletName);
-            Log.i(TAG, "Wallet address: " + credentials.getAddress());
-            createEthAndAddToSessionAccount(nickname, walletName, credentials.getAddress(), password);
+            Credentials credentials = WalletHelper.retrieveCredentials(this, eth.getId());
+            Log.i(TAG, "EncryptedWallet address: " + credentials.getAddress());
+            createEthAndAddToSessionAccount(nickname, walletName, credentials.getAddress());
             onCreateEthSuccess();
         } catch (Exception e) {
             e.printStackTrace();
@@ -52,22 +53,22 @@ public class AddEthActivity extends Activity {
         }
     }
 
-    private void createEthAndAddToSessionAccount(String nickname, String walletName, String address, String password) {
+    private void createEthAndAddToSessionAccount(String nickname, String walletName, String address) {
         Account sessionAccount = Session.getUserDetails();
         Eth eth = createEthFromSessionAccountID(sessionAccount.getId(), nickname, address, walletName);
-        long ethID = insertEthInDB(eth, password);
+        long ethID = insertEthInDB(eth);
         eth.setId(ethID);
         sessionAccount.addEth(eth);
     }
 
     private Eth createEthFromSessionAccountID(long sessionAccountID, String nickname, String address, String walletName) {
         Log.i(TAG, "Session account id: " + sessionAccountID);
-        return new Eth(nickname, walletName, address, sessionAccountID);
+        return new Eth(nickname, address, sessionAccountID);
     }
 
-    private long insertEthInDB(Eth eth, String password){
+    private long insertEthInDB(Eth eth){
         EthDbAdapter db = new EthDbAdapter(this);
-        long ethID = db.createEth(eth, password);
+        long ethID = db.createEth(eth);
         Log.i(TAG, "Setting eth id to " + ethID);
         db.close();
         return ethID;

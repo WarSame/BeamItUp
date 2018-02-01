@@ -25,8 +25,8 @@ public class EthDbAdapterTest {
         DbAdapter.DatabaseHelper dbHelper = new DbAdapter.DatabaseHelper(appContext);
         dbHelper.onUpgrade(ethDB.db, 0, 1);//Wipe db tables
 
-        insertedEth = new Eth("nickname","insertedaddress", "walletname", 15);
-        insertedEthWithID = new Eth("nickname2", "walletname2", "insertedaddresswithid", 2, 12);
+        insertedEth = new Eth("nickname","insertedaddress", 15);
+        insertedEthWithID = new Eth("nickname2", "insertedaddresswithid", 2, 12);
     }
 
     @After
@@ -36,14 +36,14 @@ public class EthDbAdapterTest {
 
     @Test
     public void createEth_InsertedAccountCreated_ShouldBeZero() throws Exception {
-        long ethID = ethDB.createEth(insertedEth, "insertedprivatekey");
+        long ethID = ethDB.createEth(insertedEth);
         System.out.println("ethid"+ethID);
         assertTrue(ethID == 1);
     }
 
     @Test
     public void createEth_InsertedAccountCreatedWithEthID_ShouldBeOne() throws Exception {
-        ethDB.createEth(insertedEthWithID, "idinsertedprivatekey");
+        ethDB.createEth(insertedEthWithID);
         System.out.println("ethidwithid"+insertedEthWithID.getId());
         assertTrue(insertedEthWithID.getId() == 2);
     }

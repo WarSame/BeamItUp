@@ -13,7 +13,7 @@ import com.example.graeme.beamitup.Session;
 import com.example.graeme.beamitup.account.Account;
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthDbAdapter;
-import com.example.graeme.beamitup.eth.WalletHelper;
+import com.example.graeme.beamitup.wallet.WalletHelper;
 import com.example.graeme.beamitup.transfer.LandingPageActivity;
 import com.example.graeme.beamitup.SendTransactionTask.SendTransactionResponse;
 
@@ -51,8 +51,7 @@ public class FinishRequestActivity extends Activity {
 
         Credentials credentials = WalletHelper.retrieveCredentials(
                 this,
-                password,
-                eth.getWalletName()
+                eth.getId()
         );
 
          SendTransactionResponse sendTransactionResponse = transactionReceipt -> {
@@ -118,13 +117,6 @@ public class FinishRequestActivity extends Activity {
     private void removeProgressBar(){
         ProgressBar pbSendTransfer = (ProgressBar)findViewById(R.id.pb_send_transfer);
         pbSendTransfer.setVisibility(View.GONE);
-    }
-
-    String getSenderPrivateKey(long ethID, String walletName) throws Exception{
-        EthDbAdapter db = new EthDbAdapter(this);
-        String senderPrivateKey = db.retrieveSenderPrivateKey(ethID, walletName);
-        db.close();
-        return senderPrivateKey;
     }
 
     private String getTransactionAmount(Transaction transaction) throws Exception{
