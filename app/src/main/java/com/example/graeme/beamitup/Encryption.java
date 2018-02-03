@@ -47,8 +47,6 @@ public class Encryption {
     private static final String AES_CIPHER = KeyProperties.KEY_ALGORITHM_AES + "/" +
             KeyProperties.BLOCK_MODE_GCM + "/" +
             KeyProperties.ENCRYPTION_PADDING_NONE;
-    private static final int GCM_TAG_LENGTH = 128;
-    private static final int IV_BYTE_LENGTH = 12;
 
     private static final int RANDOM_STRING_LENGTH = 128;
     private static final char[] RANDOM_STRING_CHARACTERS = "abcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
@@ -176,17 +174,6 @@ public class Encryption {
         return new EncryptedWallet(encryptedLongPassword, cipher.getIV(), walletName);
     }
 
-    public static byte[] generateIV(){
-        return generateBytes(IV_BYTE_LENGTH);
-    }
-
-    private static byte[] generateBytes(int length){
-        byte[] bytes = new byte[length];
-        SecureRandom sr = new SecureRandom();
-        sr.nextBytes(bytes);
-        return bytes;
-    }
-
     public static String generateLongRandomString(){
         SecureRandom sr = new SecureRandom();
         final int RANDOM_STRING_NUM_CHARS = RANDOM_STRING_CHARACTERS.length;
@@ -225,12 +212,25 @@ public class Encryption {
         return cipher;
     }
 
-    //Retrieve encrypted blob from DB
+    //Retrieve encrypted long password from DB
     //Retrieve key with walletName alias
     //Decrypt long password with key
-    public static String decryptWalletPassword(byte[] encryptedLongPassword, byte[] IV, String walletName) {
-        //SecretKey secretKey = retrieveKey(walletName);
-        //return decryptAES(encryptedLongPassword, IV, walletName);
-        return "";
+    public static String decryptWalletPassword(byte[] encryptedLongPassword, byte[] IV, String walletName) throws Exception{
+        SecretKey aesKey = retrieveKeyFromKeyStore(walletName);
+        byte[] decryptedLongPassword = decryptAES(encryptedLongPassword, IV, aesKey);
+        return Arrays.toString(decryptedLongPassword);
+    }
+
+    private static SecretKey retrieveKeyFromKeyStore(String walletName) throws Exception{
+        KeyStore keyStore = KeyStore.getInstance(KEYSTORE_PROVIDER);
+        KeyStore.SecretKeyEntry entry = (KeyStore.SecretKeyEntry) keyStore.getEntry(walletName, null);
+        return entry.getSecretKey();
+    }
+
+    private static byte[] decryptAES(final byte[] bytes, final byte[] iv, final Key aesKey) throws Exception {
+        Cipher cipher = Cipher.getInstance(AES_CIPHER);
+        cipher.init(Cipher.DECRYPT_MODE, aesKey);
+
+        return cipher.doFinal(bytes);
     }
 }

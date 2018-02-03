@@ -4,11 +4,20 @@ public class EncryptedWallet {
     private byte[] encryptedLongPassword;
     private byte[] IV;
     private String walletName;
+    private long id;
 
     public EncryptedWallet(byte[] encryptedLongPassword, byte[] IV, String walletName){
         this.encryptedLongPassword = encryptedLongPassword;
         this.IV = IV;
         this.walletName = walletName;
+        this.id = -1;
+    }
+
+    public EncryptedWallet(byte[] encryptedLongPassword, byte[] IV, String walletName, long id){
+        this.encryptedLongPassword = encryptedLongPassword;
+        this.IV = IV;
+        this.walletName = walletName;
+        this.id = id;
     }
 
     public byte[] getEncryptedLongPassword() {
@@ -33,5 +42,13 @@ public class EncryptedWallet {
 
     public void setWalletName(String walletName) {
         this.walletName = walletName;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

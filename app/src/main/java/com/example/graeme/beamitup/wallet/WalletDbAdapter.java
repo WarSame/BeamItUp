@@ -2,6 +2,7 @@ package com.example.graeme.beamitup.wallet;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.util.Log;
 
 import com.example.graeme.beamitup.DbAdapter;
@@ -31,6 +32,26 @@ public class WalletDbAdapter extends DbAdapter {
     }
 
     public EncryptedWallet retrieveEncryptedWalletByEthID(long ethID) {
-        return null;
+        Cursor res = this.db.query(
+                WalletTable.WALLET_TABLE_NAME,
+                new String[]{
+                        WalletTable.ETH_ID,
+                        WalletTable.WALLET_ENCRYPTED_LONG_PASSWORD,
+                        WalletTable.WALLET_IV,
+                        WalletTable.WALLET_NAME,
+                        WalletTable._ID
+                },
+                WalletTable.ETH_ID+"=?",
+                new String[]{Long.toString(ethID)},
+                null,
+                null,
+                null
+        );
+        byte[] encryptedLongPassword = res.getBlob(res.getColumnIndex(WalletTable.WALLET_ENCRYPTED_LONG_PASSWORD));
+        byte[] IV = res.getBlob(res.getColumnIndex(WalletTable.WALLET_IV));
+        String walletName = res.getString(res.getColumnIndex(WalletTable.WALLET_NAME));
+        long ID = res.getLong(res.getColumnIndex(WalletTable._ID));
+        res.close();
+        return new EncryptedWallet(encryptedLongPassword, IV, walletName, ID);
     }
 }
