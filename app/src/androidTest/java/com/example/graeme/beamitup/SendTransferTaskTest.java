@@ -23,16 +23,16 @@ public class SendTransferTaskTest {
     private static Transfer transfer;
     private static TransactionReceipt transactionReceipt;
     private static final String TRANSACTION_VALUE = "0.005";
-    private static final String SENDER_ADDRESS = "0x6861b070f43842fc16ead07854ee5d91b9d27c13";
-    private static final String RECEIVER_ADDRESS = "0x31b98d14007bdee637298086988a0bbd31184523";
+    private static final String FROM_ADDRESS = "0x6861b070f43842fc16ead07854ee5d91b9d27c13";
+    private static final String TO_ADDRESS = "0x31b98d14007bdee637298086988a0bbd31184523";
 
     private static final String SENDER_PRIVATE_KEY = "";
 
     @BeforeClass
     public static void oneTimeSetUp() throws Exception{
         transfer = new Transfer();
-        transfer.setFromAddress(SENDER_ADDRESS);
-        transfer.setToAddress(RECEIVER_ADDRESS);
+        transfer.setFromAddress(FROM_ADDRESS);
+        transfer.setToAddress(TO_ADDRESS);
         transfer.setAmount(TRANSACTION_VALUE);
 
         Credentials credentials = Credentials.create(SENDER_PRIVATE_KEY);
