@@ -16,7 +16,7 @@ public class WalletHelper {
     private static final String TAG = "WalletHelper";
     private static final String WALLET_DIR_RELATIVE_PATH = "/wallets";
 
-    public static Credentials retrieveCredentials(Context context, long ethID) throws IOException, CipherException {
+    public static Credentials retrieveCredentials(Context context, long ethID) throws Exception {
         //Retrieve encrypted long password from DB with IV, decrypt using keystore
         Wallet wallet = retrieveWalletForEth(context, ethID);
         File walletFile = new File( getWalletDir(context) + "/" + wallet.getWalletName());
@@ -24,7 +24,7 @@ public class WalletHelper {
         return WalletUtils.loadCredentials(wallet.getLongPassword(), walletFile);
     }
 
-    private static Wallet retrieveWalletForEth(Context context, long ethID){
+    private static Wallet retrieveWalletForEth(Context context, long ethID) throws Exception{
         EncryptedWallet encryptedWallet = retrieveEncryptedWalletFromDB(context, ethID);
         byte[] encryptedLongPassword = encryptedWallet.getEncryptedLongPassword();
         byte[] IV = encryptedWallet.getIV();

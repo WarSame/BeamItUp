@@ -85,6 +85,7 @@ public class EthDbAdapter extends DbAdapter {
                 new String[]{
                         EthTable._ID,
                         EthTable.ETH_NICKNAME,
+                        EthTable.ETH_ADDRESS,
                         EthTable.ETH_ACCOUNT_ID,
                 },
                 EthTable.ETH_ACCOUNT_ID + "=?",

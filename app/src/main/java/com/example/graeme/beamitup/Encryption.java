@@ -35,6 +35,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.IvParameterSpec;
 import javax.security.auth.x500.X500Principal;
 
 public class Encryption {
@@ -47,6 +48,7 @@ public class Encryption {
     private static final String AES_CIPHER = KeyProperties.KEY_ALGORITHM_AES + "/" +
             KeyProperties.BLOCK_MODE_GCM + "/" +
             KeyProperties.ENCRYPTION_PADDING_NONE;
+    private static final int GCM_TAG_LENGTH = 128;
 
     private static final int RANDOM_STRING_LENGTH = 128;
     private static final char[] RANDOM_STRING_CHARACTERS = "abcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
@@ -218,18 +220,19 @@ public class Encryption {
     public static String decryptWalletPassword(byte[] encryptedLongPassword, byte[] IV, String walletName) throws Exception{
         SecretKey aesKey = retrieveKeyFromKeyStore(walletName);
         byte[] decryptedLongPassword = decryptAES(encryptedLongPassword, IV, aesKey);
-        return Arrays.toString(decryptedLongPassword);
+        return new String(decryptedLongPassword);
     }
 
     private static SecretKey retrieveKeyFromKeyStore(String walletName) throws Exception{
         KeyStore keyStore = KeyStore.getInstance(KEYSTORE_PROVIDER);
+        keyStore.load(null);
         KeyStore.SecretKeyEntry entry = (KeyStore.SecretKeyEntry) keyStore.getEntry(walletName, null);
         return entry.getSecretKey();
     }
 
-    private static byte[] decryptAES(final byte[] bytes, final byte[] iv, final Key aesKey) throws Exception {
+    private static byte[] decryptAES(final byte[] bytes, final byte[] IV, final Key aesKey) throws Exception {
         Cipher cipher = Cipher.getInstance(AES_CIPHER);
-        cipher.init(Cipher.DECRYPT_MODE, aesKey);
+        cipher.init(Cipher.DECRYPT_MODE, aesKey, new GCMParameterSpec(GCM_TAG_LENGTH, IV));
 
         return cipher.doFinal(bytes);
     }

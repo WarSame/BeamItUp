@@ -47,6 +47,7 @@ public class WalletDbAdapter extends DbAdapter {
                 null,
                 null
         );
+        res.moveToFirst();
         byte[] encryptedLongPassword = res.getBlob(res.getColumnIndex(WalletTable.WALLET_ENCRYPTED_LONG_PASSWORD));
         byte[] IV = res.getBlob(res.getColumnIndex(WalletTable.WALLET_IV));
         String walletName = res.getString(res.getColumnIndex(WalletTable.WALLET_NAME));

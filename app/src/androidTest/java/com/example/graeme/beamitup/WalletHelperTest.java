@@ -16,8 +16,8 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import static junit.framework.Assert.assertTrue;
 
-public class WalletTest {
-    private static final String TAG = "WalletTest";
+public class WalletHelperTest {
+    private static final String TAG = "WalletHelperTest";
     private static final String TO_ADDRESS = "0x31B98D14007bDEe637298086988A0bBd31184523";
     private static final String TRANSACTION_VALUE = "0.01";
     private static final long ETH_ID = 1;
@@ -55,7 +55,7 @@ public class WalletTest {
         assertTrue(transactionReceipt == null);
     }
 
-    @Test(expected = CipherException.class)
+    @Test
     public void sendFundsWithWrongPassword_ShouldBeCipherException() throws Exception{
         Credentials credentials = WalletHelper.retrieveCredentials(
                 appContext,

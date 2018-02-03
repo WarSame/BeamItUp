@@ -112,6 +112,7 @@ public class DbAdapter {
                 + WALLET_NAME + " TEXT,"
                 + WALLET_IV + " BLOB,"
                 + WALLET_ENCRYPTED_LONG_PASSWORD + " BLOB,"
+                + ETH_ID + " INTEGER,"
                 + "FOREIGN KEY (" + ETH_ID + ") REFERENCES "
                 + ETH_TABLE_NAME + "(" + _ID + "))";
 
