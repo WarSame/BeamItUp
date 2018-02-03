@@ -32,7 +32,8 @@ public class WalletDbAdapter extends DbAdapter {
     }
 
     public EncryptedWallet retrieveEncryptedWalletByEthID(long ethID) {
-        Cursor res = this.db.query(
+        Log.i(TAG, "Retrieving encrypted wallet for eth of id: " + ethID);
+        /*Cursor res = this.db.query(
                 WalletTable.WALLET_TABLE_NAME,
                 new String[]{
                         WalletTable.ETH_ID,
@@ -41,13 +42,16 @@ public class WalletDbAdapter extends DbAdapter {
                         WalletTable.WALLET_NAME,
                         WalletTable._ID
                 },
-                WalletTable.ETH_ID+"=?",
+                null,
                 new String[]{Long.toString(ethID)},
                 null,
                 null,
                 null
         );
+        */
+        Cursor res = db.rawQuery("select * from " + WalletTable.WALLET_TABLE_NAME, null);
         res.moveToFirst();
+        Log.i(TAG, "Retrieved " + res.getCount() + " results");
         byte[] encryptedLongPassword = res.getBlob(res.getColumnIndex(WalletTable.WALLET_ENCRYPTED_LONG_PASSWORD));
         byte[] IV = res.getBlob(res.getColumnIndex(WalletTable.WALLET_IV));
         String walletName = res.getString(res.getColumnIndex(WalletTable.WALLET_NAME));
