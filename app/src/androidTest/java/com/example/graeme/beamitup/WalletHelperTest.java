@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.util.Log;
 
+import com.example.graeme.beamitup.wallet.WalletDbAdapter;
 import com.example.graeme.beamitup.wallet.WalletHelper;
 import com.example.graeme.beamitup.request.FulfillRequestTask;
 import com.example.graeme.beamitup.request.Request;
@@ -20,7 +21,8 @@ public class WalletHelperTest {
     private static final String TAG = "WalletHelperTest";
     private static final String TO_ADDRESS = "0x31B98D14007bDEe637298086988A0bBd31184523";
     private static final String TRANSACTION_VALUE = "0.01";
-    private static final long ETH_ID = 1;
+    private static long ETH_ID = 1;
+    private static WalletDbAdapter walletDB;
     private static String walletName;
     private static Request request;
 
@@ -29,8 +31,12 @@ public class WalletHelperTest {
     @BeforeClass
     public static void setUpOneTime() throws Exception{
         appContext = InstrumentationRegistry.getTargetContext();
+        walletDB = new WalletDbAdapter(appContext);
         Session.createSession();
 
+        DbAdapter.DatabaseHelper dbHelper = new DbAdapter.DatabaseHelper(appContext);
+        dbHelper.onUpgrade(walletDB.db, 0, 1);//Wipe db tables
+        
         walletName = WalletHelper.generateWallet(appContext, ETH_ID);
         Log.i(TAG, "walletName: " + walletName);
 
