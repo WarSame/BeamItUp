@@ -1,5 +1,7 @@
 package com.example.graeme.beamitup;
 
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
 import android.util.Log;
 
 import com.example.graeme.beamitup.SendTransactionTask.SendTransactionResponse;
@@ -15,6 +17,11 @@ import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.core.methods.response.EthTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.util.Scanner;
 
 import static org.junit.Assert.assertTrue;
 
@@ -35,6 +42,8 @@ public class FulfillRequestTaskTest {
         request.setToAddress(TO_ADDRESS);
         request.setAmount(TRANSACTION_VALUE);
 
+        retrieveFromPrivateKey();
+
         Credentials credentials = Credentials.create(SENDER_PRIVATE_KEY);
         Session.createSession();//Empty session for testing
 
@@ -45,6 +54,16 @@ public class FulfillRequestTaskTest {
         );
         task.execute(request);
         transactionReceipt = task.get();
+    }
+
+    private static void retrieveFromPrivateKey() throws Exception {
+        Context testContext = InstrumentationRegistry.getInstrumentation().getContext();
+        InputStream testInput = testContext.getAssets().open("eth.secrets");
+        Scanner in = new Scanner(testInput);
+        while (in.hasNext()){
+            System.out.println(in.next());
+        }
+        in.close();
     }
 
     @After
