@@ -12,6 +12,7 @@ import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.web3j.crypto.Credentials;
+import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.core.methods.response.EthTransaction;
@@ -39,7 +40,7 @@ public class FulfillRequestTaskTest {
         request.setToAddress(TO_ADDRESS);
         request.setAmount(TRANSACTION_VALUE);
 
-        String fromPrivateKey = retrieveFromPrivateKey();
+        String fromPrivateKey = retrieveMasterPrivateKey();
 
         Credentials credentials = Credentials.create(fromPrivateKey);
         Session.createSession();//Empty session for testing
@@ -53,7 +54,11 @@ public class FulfillRequestTaskTest {
         transactionReceipt = task.get();
     }
 
-    private static String retrieveFromPrivateKey() throws Exception {
+    static Credentials retrieveMasterCredentials() throws  Exception {
+        return Credentials.create(retrieveMasterPrivateKey());
+    }
+
+    static String retrieveMasterPrivateKey() throws Exception {
         Context testContext = InstrumentationRegistry.getInstrumentation().getContext();
         InputStream testInput = testContext.getAssets().open(SECRETS_FILE);
         Scanner in = new Scanner(testInput);

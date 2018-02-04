@@ -26,7 +26,7 @@ public class SendTransferTaskTest {
     private static final String FROM_ADDRESS = "0x6861b070f43842fc16ead07854ee5d91b9d27c13";
     private static final String TO_ADDRESS = "0x31b98d14007bdee637298086988a0bbd31184523";
 
-    private static final String SENDER_PRIVATE_KEY = "";
+    private static String senderPrivateKey;
 
     @BeforeClass
     public static void oneTimeSetUp() throws Exception{
@@ -35,7 +35,9 @@ public class SendTransferTaskTest {
         transfer.setToAddress(TO_ADDRESS);
         transfer.setAmount(TRANSACTION_VALUE);
 
-        Credentials credentials = Credentials.create(SENDER_PRIVATE_KEY);
+        senderPrivateKey = FulfillRequestTaskTest.retrieveMasterPrivateKey();
+
+        Credentials credentials = Credentials.create(senderPrivateKey);
         Session.createSession();//Empty session for testing
 
         SendTransferTask task = new SendTransferTask(
