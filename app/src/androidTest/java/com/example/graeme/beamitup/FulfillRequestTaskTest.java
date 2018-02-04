@@ -18,8 +18,6 @@ import org.web3j.protocol.core.methods.response.EthTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.util.Scanner;
 
@@ -32,8 +30,7 @@ public class FulfillRequestTaskTest {
     private static final String TRANSACTION_VALUE = "0.005";
     private static final String FROM_ADDRESS = "0x6861b070f43842fc16ead07854ee5d91b9d27c13";
     private static final String TO_ADDRESS = "0x31b98d14007bdee637298086988a0bbd31184523";
-
-    private static final String SENDER_PRIVATE_KEY = "";
+    private static final String SECRETS_FILE = "eth.secrets";
 
     @BeforeClass
     public static void setUp() throws Exception {
@@ -42,9 +39,9 @@ public class FulfillRequestTaskTest {
         request.setToAddress(TO_ADDRESS);
         request.setAmount(TRANSACTION_VALUE);
 
-        retrieveFromPrivateKey();
+        String fromPrivateKey = retrieveFromPrivateKey();
 
-        Credentials credentials = Credentials.create(SENDER_PRIVATE_KEY);
+        Credentials credentials = Credentials.create(fromPrivateKey);
         Session.createSession();//Empty session for testing
 
         FulfillRequestTask task = new FulfillRequestTask(
@@ -56,14 +53,11 @@ public class FulfillRequestTaskTest {
         transactionReceipt = task.get();
     }
 
-    private static void retrieveFromPrivateKey() throws Exception {
+    private static String retrieveFromPrivateKey() throws Exception {
         Context testContext = InstrumentationRegistry.getInstrumentation().getContext();
-        InputStream testInput = testContext.getAssets().open("eth.secrets");
+        InputStream testInput = testContext.getAssets().open(SECRETS_FILE);
         Scanner in = new Scanner(testInput);
-        while (in.hasNext()){
-            System.out.println(in.next());
-        }
-        in.close();
+        return in.next();
     }
 
     @After
