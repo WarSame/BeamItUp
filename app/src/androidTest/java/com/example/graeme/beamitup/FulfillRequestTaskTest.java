@@ -2,9 +2,9 @@ package com.example.graeme.beamitup;
 
 import android.util.Log;
 
-import com.example.graeme.beamitup.request.Request;
-import com.example.graeme.beamitup.request.FulfillRequestTask;
 import com.example.graeme.beamitup.SendTransactionTask.SendTransactionResponse;
+import com.example.graeme.beamitup.request.FulfillRequestTask;
+import com.example.graeme.beamitup.request.Request;
 
 import org.junit.After;
 import org.junit.BeforeClass;
@@ -16,7 +16,7 @@ import org.web3j.protocol.core.methods.response.EthTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class FulfillRequestTaskTest {
     private static final String TAG = "SendTransferTaskTest";

@@ -1,21 +1,20 @@
 package com.example.graeme.beamitup.request;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Activity;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.graeme.beamitup.R;
+import com.example.graeme.beamitup.SendTransactionTask.SendTransactionResponse;
 import com.example.graeme.beamitup.Session;
 import com.example.graeme.beamitup.account.Account;
 import com.example.graeme.beamitup.eth.Eth;
-import com.example.graeme.beamitup.eth.EthDbAdapter;
-import com.example.graeme.beamitup.wallet.WalletHelper;
 import com.example.graeme.beamitup.transfer.LandingPageActivity;
-import com.example.graeme.beamitup.SendTransactionTask.SendTransactionResponse;
+import com.example.graeme.beamitup.wallet.WalletHelper;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;

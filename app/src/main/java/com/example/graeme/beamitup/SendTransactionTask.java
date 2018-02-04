@@ -3,7 +3,6 @@ package com.example.graeme.beamitup;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.graeme.beamitup.Session;
 import com.example.graeme.beamitup.transfer.Transaction;
 
 import org.web3j.crypto.Credentials;

@@ -32,12 +32,24 @@ public class EthDbAdapter extends DbAdapter {
                 eth.getAccountId()
         );
         contentValues.put(
+                EthTable.ETH_NICKNAME,
+                eth.getNickname()
+        );
+        contentValues.put(
                 EthTable.ETH_ADDRESS,
                 eth.getAddress()
         );
         contentValues.put(
-                EthTable.ETH_NICKNAME,
-                eth.getNickname()
+                EthTable.ETH_WALLET_NAME,
+                eth.getWalletName()
+        );
+        contentValues.put(
+                EthTable.ETH_ENC_LONG_PASSWORD,
+                eth.getEncryptedLongPassword()
+        );
+        contentValues.put(
+                EthTable.ETH_IV,
+                eth.getIV()
         );
         long ethID = this.db.insert(
                 EthTable.ETH_TABLE_NAME,
@@ -48,10 +60,16 @@ public class EthDbAdapter extends DbAdapter {
         return ethID;
     }
 
-    Eth retrieveEthByEthID(long id){
+    public Eth retrieveEthByEthID(long id){
         Cursor res = this.db.query(EthTable.ETH_TABLE_NAME,
                 new String[]{
-                        EthTable.ETH_ADDRESS
+                        EthTable.ETH_ACCOUNT_ID,
+                        EthTable.ETH_NICKNAME,
+                        EthTable.ETH_ADDRESS,
+                        EthTable.ETH_WALLET_NAME,
+                        EthTable.ETH_ENC_LONG_PASSWORD,
+                        EthTable.ETH_IV,
+                        EthTable._ID
                 },
                 EthTable._ID + "=?",
                 new String[]{Long.toString(id)},
@@ -87,6 +105,9 @@ public class EthDbAdapter extends DbAdapter {
                         EthTable.ETH_NICKNAME,
                         EthTable.ETH_ADDRESS,
                         EthTable.ETH_ACCOUNT_ID,
+                        EthTable.ETH_IV,
+                        EthTable.ETH_ENC_LONG_PASSWORD,
+                        EthTable.ETH_WALLET_NAME
                 },
                 EthTable.ETH_ACCOUNT_ID + "=?",
                 new String[]{Long.toString(accountId)},
@@ -98,10 +119,13 @@ public class EthDbAdapter extends DbAdapter {
 
     private Eth retrieveEthFromCursor(Cursor res){
         return new Eth(
+                res.getInt(res.getColumnIndex(EthTable.ETH_ACCOUNT_ID)),
                 res.getString(res.getColumnIndex(EthTable.ETH_NICKNAME)),
                 res.getString(res.getColumnIndex(EthTable.ETH_ADDRESS)),
-                res.getLong(res.getColumnIndex(EthTable._ID)),
-                res.getInt(res.getColumnIndex(EthTable.ETH_ACCOUNT_ID))
+                res.getString(res.getColumnIndex(EthTable.ETH_WALLET_NAME)),
+                res.getBlob(res.getColumnIndex(EthTable.ETH_ENC_LONG_PASSWORD)),
+                res.getBlob(res.getColumnIndex(EthTable.ETH_IV)),
+                res.getLong(res.getColumnIndex(EthTable._ID))
         );
     }
 

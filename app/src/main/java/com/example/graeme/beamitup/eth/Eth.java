@@ -3,23 +3,47 @@ package com.example.graeme.beamitup.eth;
 import java.io.Serializable;
 
 public class Eth implements Serializable{
+    private long accountId;
     private String nickname;
     private String address;
+    private String walletName;
+    private byte[] encryptedLongPassword;
+    private byte[] IV;
     private long id;
-    private long accountId;
 
-    public Eth(String nickname, String address, long id, long accountId){
+    public Eth(
+            long accountId,
+            String nickname,
+            String address,
+            String walletName,
+            byte[] encryptedLongPassword,
+            byte[] IV,
+            long id
+            ){
+        this.accountId = accountId;
         this.nickname = nickname;
         this.address = address;
+        this.walletName = walletName;
+        this.encryptedLongPassword = encryptedLongPassword;
+        this.IV = IV;
         this.id = id;
-        this.accountId = accountId;
     }
 
-    public Eth(String nickname, String address, long accountId){
+    public Eth(
+            long accountId,
+            String nickname,
+            String address,
+            String walletName,
+            byte[] encryptedLongPassword,
+            byte[] IV
+    ){
+        this.accountId = accountId;
         this.nickname = nickname;
         this.address = address;
+        this.walletName = walletName;
+        this.encryptedLongPassword = encryptedLongPassword;
+        this.IV = IV;
         this.id = -1;
-        this.accountId = accountId;
     }
 
     public long getId() {
@@ -52,5 +76,29 @@ public class Eth implements Serializable{
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getWalletName() {
+        return walletName;
+    }
+
+    public void setWalletName(String walletName) {
+        this.walletName = walletName;
+    }
+
+    public byte[] getEncryptedLongPassword() {
+        return encryptedLongPassword;
+    }
+
+    public void setEncryptedLongPassword(byte[] encryptedLongPassword) {
+        this.encryptedLongPassword = encryptedLongPassword;
+    }
+
+    public byte[] getIV() {
+        return IV;
+    }
+
+    public void setIV(byte[] IV) {
+        this.IV = IV;
     }
 }

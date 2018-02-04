@@ -1,14 +1,10 @@
 package com.example.graeme.beamitup;
 
-import android.util.Log;
-
 import com.example.graeme.beamitup.wallet.EncryptedWallet;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class EncryptionTest {
     private static final String TAG = "EncryptionTest";

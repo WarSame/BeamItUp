@@ -4,8 +4,9 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.graeme.beamitup.Encryption;
+import com.example.graeme.beamitup.eth.Eth;
+import com.example.graeme.beamitup.eth.EthDbAdapter;
 
-import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 
@@ -18,43 +19,50 @@ public class WalletHelper {
 
     public static Credentials retrieveCredentials(Context context, long ethID) throws Exception {
         //Retrieve encrypted long password from DB with IV, decrypt using keystore
-        Wallet wallet = retrieveWalletForEth(context, ethID);
-        File walletFile = new File( getWalletDir(context) + "/" + wallet.getWalletName());
+        EthDbAdapter ethDbAdapter = new EthDbAdapter(context);
+        Eth eth = ethDbAdapter.retrieveEthByEthID(ethID);
+        ethDbAdapter.close();
+        File walletFile = getWalletFile(context, eth.getWalletName());
         Log.i(TAG, "Wallet file location: " + walletFile);
-        return WalletUtils.loadCredentials(wallet.getLongPassword(), walletFile);
+        String longPassword = Encryption.decryptWalletPassword(
+                eth.getEncryptedLongPassword(),
+                eth.getIV(),
+                eth.getWalletName()
+        );
+        return WalletUtils.loadCredentials(longPassword, walletFile);
     }
 
-    private static Wallet retrieveWalletForEth(Context context, long ethID) throws Exception{
-        EncryptedWallet encryptedWallet = retrieveEncryptedWalletFromDB(context, ethID);
-        byte[] encryptedLongPassword = encryptedWallet.getEncryptedLongPassword();
-        byte[] IV = encryptedWallet.getIV();
-        String walletName = encryptedWallet.getWalletName();
-        String longPassword = Encryption.decryptWalletPassword(encryptedLongPassword, IV, walletName);
-        return new Wallet(walletName, longPassword);
-    }
-
-    private static EncryptedWallet retrieveEncryptedWalletFromDB(Context context, long ethID) {
-        WalletDbAdapter walletDB = new WalletDbAdapter(context);
-        EncryptedWallet encryptedWallet = walletDB.retrieveEncryptedWalletByEthID(ethID);
-        walletDB.close();
-        return encryptedWallet;
-    }
-
-    public static String generateWallet(Context context, long ethID) throws Exception {
+    public static Eth generateWallet(Context context, String nickname, long accountID) throws Exception {
         String longPassword = Encryption.generateLongRandomString();
         String walletName = WalletUtils.generateLightNewWalletFile(longPassword, getWalletDir(context));
         EncryptedWallet encryptedWallet = Encryption.encryptWalletPassword(walletName, longPassword);
         byte[] IV = encryptedWallet.getIV();
         byte[] encryptedLongPassword = encryptedWallet.getEncryptedLongPassword();
-        addEncryptedWalletToDB(context, walletName, IV, encryptedLongPassword, ethID);
-        return walletName;
+        Credentials credentials = retrieveCredentials(context, encryptedLongPassword, IV, walletName);
+        String address = credentials.getAddress();
+        Eth eth = new Eth(
+                accountID,
+                nickname,
+                address,
+                walletName,
+                encryptedLongPassword,
+                IV
+        );
+        EthDbAdapter ethDbAdapter = new EthDbAdapter(context);
+        long ethID = ethDbAdapter.createEth(eth);
+        ethDbAdapter.close();
+        eth.setId(ethID);
+        return eth;
     }
 
-    private static void addEncryptedWalletToDB(Context context, String walletName, byte[] IV, byte[] encryptedLongPassword, long ethID) {
-        EncryptedWallet encryptedWallet = new EncryptedWallet(encryptedLongPassword, IV, walletName);
-        WalletDbAdapter walletDB = new WalletDbAdapter(context);
-        walletDB.createEncryptedWallet(encryptedWallet, ethID);
-        walletDB.close();
+    private static Credentials retrieveCredentials(Context context, byte[] encryptedLongPassword, byte[] IV, String walletName) throws Exception{
+        String longPassword = Encryption.decryptWalletPassword(encryptedLongPassword, IV, walletName);
+        File walletFile = getWalletFile(context, walletName);
+        return WalletUtils.loadCredentials(longPassword, walletFile);
+    }
+
+    private static File getWalletFile(Context context, String walletName) throws Exception {
+        return new File(getWalletDir(context) + "/" + walletName);
     }
 
     private static File getWalletDir(Context context) throws IOException {

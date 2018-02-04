@@ -8,9 +8,12 @@ import com.example.graeme.beamitup.account.Account;
 import com.example.graeme.beamitup.account.AccountDbAdapter;
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthDbAdapter;
+import com.example.graeme.beamitup.wallet.WalletHelper;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.NoSuchElementException;
@@ -19,23 +22,23 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class AccountDbAdapterTest {
-    private AccountDbAdapter accountDB;
-    private EthDbAdapter ethDb;
+    private static AccountDbAdapter accountDB;
+    private static EthDbAdapter ethDb;
 
-    private String insertedEmail = "someinsertedEmail@thisplace.com";
-    private String insertedPassword = "someinsertedPassword";
-    private char[] insertedPasswordCharArray = insertedPassword.toCharArray();
-    private Account insertedAccount;
+    private static String insertedEmail = "someinsertedEmail@thisplace.com";
+    private static String insertedPassword = "someinsertedPassword";
+    private static char[] insertedPasswordCharArray = insertedPassword.toCharArray();
+    private static Account insertedAccount;
 
-    private Account otherInsertedAccount;
-    private Eth otherInsertedEth;
+    private static Account otherInsertedAccount;
+    private static Eth otherInsertedEth;
 
-    private String notInsertedEmail = "somenotInsertedemail@place.com";
+    private static String notInsertedEmail = "somenotInsertedemail@place.com";
     private char[] notInsertedPassword = "somenotInsertedpassword".toCharArray();
-    private Account notInsertedAccount;
+    private static Account notInsertedAccount;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeClass
+    public static void setUpOneTime() throws Exception {
         Context appContext = InstrumentationRegistry.getTargetContext();
         accountDB = new AccountDbAdapter(appContext);
         ethDb = new EthDbAdapter(appContext);
@@ -45,7 +48,7 @@ public class AccountDbAdapterTest {
 
         long insertedAccountID = accountDB.createAccount(insertedEmail, insertedPasswordCharArray);
         insertedAccount = new Account(insertedEmail, insertedAccountID);
-        Eth insertedEth = new Eth("somenick", "someaddress", insertedAccountID);
+        Eth insertedEth = WalletHelper.generateWallet(appContext, "insertedeth", insertedAccountID);
         insertedAccount.addEth(insertedEth);
         ethDb.createEth(insertedEth);
 
@@ -53,13 +56,13 @@ public class AccountDbAdapterTest {
         char[] otherInsertedPassword = "someotherinsertedpassword".toCharArray();
         long otherInsertedAccountID = accountDB.createAccount(otherInsertedEmail, otherInsertedPassword);
         otherInsertedAccount = new Account(otherInsertedEmail, otherInsertedAccountID);
-        otherInsertedEth = new Eth("someothernick","someotheraddress", otherInsertedAccountID);
+        otherInsertedEth = WalletHelper.generateWallet(appContext, "otherinsertedeth", otherInsertedAccountID);
 
         notInsertedAccount = new Account(notInsertedEmail, 17);
     }
 
-    @After
-    public void tearDown() throws Exception {
+    @AfterClass
+    public static void tearDown() throws Exception {
         accountDB.close();
         ethDb.close();
     }

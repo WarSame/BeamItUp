@@ -1,23 +1,18 @@
 package com.example.graeme.beamitup;
 
-import android.content.Context;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.example.graeme.beamitup.eth.EthDbAdapter;
 import com.example.graeme.beamitup.wallet.EncryptedWallet;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.Key;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.MessageDigest;
@@ -27,16 +22,11 @@ import java.security.SecureRandom;
 import java.security.UnrecoverableEntryException;
 import java.security.cert.CertificateException;
 import java.util.Arrays;
-import java.util.Random;
-import java.util.UUID;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.IvParameterSpec;
-import javax.security.auth.x500.X500Principal;
 
 public class Encryption {
     private static final String TAG = "Encryption";
@@ -173,7 +163,7 @@ public class Encryption {
         Cipher cipher = createEncryptionCipher(secretKey);
         byte[] longPasswordBytes = longPassword.getBytes();
         byte[] encryptedLongPassword = cipher.doFinal(longPasswordBytes);
-        return new EncryptedWallet(encryptedLongPassword, cipher.getIV(), walletName);
+        return new EncryptedWallet(encryptedLongPassword, cipher.getIV());
     }
 
     public static String generateLongRandomString(){

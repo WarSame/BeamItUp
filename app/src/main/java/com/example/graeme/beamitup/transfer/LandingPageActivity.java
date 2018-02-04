@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
-import com.example.graeme.beamitup.eth.AddEthActivity;
 import com.example.graeme.beamitup.R;
+import com.example.graeme.beamitup.eth.AddEthActivity;
 import com.example.graeme.beamitup.request.CreateRequestActivity;
 
 public class LandingPageActivity extends Activity {

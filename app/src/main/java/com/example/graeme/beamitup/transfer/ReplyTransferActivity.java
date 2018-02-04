@@ -9,8 +9,8 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.R;
+import com.example.graeme.beamitup.eth.Eth;
 
 import org.apache.commons.lang3.SerializationUtils;
 

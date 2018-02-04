@@ -2,7 +2,6 @@ package com.example.graeme.beamitup.account;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.SQLException;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;

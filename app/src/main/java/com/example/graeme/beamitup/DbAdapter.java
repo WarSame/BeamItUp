@@ -8,11 +8,10 @@ import android.provider.BaseColumns;
 import java.sql.SQLException;
 
 import static com.example.graeme.beamitup.DbAdapter.AccountTable.ACCOUNT_TABLE_NAME;
-import static com.example.graeme.beamitup.DbAdapter.EthTable.ETH_TABLE_NAME;
 
 public class DbAdapter {
     //If changing schema, must update db version
-    static final int DATABASE_VERSION = 13;
+    static final int DATABASE_VERSION = 15;
     static final String DATABASE_NAME = "BeamItUp.db";
 
     private DatabaseHelper DbHelper;
@@ -38,7 +37,6 @@ public class DbAdapter {
         {
             db.execSQL(AccountTable.SQL_CREATE_TABLE);
             db.execSQL(EthTable.SQL_CREATE_TABLE);
-            db.execSQL(WalletTable.SQL_CREATE_TABLE);
         }
 
         public void onUpgrade(SQLiteDatabase db, int oldVersion,
@@ -46,7 +44,6 @@ public class DbAdapter {
         {
             db.execSQL(AccountTable.SQL_DELETE_TABLE);
             db.execSQL(EthTable.SQL_DELETE_TABLE);
-            db.execSQL(WalletTable.SQL_DELETE_TABLE);
             onCreate(db);
         }
 
@@ -88,35 +85,21 @@ public class DbAdapter {
         public static final String ETH_ACCOUNT_ID = "account_id";
         public static final String ETH_ADDRESS = "address";
         public static final String ETH_NICKNAME = "nickname";
+        public static final String ETH_ENC_LONG_PASSWORD = "enc_long_password";
+        public static final String ETH_IV = "iv";
+        public static final String ETH_WALLET_NAME = "wallet_name";
 
         static final String SQL_CREATE_TABLE = "CREATE TABLE " + ETH_TABLE_NAME +
             " (" + _ID + " INTEGER PRIMARY KEY,"
                 + ETH_ACCOUNT_ID + " INTEGER,"
                 + ETH_ADDRESS + " TEXT,"
                 + ETH_NICKNAME + " TEXT,"
+                + ETH_ENC_LONG_PASSWORD + " BLOB,"
+                + ETH_IV + " BLOB,"
+                + ETH_WALLET_NAME + " TEXT,"
                 + "FOREIGN KEY (" + ETH_ACCOUNT_ID + ") REFERENCES "
                 + ACCOUNT_TABLE_NAME + "(" + _ID + "))";
 
         static final String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " + ETH_TABLE_NAME;
     }
-
-    protected static class WalletTable implements BaseColumns {
-        public static final String WALLET_TABLE_NAME = "wallet";
-        public static final String WALLET_NAME = "name";
-        public static final String WALLET_IV = "iv";
-        public static final String WALLET_ENCRYPTED_LONG_PASSWORD = "enc_long_password";
-        public static final String ETH_ID = "eth_id";
-
-        static final String SQL_CREATE_TABLE = "CREATE TABLE " + WALLET_TABLE_NAME
-                + " (" + _ID + " INTEGER PRIMARY KEY,"
-                + WALLET_NAME + " TEXT,"
-                + WALLET_IV + " BLOB,"
-                + WALLET_ENCRYPTED_LONG_PASSWORD + " BLOB,"
-                + ETH_ID + " INTEGER,"
-                + "FOREIGN KEY (" + ETH_ID + ") REFERENCES "
-                + ETH_TABLE_NAME + "(" + _ID + "))";
-
-        static final String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " + WALLET_TABLE_NAME;
-    }
-
 }

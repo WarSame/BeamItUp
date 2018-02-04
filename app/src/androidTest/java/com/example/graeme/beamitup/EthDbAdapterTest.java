@@ -5,47 +5,40 @@ import android.support.test.InstrumentationRegistry;
 
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthDbAdapter;
+import com.example.graeme.beamitup.wallet.WalletHelper;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
 public class EthDbAdapterTest {
-    private EthDbAdapter ethDB;
-    private Eth insertedEth;
-    private Eth insertedEthWithID;
+    private static Context appContext;
+    private static EthDbAdapter ethDB;
+    private static final long INSERTED_ACCOUNT_ID = 15;
 
     @Before
     public void setUp() throws Exception {
-        Context appContext = InstrumentationRegistry.getTargetContext();
+        appContext = InstrumentationRegistry.getTargetContext();
         ethDB = new EthDbAdapter(appContext);
 
         DbAdapter.DatabaseHelper dbHelper = new DbAdapter.DatabaseHelper(appContext);
         dbHelper.onUpgrade(ethDB.db, 0, 1);//Wipe db tables
-
-        insertedEth = new Eth("nickname","insertedaddress", 15);
-        insertedEthWithID = new Eth("nickname2", "insertedaddresswithid", 2, 12);
     }
 
-    @After
-    public void tearDown() throws Exception {
+    @AfterClass
+    public static void tearDown() throws Exception {
         ethDB.close();
     }
 
     @Test
-    public void createEth_InsertedAccountCreated_ShouldBeZero() throws Exception {
-        long ethID = ethDB.createEth(insertedEth);
-        System.out.println("ethid"+ethID);
-        assertTrue(ethID == 1);
-    }
-
-    @Test
-    public void createEth_InsertedAccountCreatedWithEthID_ShouldBeOne() throws Exception {
-        ethDB.createEth(insertedEthWithID);
-        System.out.println("ethidwithid"+insertedEthWithID.getId());
-        assertTrue(insertedEthWithID.getId() == 2);
+    public void createEth_InsertedAccountCreated_ShouldBeOne() throws Exception {
+        Eth insertedEth = WalletHelper.generateWallet(appContext, "inserted eth", INSERTED_ACCOUNT_ID);
+        System.out.println("ethid " + insertedEth.getId());
+        assertTrue(1 == insertedEth.getId());
     }
 
     @Test

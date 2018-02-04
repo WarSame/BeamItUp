@@ -1,13 +1,12 @@
 package com.example.graeme.beamitup.request;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Activity;
 import android.util.Log;
 import android.widget.TextView;
 
 import com.example.graeme.beamitup.R;
-import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.ndef.NdefMessaging;
 
 public class ReadyRequestActivity extends Activity {

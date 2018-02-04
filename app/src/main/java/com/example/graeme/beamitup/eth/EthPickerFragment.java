@@ -2,7 +2,6 @@ package com.example.graeme.beamitup.eth;
 
 import android.app.ListFragment;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
