@@ -24,39 +24,40 @@ import static org.junit.Assert.assertTrue;
 public class AccountDbAdapterTest {
     private static AccountDbAdapter accountDB;
     private static EthDbAdapter ethDb;
+    private static Context appContext;
 
-    private static String insertedEmail = "someinsertedEmail@thisplace.com";
-    private static String insertedPassword = "someinsertedPassword";
-    private static char[] insertedPasswordCharArray = insertedPassword.toCharArray();
-    private static Account insertedAccount;
+    private String insertedEmail = "someinsertedEmail@thisplace.com";
+    private String insertedPassword = "someinsertedPassword";
+    private char[] insertedPasswordCharArray = insertedPassword.toCharArray();
+    private Account insertedAccount;
 
-    private static Account otherInsertedAccount;
-    private static Eth otherInsertedEth;
+    private Account otherInsertedAccount;
+    private long otherInsertedAccountID;
 
-    private static String notInsertedEmail = "somenotInsertedemail@place.com";
+    private String notInsertedEmail = "somenotInsertedemail@place.com";
     private char[] notInsertedPassword = "somenotInsertedpassword".toCharArray();
-    private static Account notInsertedAccount;
+    private Account notInsertedAccount;
 
     @BeforeClass
-    public static void setUpOneTime() throws Exception {
-        Context appContext = InstrumentationRegistry.getTargetContext();
+    public static void oneTimeSetUp() throws Exception {
+        appContext = InstrumentationRegistry.getTargetContext();
         accountDB = new AccountDbAdapter(appContext);
         ethDb = new EthDbAdapter(appContext);
+    }
 
+    @Before
+    public void setUp() throws Exception {
         DbAdapter.DatabaseHelper dbHelper = new DbAdapter.DatabaseHelper(appContext);
         dbHelper.onUpgrade(accountDB.db, 0, 1);//Wipe db tables
+        dbHelper.onUpgrade(ethDb.db, 0, 1);
 
         long insertedAccountID = accountDB.createAccount(insertedEmail, insertedPasswordCharArray);
         insertedAccount = new Account(insertedEmail, insertedAccountID);
-        Eth insertedEth = WalletHelper.generateWallet(appContext, "insertedeth", insertedAccountID);
-        insertedAccount.addEth(insertedEth);
-        ethDb.createEth(insertedEth);
 
         String otherInsertedEmail = "someotherinsertedemail@thisplace.com";
         char[] otherInsertedPassword = "someotherinsertedpassword".toCharArray();
-        long otherInsertedAccountID = accountDB.createAccount(otherInsertedEmail, otherInsertedPassword);
+        otherInsertedAccountID = accountDB.createAccount(otherInsertedEmail, otherInsertedPassword);
         otherInsertedAccount = new Account(otherInsertedEmail, otherInsertedAccountID);
-        otherInsertedEth = WalletHelper.generateWallet(appContext, "otherinsertedeth", otherInsertedAccountID);
 
         notInsertedAccount = new Account(notInsertedEmail, 17);
     }
@@ -91,12 +92,14 @@ public class AccountDbAdapterTest {
 
     @Test
     public void retrieveAccount_InsertedAccountEthCount_ShouldBeOne() throws Exception {
-        Account newAccount = accountDB.retrieveAccount(insertedAccount.getEmail());
-        assertTrue(newAccount.getEths().size() == 1);
+        WalletHelper.generateWallet(appContext, "someethnickname", insertedAccount.getId());
+        Account retrievedAccount = accountDB.retrieveAccount(insertedAccount.getEmail());
+        assertTrue(retrievedAccount.getEths().size() == 1);
     }
 
     @Test
     public void retrieveAccount_InsertedAccountAndExtraEthCount_ShouldBeTwo() throws Exception {
+        Eth otherInsertedEth = WalletHelper.generateWallet(appContext, "otherinsertedeth", otherInsertedAccountID);
         otherInsertedEth.setAccountId(insertedAccount.getId());
         insertedAccount.addEth(otherInsertedEth);
         ethDb.createEth(otherInsertedEth);
@@ -136,7 +139,7 @@ public class AccountDbAdapterTest {
 
     @Test
     public void isAuthentic_InsertedAccountCheckedWithCorrectValues_ShouldBeTrue() throws Exception {
-        assertTrue(accountDB.isAuthentic(insertedEmail, insertedPassword.toCharArray()));
+        assertTrue(accountDB.isAuthentic(insertedEmail, insertedPasswordCharArray));
     }
 
     @Test

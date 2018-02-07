@@ -136,7 +136,9 @@ public class AccountDbAdapter extends DbAdapter {
         byte[] storedSalt = (res.getBlob(res.getColumnIndex(AccountTable.ACCOUNT_SALT)));
         res.close();
         byte[] passwordHash = Encryption.hashPassword(password, storedSalt);
-        return Arrays.equals(storedHash, passwordHash);
+        boolean isAuthentic = Arrays.equals(storedHash, passwordHash);
+        Log.i(TAG, "Account is authentic: " + isAuthentic);
+        return isAuthentic;
     }
 
     public boolean isEmailInUse(String email){
