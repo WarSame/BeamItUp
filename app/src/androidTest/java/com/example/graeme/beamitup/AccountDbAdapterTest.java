@@ -98,17 +98,6 @@ public class AccountDbAdapterTest {
     }
 
     @Test
-    public void retrieveAccount_InsertedAccountAndExtraEthCount_ShouldBeTwo() throws Exception {
-        Eth otherInsertedEth = WalletHelper.generateWallet(appContext, "otherinsertedeth", otherInsertedAccountID);
-        otherInsertedEth.setAccountId(insertedAccount.getId());
-        insertedAccount.addEth(otherInsertedEth);
-        ethDb.createEth(otherInsertedEth);
-
-        Account updatedInsertedAccount = accountDB.retrieveAccount(insertedAccount.getEmail());
-        assertTrue(updatedInsertedAccount.getEths().size() == 2);
-    }
-
-    @Test
     public void updateAccount_InsertedAccountUpdatedEmail_ShouldBeTrue() throws Exception {
         String updatedEmail = "updatedemail@someplace.com";
         insertedAccount.setEmail(updatedEmail);
