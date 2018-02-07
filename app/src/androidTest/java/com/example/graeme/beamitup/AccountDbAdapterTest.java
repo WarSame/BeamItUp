@@ -3,6 +3,7 @@ package com.example.graeme.beamitup;
 import android.content.Context;
 import android.database.sqlite.SQLiteConstraintException;
 import android.support.test.InstrumentationRegistry;
+import android.util.Log;
 
 import com.example.graeme.beamitup.account.Account;
 import com.example.graeme.beamitup.account.AccountDbAdapter;
@@ -22,13 +23,15 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class AccountDbAdapterTest {
+    private static final String TAG = "AccountDbAdapterTest";
+
     private static AccountDbAdapter accountDB;
     private static EthDbAdapter ethDb;
     private static Context appContext;
 
     private String insertedEmail = "someinsertedEmail@thisplace.com";
     private String insertedPassword = "someinsertedPassword";
-    private char[] insertedPasswordCharArray = insertedPassword.toCharArray();
+    private char[] insertedPasswordCharArray = insertedPassword.toCharArray();//Gets cleared after insertion
     private Account insertedAccount;
 
     private Account otherInsertedAccount;
@@ -128,7 +131,7 @@ public class AccountDbAdapterTest {
 
     @Test
     public void isAuthentic_InsertedAccountCheckedWithCorrectValues_ShouldBeTrue() throws Exception {
-        assertTrue(accountDB.isAuthentic(insertedEmail, insertedPasswordCharArray));
+        assertTrue(accountDB.isAuthentic(insertedEmail, insertedPassword.toCharArray()));
     }
 
     @Test

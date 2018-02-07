@@ -39,7 +39,9 @@ public class AccountDbAdapter extends DbAdapter {
         Log.i(TAG,
                 "Creating account with email: " + email
         );
-        return this.db.insert(AccountTable.ACCOUNT_TABLE_NAME, null, contentValues);
+        long accountID = this.db.insert(AccountTable.ACCOUNT_TABLE_NAME, null, contentValues);
+        Log.i(TAG, "accountID: " + accountID);
+        return accountID;
     }
 
     private Cursor getAccountCursor(String email){
