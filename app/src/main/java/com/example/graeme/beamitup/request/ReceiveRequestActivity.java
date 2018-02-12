@@ -73,9 +73,6 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
             request.setFromAddress(eth.getAddress());
             finishRequestIntent.putExtra("request", request);
 
-            EditText etPassword = (EditText)findViewById(R.id.et_password);
-            String password = etPassword.getText().toString();
-            finishRequestIntent.putExtra("password", password);
             v.setEnabled(true);
             startActivity(finishRequestIntent);
         });

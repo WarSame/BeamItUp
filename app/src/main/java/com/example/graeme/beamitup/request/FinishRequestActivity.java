@@ -35,16 +35,15 @@ public class FinishRequestActivity extends Activity {
 
         Intent incomingIntent = getIntent();
         Request request = (Request)incomingIntent.getSerializableExtra("request");
-        String password = incomingIntent.getStringExtra("password");
         try {
-            sendTransfer(request, password);
+            sendTransfer(request);
         } catch (Exception e) {
             e.printStackTrace();
             finishRequestFail(request);
         }
     }
 
-    private void sendTransfer(final Request request, final String password) throws Exception {
+    private void sendTransfer(final Request request) throws Exception {
         Account account = Session.getUserDetails();
         Eth eth = selectEthFromAccountByAddress( account, request.getFromAddress() );
 
