@@ -1,7 +1,7 @@
 # BeamItUp
 Peer to peer ethereum transfers on Android.
 
-Working:
+Completed:
 * Login/create app account
 * Create ethereum account
 * Retrieve associated ethereum account for app account
@@ -14,9 +14,9 @@ Working:
 * Account session
 * Determine transfer fees when preparing transfer
 * Switch to a request-based flow
+* Make handling ethereum credentials easier with wallet files
 
 Todo:
-* Make it easier to input ethereum credentials (currently a huge pain and uncertain you'll type it correctly) - wallet?
 * Allow users to modify app account and ethereum accounts more
 
 Wishlist:
