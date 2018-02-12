@@ -39,7 +39,9 @@ public class AccountDbAdapter extends DbAdapter {
         Log.i(TAG,
                 "Creating account with email: " + email
         );
-        return this.db.insert(AccountTable.ACCOUNT_TABLE_NAME, null, contentValues);
+        long accountID = this.db.insert(AccountTable.ACCOUNT_TABLE_NAME, null, contentValues);
+        Log.i(TAG, "accountID: " + accountID);
+        return accountID;
     }
 
     private Cursor getAccountCursor(String email){
@@ -136,7 +138,9 @@ public class AccountDbAdapter extends DbAdapter {
         byte[] storedSalt = (res.getBlob(res.getColumnIndex(AccountTable.ACCOUNT_SALT)));
         res.close();
         byte[] passwordHash = Encryption.hashPassword(password, storedSalt);
-        return Arrays.equals(storedHash, passwordHash);
+        boolean isAuthentic = Arrays.equals(storedHash, passwordHash);
+        Log.i(TAG, "Account is authentic: " + isAuthentic);
+        return isAuthentic;
     }
 
     public boolean isEmailInUse(String email){

@@ -3,14 +3,18 @@ package com.example.graeme.beamitup;
 import android.content.Context;
 import android.database.sqlite.SQLiteConstraintException;
 import android.support.test.InstrumentationRegistry;
+import android.util.Log;
 
 import com.example.graeme.beamitup.account.Account;
 import com.example.graeme.beamitup.account.AccountDbAdapter;
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthDbAdapter;
+import com.example.graeme.beamitup.wallet.WalletHelper;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.NoSuchElementException;
@@ -19,47 +23,50 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class AccountDbAdapterTest {
-    private AccountDbAdapter accountDB;
-    private EthDbAdapter ethDb;
+    private static final String TAG = "AccountDbAdapterTest";
+
+    private static AccountDbAdapter accountDB;
+    private static EthDbAdapter ethDb;
+    private static Context appContext;
 
     private String insertedEmail = "someinsertedEmail@thisplace.com";
     private String insertedPassword = "someinsertedPassword";
-    private char[] insertedPasswordCharArray = insertedPassword.toCharArray();
+    private char[] insertedPasswordCharArray = insertedPassword.toCharArray();//Gets cleared after insertion
     private Account insertedAccount;
 
     private Account otherInsertedAccount;
-    private Eth otherInsertedEth;
+    private long otherInsertedAccountID;
 
     private String notInsertedEmail = "somenotInsertedemail@place.com";
     private char[] notInsertedPassword = "somenotInsertedpassword".toCharArray();
     private Account notInsertedAccount;
 
-    @Before
-    public void setUp() throws Exception {
-        Context appContext = InstrumentationRegistry.getTargetContext();
+    @BeforeClass
+    public static void oneTimeSetUp() throws Exception {
+        appContext = InstrumentationRegistry.getTargetContext();
         accountDB = new AccountDbAdapter(appContext);
         ethDb = new EthDbAdapter(appContext);
+    }
 
+    @Before
+    public void setUp() throws Exception {
         DbAdapter.DatabaseHelper dbHelper = new DbAdapter.DatabaseHelper(appContext);
         dbHelper.onUpgrade(accountDB.db, 0, 1);//Wipe db tables
+        dbHelper.onUpgrade(ethDb.db, 0, 1);
 
         long insertedAccountID = accountDB.createAccount(insertedEmail, insertedPasswordCharArray);
         insertedAccount = new Account(insertedEmail, insertedAccountID);
-        Eth insertedEth = new Eth("someaddress", insertedAccountID);
-        insertedAccount.addEth(insertedEth);
-        ethDb.createEth(insertedEth, "someotherprivatekey");
 
         String otherInsertedEmail = "someotherinsertedemail@thisplace.com";
         char[] otherInsertedPassword = "someotherinsertedpassword".toCharArray();
-        long otherInsertedAccountID = accountDB.createAccount(otherInsertedEmail, otherInsertedPassword);
+        otherInsertedAccountID = accountDB.createAccount(otherInsertedEmail, otherInsertedPassword);
         otherInsertedAccount = new Account(otherInsertedEmail, otherInsertedAccountID);
-        otherInsertedEth = new Eth("someaddress", otherInsertedAccountID);
 
         notInsertedAccount = new Account(notInsertedEmail, 17);
     }
 
-    @After
-    public void tearDown() throws Exception {
+    @AfterClass
+    public static void tearDown() throws Exception {
         accountDB.close();
         ethDb.close();
     }
@@ -88,18 +95,9 @@ public class AccountDbAdapterTest {
 
     @Test
     public void retrieveAccount_InsertedAccountEthCount_ShouldBeOne() throws Exception {
-        Account newAccount = accountDB.retrieveAccount(insertedAccount.getEmail());
-        assertTrue(newAccount.getEths().size() == 1);
-    }
-
-    @Test
-    public void retrieveAccount_InsertedAccountAndExtraEthCount_ShouldBeTwo() throws Exception {
-        otherInsertedEth.setAccountId(insertedAccount.getId());
-        insertedAccount.addEth(otherInsertedEth);
-        ethDb.createEth(otherInsertedEth, "someprivatekey");
-
-        Account updatedInsertedAccount = accountDB.retrieveAccount(insertedAccount.getEmail());
-        assertTrue(updatedInsertedAccount.getEths().size() == 2);
+        WalletHelper.generateWallet(appContext, "someethnickname", insertedAccount.getId());
+        Account retrievedAccount = accountDB.retrieveAccount(insertedAccount.getEmail());
+        assertTrue(retrievedAccount.getEths().size() == 1);
     }
 
     @Test

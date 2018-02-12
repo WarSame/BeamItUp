@@ -14,6 +14,14 @@
         />
 
     <TextView
+        android:id="@+id/tv_eth_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tv_eth_nickname"
+        android:layout_margin="16dp"
+        />
+
+    <TextView
         android:id="@+id/tv_eth_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

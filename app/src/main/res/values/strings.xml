@@ -65,5 +65,10 @@
     <string name="to_address_value">to</string>
     <string name="btn_accept_request">Accept Request</string>
     <string name="btn_decline_request">Decline Request</string>
+    <string name="et_eth_nickname">Nickname</string>
+    <string name="et_eth_password">Password</string>
+    <string name="tv_eth_nickname">Eth Nickname</string>
+    <string name="tv_password">Password:</string>
+    <string name="et_password">password</string>
 
 </resources>

@@ -1,19 +1,12 @@
 package com.example.graeme.beamitup.transfer;
 
-import android.os.AsyncTask;
-import android.util.Log;
-
-import com.example.graeme.beamitup.Session;
+import com.example.graeme.beamitup.SendTransactionTask;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
-import org.web3j.utils.Convert;
-
-import java.math.BigDecimal;
 
 public class SendTransferTask extends SendTransactionTask<Transfer> {
-    public SendTransferTask(Credentials credentials, String receiverAddress, SendTransferResponse sendTransferResponse) {
-        super(credentials, receiverAddress, sendTransferResponse);
+    public SendTransferTask(Web3j web3j, Credentials credentials, SendTransactionResponse sendTransactionResponse) {
+        super(web3j, credentials, sendTransactionResponse);
     }
 }

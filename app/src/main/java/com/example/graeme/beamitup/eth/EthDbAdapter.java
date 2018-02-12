@@ -10,7 +10,6 @@ import com.example.graeme.beamitup.Encryption;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class EthDbAdapter extends DbAdapter {
     private static final String TAG = "EthDbAdapter";
@@ -19,15 +18,13 @@ public class EthDbAdapter extends DbAdapter {
         super(context);
     }
 
-    public long createEth(Eth eth, String privateKey) {
-        Encryption.Encryptor encryptor = encryptPrivateKey(eth.getAddress(), privateKey);
-
-        long ethID = createEthInDB(eth, encryptor.getEncryption(), encryptor.getIv());
+    public long createEth(Eth eth) {
+        long ethID = createEthInDB(eth);
         Log.i(TAG, "Returning eth id: " + ethID);
         return ethID;
     }
 
-    private long createEthInDB(Eth eth, byte[] encPrivateKey, byte[] iv){
+    private long createEthInDB(Eth eth){
         Log.i(TAG, "Inserting eth into db of address: " + eth.getAddress());
         ContentValues contentValues = new ContentValues();
         contentValues.put(
@@ -35,16 +32,24 @@ public class EthDbAdapter extends DbAdapter {
                 eth.getAccountId()
         );
         contentValues.put(
+                EthTable.ETH_NICKNAME,
+                eth.getNickname()
+        );
+        contentValues.put(
                 EthTable.ETH_ADDRESS,
                 eth.getAddress()
         );
         contentValues.put(
-                EthTable.ETH_ENC_PRIVATE_KEY,
-                encPrivateKey
+                EthTable.ETH_WALLET_NAME,
+                eth.getWalletName()
+        );
+        contentValues.put(
+                EthTable.ETH_ENC_LONG_PASSWORD,
+                eth.getEncryptedLongPassword()
         );
         contentValues.put(
                 EthTable.ETH_IV,
-                iv
+                eth.getIV()
         );
         long ethID = this.db.insert(
                 EthTable.ETH_TABLE_NAME,
@@ -55,11 +60,16 @@ public class EthDbAdapter extends DbAdapter {
         return ethID;
     }
 
-    Eth retrieveEthByEthID(long id){
+    public Eth retrieveEthByEthID(long id){
         Cursor res = this.db.query(EthTable.ETH_TABLE_NAME,
                 new String[]{
+                        EthTable.ETH_ACCOUNT_ID,
+                        EthTable.ETH_NICKNAME,
                         EthTable.ETH_ADDRESS,
-                        EthTable.ETH_ENC_PRIVATE_KEY
+                        EthTable.ETH_WALLET_NAME,
+                        EthTable.ETH_ENC_LONG_PASSWORD,
+                        EthTable.ETH_IV,
+                        EthTable._ID
                 },
                 EthTable._ID + "=?",
                 new String[]{Long.toString(id)},
@@ -92,10 +102,12 @@ public class EthDbAdapter extends DbAdapter {
                 EthTable.ETH_TABLE_NAME,
                 new String[]{
                         EthTable._ID,
-                        EthTable.ETH_ACCOUNT_ID,
+                        EthTable.ETH_NICKNAME,
                         EthTable.ETH_ADDRESS,
-                        EthTable.ETH_ENC_PRIVATE_KEY,
-                        EthTable.ETH_IV
+                        EthTable.ETH_ACCOUNT_ID,
+                        EthTable.ETH_IV,
+                        EthTable.ETH_ENC_LONG_PASSWORD,
+                        EthTable.ETH_WALLET_NAME
                 },
                 EthTable.ETH_ACCOUNT_ID + "=?",
                 new String[]{Long.toString(accountId)},
@@ -107,56 +119,18 @@ public class EthDbAdapter extends DbAdapter {
 
     private Eth retrieveEthFromCursor(Cursor res){
         return new Eth(
+                res.getInt(res.getColumnIndex(EthTable.ETH_ACCOUNT_ID)),
+                res.getString(res.getColumnIndex(EthTable.ETH_NICKNAME)),
                 res.getString(res.getColumnIndex(EthTable.ETH_ADDRESS)),
-                res.getLong(res.getColumnIndex(EthTable._ID)),
-                res.getInt(res.getColumnIndex(EthTable.ETH_ACCOUNT_ID))
+                res.getString(res.getColumnIndex(EthTable.ETH_WALLET_NAME)),
+                res.getBlob(res.getColumnIndex(EthTable.ETH_ENC_LONG_PASSWORD)),
+                res.getBlob(res.getColumnIndex(EthTable.ETH_IV)),
+                res.getLong(res.getColumnIndex(EthTable._ID))
         );
-    }
-
-    public String retrieveSenderPrivateKey(long ethID, String senderAddress) throws Exception {
-        Encryption.Encryptor encryptor = retrieveEncryptor(ethID);
-        byte[] encPrivateKey = encryptor.getEncryption();
-        byte[] iv = encryptor.getIv();
-        Encryption.Decryptor decryptor = new Encryption.Decryptor();
-        return decryptor.decryptPrivateKey(senderAddress, encPrivateKey, iv);
-    }
-
-    private Encryption.Encryptor retrieveEncryptor(long ethID){
-        Cursor res = retrieveEncryptorCursor(ethID);
-        res.moveToFirst();
-        return putCursorIntoEncryptor(res);
-    }
-
-    private Cursor retrieveEncryptorCursor(long ethID){
-        Cursor res = this.db.query(
-                EthTable.ETH_TABLE_NAME,
-                new String[]{
-                        EthTable.ETH_ENC_PRIVATE_KEY,
-                        EthTable.ETH_IV
-                },
-                EthTable._ID + "=?",
-                new String[]{Long.toString(ethID)},
-                null,
-                null,
-                null
-        );
-        if (res.getCount() == 0){
-            throw new NoSuchElementException();
-        }
-        return res;
-    }
-
-    private Encryption.Encryptor putCursorIntoEncryptor(Cursor res){
-        byte[] encPrivateKey = res.getBlob(res.getColumnIndex(EthTable.ETH_ENC_PRIVATE_KEY));
-        byte[] iv = res.getBlob(res.getColumnIndex(EthTable.ETH_IV));
-        Encryption.Encryptor encryptor = new Encryption.Encryptor();
-        encryptor.setEncryption(encPrivateKey);
-        encryptor.setIv(iv);
-        return encryptor;
     }
 
     boolean updateEth(Eth eth, String privateKey){
-        Encryption.Encryptor encryptor = encryptPrivateKey(eth.getAddress(), privateKey);
+        Encryption.Encryptor encryptor = encryptPassword(eth.getAddress(), privateKey);
         return updateEthInDB(eth, encryptor.getEncryption(), encryptor.getIv());
     }
 
@@ -165,14 +139,6 @@ public class EthDbAdapter extends DbAdapter {
         contentValues.put(
                 EthTable.ETH_ADDRESS,
                 eth.getAddress()
-        );
-        contentValues.put(
-                EthTable.ETH_ENC_PRIVATE_KEY,
-                encPrivateKey
-        );
-        contentValues.put(
-                EthTable.ETH_IV,
-                iv
         );
         contentValues.put(
                 EthTable.ETH_ACCOUNT_ID,
@@ -192,10 +158,10 @@ public class EthDbAdapter extends DbAdapter {
 
     }
 
-    private Encryption.Encryptor encryptPrivateKey(String address, String privateKey){
+    private Encryption.Encryptor encryptPassword(String walletName, String password){
         Encryption.Encryptor encryptor = new Encryption.Encryptor();
         try {
-            encryptor.encryptPrivateKey(address, privateKey);
+            encryptor.encryptPassword(walletName, password);
         } catch (Exception e) {
             e.printStackTrace();
         }

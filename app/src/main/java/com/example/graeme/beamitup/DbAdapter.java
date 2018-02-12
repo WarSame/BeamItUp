@@ -11,7 +11,7 @@ import static com.example.graeme.beamitup.DbAdapter.AccountTable.ACCOUNT_TABLE_N
 
 public class DbAdapter {
     //If changing schema, must update db version
-    static final int DATABASE_VERSION = 10;
+    static final int DATABASE_VERSION = 15;
     static final String DATABASE_NAME = "BeamItUp.db";
 
     private DatabaseHelper DbHelper;
@@ -84,19 +84,22 @@ public class DbAdapter {
         public static final String ETH_TABLE_NAME = "eth";
         public static final String ETH_ACCOUNT_ID = "account_id";
         public static final String ETH_ADDRESS = "address";
-        public static final String ETH_ENC_PRIVATE_KEY = "enc_private_key";
+        public static final String ETH_NICKNAME = "nickname";
+        public static final String ETH_ENC_LONG_PASSWORD = "enc_long_password";
         public static final String ETH_IV = "iv";
+        public static final String ETH_WALLET_NAME = "wallet_name";
 
         static final String SQL_CREATE_TABLE = "CREATE TABLE " + ETH_TABLE_NAME +
             " (" + _ID + " INTEGER PRIMARY KEY,"
                 + ETH_ACCOUNT_ID + " INTEGER,"
                 + ETH_ADDRESS + " TEXT,"
-                + ETH_ENC_PRIVATE_KEY + " BLOB,"
+                + ETH_NICKNAME + " TEXT,"
+                + ETH_ENC_LONG_PASSWORD + " BLOB,"
                 + ETH_IV + " BLOB,"
+                + ETH_WALLET_NAME + " TEXT,"
                 + "FOREIGN KEY (" + ETH_ACCOUNT_ID + ") REFERENCES "
                 + ACCOUNT_TABLE_NAME + "(" + _ID + "))";
 
         static final String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " + ETH_TABLE_NAME;
     }
-
 }

@@ -9,9 +9,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthPickerFragment;
-import com.example.graeme.beamitup.R;
 
 import org.web3j.protocol.core.methods.response.EthGasPrice;
 import org.web3j.utils.Convert;

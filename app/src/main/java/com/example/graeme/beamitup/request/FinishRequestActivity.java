@@ -1,20 +1,20 @@
 package com.example.graeme.beamitup.request;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Activity;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.graeme.beamitup.R;
+import com.example.graeme.beamitup.SendTransactionTask.SendTransactionResponse;
 import com.example.graeme.beamitup.Session;
 import com.example.graeme.beamitup.account.Account;
 import com.example.graeme.beamitup.eth.Eth;
-import com.example.graeme.beamitup.eth.EthDbAdapter;
 import com.example.graeme.beamitup.transfer.LandingPageActivity;
-import com.example.graeme.beamitup.transfer.SendTransactionTask.SendTransferResponse;
+import com.example.graeme.beamitup.wallet.WalletHelper;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
@@ -47,10 +47,12 @@ public class FinishRequestActivity extends Activity {
         Account account = Session.getUserDetails();
         Eth eth = selectEthFromAccountByAddress( account, request.getFromAddress() );
 
-        String senderPrivateKey = getSenderPrivateKey(eth.getId(), request.getFromAddress());
-        Credentials credentials = Credentials.create(senderPrivateKey);
+        Credentials credentials = WalletHelper.retrieveCredentials(
+                this,
+                eth.getId()
+        );
 
-         SendTransferResponse sendTransferResponse = transactionReceipt -> {
+         SendTransactionResponse sendTransactionResponse = transactionReceipt -> {
             if (transactionReceipt == null){
                 finishRequestFail(request);
             }
@@ -60,7 +62,11 @@ public class FinishRequestActivity extends Activity {
             }
         };
 
-        FulfillRequestTask task = new FulfillRequestTask(credentials, request.getToAddress(), sendTransferResponse);
+        FulfillRequestTask task = new FulfillRequestTask(
+                Session.getWeb3j(),
+                credentials,
+                sendTransactionResponse
+        );
         task.execute(request);
     }
 
@@ -109,13 +115,6 @@ public class FinishRequestActivity extends Activity {
     private void removeProgressBar(){
         ProgressBar pbSendTransfer = (ProgressBar)findViewById(R.id.pb_send_transfer);
         pbSendTransfer.setVisibility(View.GONE);
-    }
-
-    String getSenderPrivateKey(long ethID, String senderAddress) throws Exception{
-        EthDbAdapter db = new EthDbAdapter(this);
-        String senderPrivateKey = db.retrieveSenderPrivateKey(ethID, senderAddress);
-        db.close();
-        return senderPrivateKey;
     }
 
     private String getTransactionAmount(Transaction transaction) throws Exception{

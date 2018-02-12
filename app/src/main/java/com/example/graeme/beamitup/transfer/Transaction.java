@@ -14,6 +14,9 @@ public class Transaction implements Serializable {
         this.toAddress = toAddress;
     }
 
+    public Transaction() {
+    }
+
     public String getToAddress() {
         return toAddress;
     }

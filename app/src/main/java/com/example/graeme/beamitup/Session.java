@@ -1,6 +1,8 @@
 package com.example.graeme.beamitup;
 
 import com.example.graeme.beamitup.account.Account;
+import com.example.graeme.beamitup.account.AccountDbAdapter;
+import com.example.graeme.beamitup.eth.EthDbAdapter;
 
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
@@ -12,8 +14,6 @@ public class Session {
     static private boolean isAlive;
 
     static private Web3j web3j;
-
-    static private String INFURA_URL = "https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9";
 
     private Session(){
     }
@@ -29,6 +29,7 @@ public class Session {
     }
 
     private static Web3j buildWeb3j(){
+        String INFURA_URL = "https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9";
         return Web3jFactory.build(
                 new HttpService(INFURA_URL)
         );

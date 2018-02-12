@@ -1,10 +1,11 @@
 package com.example.graeme.beamitup.request;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Activity;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,8 +15,6 @@ import com.example.graeme.beamitup.account.LoginActivity;
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthPickerFragment;
 import com.example.graeme.beamitup.transfer.LandingPageActivity;
-
-import org.web3j.abi.datatypes.Int;
 
 import static com.example.graeme.beamitup.ndef.NdefMessaging.handlePushMessage;
 
@@ -73,6 +72,7 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
             Intent finishRequestIntent = new Intent(this, FinishRequestActivity.class);
             request.setFromAddress(eth.getAddress());
             finishRequestIntent.putExtra("request", request);
+
             v.setEnabled(true);
             startActivity(finishRequestIntent);
         });

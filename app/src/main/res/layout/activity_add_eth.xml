@@ -11,16 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:inputType="text"
-        android:id="@+id/et_eth_address"
-        android:hint="@string/hint_eth_address"
-        android:layout_margin="16dp"/>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:inputType="textPassword"
-        android:id="@+id/et_private_key"
-        android:hint="@string/hint_private_key"
+        android:id="@+id/et_eth_nickname"
+        android:hint="@string/et_eth_nickname"
         android:layout_margin="16dp"/>
 
     <Button

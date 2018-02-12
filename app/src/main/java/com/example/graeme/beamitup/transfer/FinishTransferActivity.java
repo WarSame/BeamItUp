@@ -12,12 +12,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.graeme.beamitup.R;
+import com.example.graeme.beamitup.SendTransactionTask;
+import com.example.graeme.beamitup.Session;
 import com.example.graeme.beamitup.account.Account;
 import com.example.graeme.beamitup.account.LoginActivity;
 import com.example.graeme.beamitup.eth.Eth;
-import com.example.graeme.beamitup.eth.EthDbAdapter;
-import com.example.graeme.beamitup.R;
-import com.example.graeme.beamitup.Session;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.web3j.crypto.Credentials;
@@ -81,7 +81,7 @@ public class FinishTransferActivity extends Activity {
         String senderPrivateKey = getSenderPrivateKey(ethID, tran.getFromAddress());
         Credentials credentials = Credentials.create(senderPrivateKey);
 
-        SendTransferTask.SendTransferResponse sendTransferResponse = transactionReceipt -> {
+        SendTransactionTask.SendTransactionResponse sendTransactionResponse = transactionReceipt -> {
             ProgressBar pbSendTransfer = (ProgressBar)findViewById(R.id.pb_send_transfer);
             pbSendTransfer.setVisibility(View.GONE);
             if (transactionReceipt == null){
@@ -92,15 +92,16 @@ public class FinishTransferActivity extends Activity {
             }
         };
 
-        SendTransferTask task = new SendTransferTask(credentials, tran.getToAddress(), sendTransferResponse);
+        SendTransferTask task = new SendTransferTask(
+                Session.getWeb3j(),
+                credentials,
+                sendTransactionResponse
+        );
         task.execute(tran);
     }
 
     String getSenderPrivateKey(long ethID, String senderAddress) throws Exception{
-        EthDbAdapter db = new EthDbAdapter(this);
-        String senderPrivateKey = db.retrieveSenderPrivateKey(ethID, senderAddress);
-        db.close();
-        return senderPrivateKey;
+        return "";
     }
 
     @SuppressLint("SetTextI18n")

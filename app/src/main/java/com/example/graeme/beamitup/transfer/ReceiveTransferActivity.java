@@ -8,9 +8,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.account.Account;
 import com.example.graeme.beamitup.account.LoginFragment;
-import com.example.graeme.beamitup.R;
 
 public class ReceiveTransferActivity extends Activity {
     private static final int REQUEST_LOGIN = 0;

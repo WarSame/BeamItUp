@@ -8,10 +8,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.graeme.beamitup.account.Account;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.Session;
 import com.example.graeme.beamitup.transfer.LandingPageActivity;
+import com.example.graeme.beamitup.wallet.WalletHelper;
 
 public class AddEthActivity extends Activity {
     private static final String TAG = "AddEthActivity";
@@ -24,50 +24,36 @@ public class AddEthActivity extends Activity {
         Button btn_add_eth = (Button) findViewById(R.id.btn_add_eth);
 
         btn_add_eth.setOnClickListener(
-                (v) -> createEth()
+                (v) -> createEth((Button)v)
         );
     }
 
-    private void createEth(){
-        Button btn_add_eth = (Button) findViewById(R.id.btn_add_eth);
+    private void createEth(Button btn_add_eth){
         btn_add_eth.setEnabled(false);
+        EditText et_eth_nickname = (EditText) findViewById(R.id.et_eth_nickname);
+        String nickname = et_eth_nickname.getText().toString();
 
-        EditText et_eth_address = (EditText) findViewById(R.id.et_eth_address);
-        EditText et_private_key = (EditText) findViewById(R.id.et_private_key);
-
-        String ethAddress = et_eth_address.getText().toString();
-        String privateKey = et_private_key.getText().toString();
-
-        createEthAndAddToSessionAccount(ethAddress, privateKey);
-
-        onCreateEthSuccess();
+        try {
+            Eth eth = WalletHelper.generateWallet(
+                    this,
+                    nickname,
+                    Session.getUserDetails().getId()
+            );
+            Log.i(TAG, "Wallet name: " + eth.getWalletName());
+            Log.i(TAG, "Wallet address: " + eth.getAddress());
+            Session.getUserDetails().addEth(eth);
+            onCreateEthSuccess();
+        } catch (Exception e) {
+            e.printStackTrace();
+            onCreateEthFail();
+        }
     }
-
-    private void createEthAndAddToSessionAccount(String ethAddress, String privateKey) {
-        Account sessionAccount = Session.getUserDetails();
-        Eth eth = createEthFromSessionAccountID(sessionAccount.getId(), ethAddress);
-        long ethID = insertEthInDB(eth, privateKey);
-        eth.setId(ethID);
-        sessionAccount.addEth(eth);
-    }
-
-    private Eth createEthFromSessionAccountID(long sessionAccountID, String ethAddress) {
-        Log.i(TAG, "Session account id: " + sessionAccountID);
-        return new Eth(ethAddress, sessionAccountID);
-    }
-
-    private long insertEthInDB(Eth eth, String privateKey){
-        EthDbAdapter db = new EthDbAdapter(this);
-        long ethID = db.createEth(eth, privateKey);
-        Log.i(TAG, "Setting eth id to " + ethID);
-        db.close();
-        return ethID;
-    }
-
 
     private void onCreateEthSuccess(){
         Button btn_add_eth = (Button) findViewById(R.id.btn_add_eth);
         btn_add_eth.setEnabled(true);
+
+        Toast.makeText(this, "Eth created.", Toast.LENGTH_LONG).show();
 
         final Intent landingPageIntent = new Intent(this, LandingPageActivity.class);
         startActivity(landingPageIntent);
@@ -77,7 +63,7 @@ public class AddEthActivity extends Activity {
         Button btn_add_eth = (Button) findViewById(R.id.btn_add_eth);
         btn_add_eth.setEnabled(true);
 
-        Toast.makeText(this, "Ethereum account creation failed.", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Eth creation failed.", Toast.LENGTH_LONG).show();
     }
 
 }
