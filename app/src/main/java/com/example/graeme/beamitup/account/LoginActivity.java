@@ -1,6 +1,8 @@
 package com.example.graeme.beamitup.account;
 
 import android.app.Activity;
+import android.app.KeyguardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +23,10 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         btn_create_account = (Button)findViewById(R.id.btn_create_account);
+
+        KeyguardManager kgm = (KeyguardManager) getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
+        Intent credIntent = kgm.createConfirmDeviceCredentialIntent("sometitle", "somedesc");
+        startActivityForResult(credIntent, 0);
 
         boolean isStartedForResult = getCallingActivity() != null;
         btn_create_account.setOnClickListener(v->{
