@@ -24,6 +24,7 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
     static final int LOGIN_REQUEST = 0;
     static final int MOBILE_AUTHENTICATE_REQUEST = 1;
     Eth eth;
+    Request request;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
     private void handleRequest() {
         setContentView(R.layout.activity_receive_request);
 
-        Request request = handlePushMessage(getIntent());
+        request = handlePushMessage(getIntent());
 
         TextView tvAmount = (TextView)findViewById(R.id.tv_amount_value);
         TextView tvToAddress = (TextView)findViewById(R.id.tv_to_address_value);
@@ -72,42 +73,42 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
                 return;
             }
 
-            authenticateAndSend(request, eth);
+            authenticateAndSend();
         });
     }
 
-    protected void authenticateAndSend(Request request, Eth eth){
+    protected void authenticateAndSend(){
         KeyguardManager kgm = (KeyguardManager) getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
         if (kgm == null){
             return;
         }
 
         Intent credIntent = kgm.createConfirmDeviceCredentialIntent("sometitle", "somedesc");
-        credIntent.putExtra("request", request);
-        credIntent.putExtra("eth", eth);
         startActivityForResult(credIntent, MOBILE_AUTHENTICATE_REQUEST);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        Log.i(TAG, "requestCode = " + requestCode + " resultCode = " + resultCode);
+        Log.i(TAG,"request = " + request);
+        Log.i(TAG, "eth = " + eth);
         switch (requestCode){
             case LOGIN_REQUEST:
+                Log.i(TAG, "Handling login request");
                 handleLoginResponse(resultCode);
                 break;
             case MOBILE_AUTHENTICATE_REQUEST:
-                handleMobileAuthenticateResponse(resultCode, data);
+                Log.i(TAG, "Handling authentication request");
+                handleMobileAuthenticateResponse(resultCode);
                 break;
         }
     }
 
-    private void handleMobileAuthenticateResponse(int resultCode, Intent authenticationResponse) {
+    private void handleMobileAuthenticateResponse(int resultCode) {
         switch (resultCode){
             case RESULT_OK:
                 Toast.makeText(this, "User authenticated", Toast.LENGTH_LONG).show();
                 Log.i(TAG, "User is authenticated");
-
-                Request request = (Request) authenticationResponse.getSerializableExtra("request");
-                Eth eth = (Eth) authenticationResponse.getSerializableExtra("eth");
 
                 Intent finishRequestIntent = new Intent(this, FinishRequestActivity.class);
                 request.setFromAddress(eth.getAddress());
@@ -118,7 +119,7 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
                 startActivity(finishRequestIntent);
                 break;
             case RESULT_CANCELED:
-                Toast.makeText(this, "User failed to authenticated", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "User failed to authenticate", Toast.LENGTH_LONG).show();
                 Log.i(TAG, "User is not authenticated");
                 break;
         }
