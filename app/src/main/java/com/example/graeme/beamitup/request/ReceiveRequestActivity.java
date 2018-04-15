@@ -72,12 +72,11 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
                 return;
             }
 
-            getUserMobileAuthentication(request, eth);
-
+            authenticateAndSend(request, eth);
         });
     }
 
-    protected void getUserMobileAuthentication(Request request, Eth eth){
+    protected void authenticateAndSend(Request request, Eth eth){
         KeyguardManager kgm = (KeyguardManager) getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
         if (kgm == null){
             return;
@@ -114,7 +113,8 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
                 request.setFromAddress(eth.getAddress());
                 finishRequestIntent.putExtra("request", request);
 
-                v.setEnabled(true);
+                Button btnAcceptRequest = (Button)findViewById(R.id.btn_accept_request);
+                btnAcceptRequest.setEnabled(true);
                 startActivity(finishRequestIntent);
                 break;
             case RESULT_CANCELED:
