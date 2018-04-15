@@ -32,8 +32,6 @@ public class Encryption {
     private static final String TAG = "Encryption";
     private static final String HASHING_ALGORITHM = "SHA-256";
     private static final String KEYSTORE_PROVIDER = "AndroidKeyStore";
-    private static final String TRANSFORMATION = "AES/GCM/NoPadding";
-    private static final String TEXT_FORMAT = "UTF-8";
 
     private static final String AES_CIPHER = KeyProperties.KEY_ALGORITHM_AES + "/" +
             KeyProperties.BLOCK_MODE_GCM + "/" +
@@ -75,83 +73,6 @@ public class Encryption {
         byte[] salt = new byte[20];
         random.nextBytes(salt);
         return salt;
-    }
-
-    public static class Encryptor {
-        private byte[] encryption;
-        private byte[] iv;
-
-        public Encryptor(){
-        }
-
-        public void encryptPassword(String walletName, String password) throws Exception {
-            Log.i(TAG, "Encrypting password with alias of: " + walletName);
-            this.encryptText(walletName, password);
-        }
-
-        private void encryptText(final String alias, final String textToEncrypt) throws Exception {
-            Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-            cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(alias));
-
-            this.iv = cipher.getIV();
-            this.encryption = cipher.doFinal(textToEncrypt.getBytes(TEXT_FORMAT));
-        }
-
-        @NonNull
-        private SecretKey getSecretKey(final String alias) throws NoSuchAlgorithmException,
-                NoSuchProviderException, InvalidAlgorithmParameterException {
-
-            final KeyGenerator keyGenerator = KeyGenerator
-                    .getInstance(KeyProperties.KEY_ALGORITHM_AES, KEYSTORE_PROVIDER);
-
-            keyGenerator.init(new KeyGenParameterSpec.Builder(alias,
-                    KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
-                    .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
-                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                    .build());
-
-            return keyGenerator.generateKey();
-        }
-
-        public byte[] getEncryption(){
-            return this.encryption;
-        }
-
-        public void setEncryption(byte[] encryption){
-            this.encryption = encryption;
-        }
-
-        public byte[] getIv(){
-            return this.iv;
-        }
-
-        public void setIv(byte[] iv){
-            this.iv = iv;
-        }
-    }
-
-    public static class Decryptor {
-        private KeyStore ks;
-
-        public Decryptor() throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException {
-            ks = KeyStore.getInstance(KEYSTORE_PROVIDER);
-            ks.load(null);
-        }
-
-        public String decryptPassword(String walletName, byte[] privateKeyEnc, byte[] iv) throws Exception {
-            return this.decryptText(walletName, privateKeyEnc, iv);
-        }
-
-        private String decryptText(final String alias, final byte[] encryptedData, final byte[] encryptionIV) throws Exception {
-            Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-            GCMParameterSpec spec = new GCMParameterSpec(128, encryptionIV);
-            cipher.init(Cipher.DECRYPT_MODE, getSecretKey(alias), spec);
-            return new String(cipher.doFinal(encryptedData), TEXT_FORMAT);
-        }
-
-        private SecretKey getSecretKey(final String alias) throws UnrecoverableEntryException, NoSuchAlgorithmException, KeyStoreException {
-            return ((KeyStore.SecretKeyEntry) ks.getEntry(alias, null)).getSecretKey();
-        }
     }
 
     //Generate a long random string as the actual password for the wallet file

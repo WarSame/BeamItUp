@@ -129,11 +129,6 @@ public class EthDbAdapter extends DbAdapter {
         );
     }
 
-    boolean updateEth(Eth eth, String privateKey){
-        Encryption.Encryptor encryptor = encryptPassword(eth.getAddress(), privateKey);
-        return updateEthInDB(eth, encryptor.getEncryption(), encryptor.getIv());
-    }
-
     private boolean updateEthInDB(Eth eth, byte[] encPrivateKey, byte[] iv){
         ContentValues contentValues = new ContentValues();
         contentValues.put(
@@ -156,15 +151,5 @@ public class EthDbAdapter extends DbAdapter {
 
     void deleteEth(long id){
 
-    }
-
-    private Encryption.Encryptor encryptPassword(String walletName, String password){
-        Encryption.Encryptor encryptor = new Encryption.Encryptor();
-        try {
-            encryptor.encryptPassword(walletName, password);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return encryptor;
     }
 }
