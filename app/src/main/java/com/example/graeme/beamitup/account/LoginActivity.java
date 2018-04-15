@@ -9,7 +9,7 @@ import android.widget.Button;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.Session;
 import com.example.graeme.beamitup.request.ReceiveRequestActivity;
-import com.example.graeme.beamitup.transfer.LandingPageActivity;
+import com.example.graeme.beamitup.LandingPageActivity;
 
 public class LoginActivity extends Activity {
     private static final String TAG = "LoginActivity";

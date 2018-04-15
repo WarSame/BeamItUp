@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.Session;
-import com.example.graeme.beamitup.transfer.LandingPageActivity;
+import com.example.graeme.beamitup.LandingPageActivity;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;

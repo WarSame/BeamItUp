@@ -24,7 +24,7 @@ import java.util.Scanner;
 import static org.junit.Assert.assertTrue;
 
 public class FulfillRequestTaskTest {
-    private static final String TAG = "SendTransferTaskTest";
+    private static final String TAG = "FulfillRequestTaskTest";
     private static Request request;
     private static TransactionReceipt transactionReceipt;
     private static final String TRANSACTION_VALUE = "0.005";

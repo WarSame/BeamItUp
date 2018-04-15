@@ -18,50 +18,6 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".transfer.CreateTransferActivity"
-            android:label="@string/title_activity_transfer_money"
-            android:parentActivityName=".transfer.LandingPageActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.graeme.beamitup.transfer.LandingPageActivity" />
-        </activity>
-        <activity
-            android:name=".transfer.ReadyTransferActivity"
-            android:label="@string/title_activity_ready_transfer"
-            android:parentActivityName=".transfer.CreateTransferActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.graeme.beamitup.transfer.CreateTransferActivity" />
-        </activity>
-        <activity
-            android:name=".transfer.ReplyTransferActivity"
-            android:label="@string/title_activity_reply_transfer"
-            android:parentActivityName=".transfer.LandingPageActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.graeme.beamitup.transfer.LandingPageActivity" />
-        </activity>
-        <activity
-            android:name=".transfer.FinishTransferActivity"
-            android:label="@string/title_activity_finish_transfer"
-            android:parentActivityName=".transfer.LandingPageActivity"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-
-                <data android:mimeType="application/com.example.graeme.beamitup/reply_transfer" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.graeme.beamitup.transfer.LandingPageActivity" />
-        </activity>
-        <activity
             android:name=".account.CreateAccountActivity"
             android:label="@string/title_activity_create_account"
             android:parentActivityName=".account.LoginActivity"
@@ -71,16 +27,12 @@
                 android:value="com.example.graeme.beamitup.account.LoginActivity" />
         </activity>
         <activity
-            android:name=".transfer.LandingPageActivity"
+            android:name=".LandingPageActivity"
             android:label="@string/title_activity_landing_page"
             android:screenOrientation="portrait" />
         <activity
             android:name=".eth.AddEthActivity"
             android:label="@string/title_activity_add_eth"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".transfer.ReceiveTransferActivity"
-            android:label="@string/title_activity_receive_transfer"
             android:screenOrientation="portrait" />
         <activity
             android:name=".account.LoginActivity"
@@ -93,31 +45,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".transfer.CreateReplyTransferActivity"
-            android:label="@string/title_activity_create_reply_transfer"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-
-                <data android:mimeType="application/com.example.graeme.beamitup/ready_transfer" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".request.CreateRequestActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".transfer.LandingPageActivity"
+            android:parentActivityName=".LandingPageActivity"
             android:label="@string/title_activity_create_request" />
         <activity
             android:name=".request.ReadyRequestActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".transfer.LandingPageActivity"
+            android:parentActivityName=".LandingPageActivity"
             android:label="@string/title_activity_ready_request" />
         <activity
             android:name=".request.ReceiveRequestActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".transfer.LandingPageActivity"
+            android:parentActivityName=".LandingPageActivity"
             android:label="@string/title_activity_receive_request" >
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
@@ -130,7 +70,7 @@
         <activity
             android:name=".request.FinishRequestActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".transfer.LandingPageActivity"
+            android:parentActivityName=".LandingPageActivity"
             android:label="@string/title_activity_finish_request" />
     </application>
 
