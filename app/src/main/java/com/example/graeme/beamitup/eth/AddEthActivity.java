@@ -8,9 +8,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.Session;
-import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.wallet.WalletHelper;
 
 public class AddEthActivity extends Activity {

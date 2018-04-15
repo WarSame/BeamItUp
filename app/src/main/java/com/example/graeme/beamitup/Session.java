@@ -1,8 +1,6 @@
 package com.example.graeme.beamitup;
 
 import com.example.graeme.beamitup.account.Account;
-import com.example.graeme.beamitup.account.AccountDbAdapter;
-import com.example.graeme.beamitup.eth.EthDbAdapter;
 
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;

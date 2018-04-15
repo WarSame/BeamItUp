@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.util.Log;
 
 import com.example.graeme.beamitup.DbAdapter;
-import com.example.graeme.beamitup.Encryption;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,6 +95,18 @@ public class EthDbAdapter extends DbAdapter {
         return eths;
     }
 
+    private Eth retrieveEthFromCursor(Cursor res){
+        return new Eth(
+                res.getInt(res.getColumnIndex(EthTable.ETH_ACCOUNT_ID)),
+                res.getString(res.getColumnIndex(EthTable.ETH_NICKNAME)),
+                res.getString(res.getColumnIndex(EthTable.ETH_ADDRESS)),
+                res.getString(res.getColumnIndex(EthTable.ETH_WALLET_NAME)),
+                res.getBlob(res.getColumnIndex(EthTable.ETH_ENC_LONG_PASSWORD)),
+                res.getBlob(res.getColumnIndex(EthTable.ETH_IV)),
+                res.getLong(res.getColumnIndex(EthTable._ID))
+        );
+    }
+
     private Cursor retrieveEthCursorByAccountID(long accountId){
         Log.i(TAG, "Retrieving eth cursor for eths associated with account id " + accountId);
         return this.db.query(
@@ -114,18 +125,6 @@ public class EthDbAdapter extends DbAdapter {
                 null,
                 null,
                 null
-        );
-    }
-
-    private Eth retrieveEthFromCursor(Cursor res){
-        return new Eth(
-                res.getInt(res.getColumnIndex(EthTable.ETH_ACCOUNT_ID)),
-                res.getString(res.getColumnIndex(EthTable.ETH_NICKNAME)),
-                res.getString(res.getColumnIndex(EthTable.ETH_ADDRESS)),
-                res.getString(res.getColumnIndex(EthTable.ETH_WALLET_NAME)),
-                res.getBlob(res.getColumnIndex(EthTable.ETH_ENC_LONG_PASSWORD)),
-                res.getBlob(res.getColumnIndex(EthTable.ETH_IV)),
-                res.getLong(res.getColumnIndex(EthTable._ID))
         );
     }
 

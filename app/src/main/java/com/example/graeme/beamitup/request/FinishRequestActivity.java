@@ -8,13 +8,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
-import com.example.graeme.beamitup.eth_tasks.FulfillRequestTask;
-import com.example.graeme.beamitup.eth_tasks.SendTransactionTask.SendTransactionResponse;
 import com.example.graeme.beamitup.Session;
 import com.example.graeme.beamitup.account.Account;
 import com.example.graeme.beamitup.eth.Eth;
-import com.example.graeme.beamitup.LandingPageActivity;
+import com.example.graeme.beamitup.eth_tasks.FulfillRequestTask;
+import com.example.graeme.beamitup.eth_tasks.SendTransactionTask.SendTransactionResponse;
 import com.example.graeme.beamitup.wallet.WalletHelper;
 
 import org.web3j.crypto.Credentials;
