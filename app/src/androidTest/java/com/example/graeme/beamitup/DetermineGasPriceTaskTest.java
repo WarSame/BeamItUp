@@ -2,8 +2,8 @@ package com.example.graeme.beamitup;
 
 import android.util.Log;
 
-import com.example.graeme.beamitup.transfer.DetermineGasPriceTask;
-import com.example.graeme.beamitup.transfer.DetermineGasPriceTask.DetermineGasPriceResponse;
+import com.example.graeme.beamitup.eth_tasks.DetermineGasPriceTask;
+import com.example.graeme.beamitup.eth_tasks.DetermineGasPriceTask.DetermineGasPriceResponse;
 
 import org.junit.After;
 import org.junit.BeforeClass;

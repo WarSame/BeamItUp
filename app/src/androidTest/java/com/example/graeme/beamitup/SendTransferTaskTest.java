@@ -2,8 +2,8 @@ package com.example.graeme.beamitup;
 
 import android.util.Log;
 
-import com.example.graeme.beamitup.SendTransactionTask.SendTransactionResponse;
-import com.example.graeme.beamitup.transfer.SendTransferTask;
+import com.example.graeme.beamitup.eth_tasks.SendTransactionTask.SendTransactionResponse;
+import com.example.graeme.beamitup.eth_tasks.SendTransferTask;
 import com.example.graeme.beamitup.transfer.Transfer;
 
 import org.junit.BeforeClass;

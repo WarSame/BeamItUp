@@ -1,4 +1,4 @@
-package com.example.graeme.beamitup.transfer;
+package com.example.graeme.beamitup.transaction;
 
 import java.io.Serializable;
 

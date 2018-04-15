@@ -4,15 +4,14 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.util.Log;
 
-import com.example.graeme.beamitup.SendTransactionTask.SendTransactionResponse;
-import com.example.graeme.beamitup.request.FulfillRequestTask;
+import com.example.graeme.beamitup.eth_tasks.SendTransactionTask.SendTransactionResponse;
+import com.example.graeme.beamitup.eth_tasks.FulfillRequestTask;
 import com.example.graeme.beamitup.request.Request;
 
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.web3j.crypto.Credentials;
-import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.core.methods.response.EthTransaction;

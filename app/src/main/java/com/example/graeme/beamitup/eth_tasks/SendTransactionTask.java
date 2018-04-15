@@ -1,9 +1,9 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.eth_tasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.graeme.beamitup.transfer.Transaction;
+import com.example.graeme.beamitup.transaction.Transaction;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;

@@ -7,7 +7,8 @@ import android.util.Log;
 
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthDbAdapter;
-import com.example.graeme.beamitup.request.FulfillRequestTask;
+import com.example.graeme.beamitup.eth_tasks.SendTransactionTask;
+import com.example.graeme.beamitup.eth_tasks.FulfillRequestTask;
 import com.example.graeme.beamitup.request.Request;
 import com.example.graeme.beamitup.wallet.WalletHelper;
 

@@ -13,11 +13,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.graeme.beamitup.R;
-import com.example.graeme.beamitup.SendTransactionTask;
+import com.example.graeme.beamitup.eth_tasks.SendTransactionTask;
 import com.example.graeme.beamitup.Session;
 import com.example.graeme.beamitup.account.Account;
 import com.example.graeme.beamitup.account.LoginActivity;
 import com.example.graeme.beamitup.eth.Eth;
+import com.example.graeme.beamitup.eth_tasks.SendTransferTask;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.web3j.crypto.Credentials;

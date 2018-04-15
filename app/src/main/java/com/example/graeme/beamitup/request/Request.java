@@ -1,6 +1,6 @@
 package com.example.graeme.beamitup.request;
 
-import com.example.graeme.beamitup.transfer.Transaction;
+import com.example.graeme.beamitup.transaction.Transaction;
 
 public class Request extends Transaction {
     private static final String TAG = "Request";
