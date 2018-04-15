@@ -7,6 +7,10 @@ import com.example.graeme.beamitup.Session;
 
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.EthGasPrice;
+import org.web3j.utils.Convert;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 public class DetermineGasPriceTask extends AsyncTask<Void, Void, EthGasPrice> {
     private static final String TAG = "DetermineGasPriceTask";
@@ -31,10 +35,22 @@ public class DetermineGasPriceTask extends AsyncTask<Void, Void, EthGasPrice> {
     @Override
     protected void onPostExecute(EthGasPrice ethGasPrice) {
         super.onPostExecute(ethGasPrice);
-        determineGasPriceResponse.determineGasPriceFinish(ethGasPrice);
+
+        String gasCost = getCurrentGasCost(ethGasPrice);
+        determineGasPriceResponse.determineGasPriceFinish(gasCost);
     }
 
     public interface DetermineGasPriceResponse {
-        void determineGasPriceFinish(EthGasPrice ethGasPrice);
+        void determineGasPriceFinish(String ethGasPrice);
     }
+
+    private String getCurrentGasCost(EthGasPrice ethGasPrice){
+        BigInteger currentGasPrice = ethGasPrice.getGasPrice();
+        BigInteger GAS_USED = org.web3j.tx.Transfer.GAS_LIMIT;
+
+        BigInteger gasCost = GAS_USED.multiply(currentGasPrice);
+        return Convert.fromWei(new BigDecimal(gasCost), Convert.Unit.ETHER ).toString();
+    }
+
+
 }

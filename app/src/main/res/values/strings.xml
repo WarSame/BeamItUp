@@ -41,5 +41,7 @@
     <string name="btn_decline_request">Decline Request</string>
     <string name="et_eth_nickname">Nickname</string>
     <string name="tv_eth_nickname">Eth Nickname</string>
+    <string name="tv_gas_cost_label">Gas cost:</string>
+    <string name="tv_gas_cost_value">0</string>
 
 </resources>

@@ -24,10 +24,6 @@ public class LoginActivity extends Activity {
 
         btn_create_account = (Button)findViewById(R.id.btn_create_account);
 
-        KeyguardManager kgm = (KeyguardManager) getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
-        Intent credIntent = kgm.createConfirmDeviceCredentialIntent("sometitle", "somedesc");
-        startActivityForResult(credIntent, 0);
-
         boolean isStartedForResult = getCallingActivity() != null;
         btn_create_account.setOnClickListener(v->{
             if (isStartedForResult) {
