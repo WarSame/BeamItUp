@@ -12,8 +12,6 @@ import android.widget.Toast;
 
 import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
-import com.example.graeme.beamitup.Session;
-import com.example.graeme.beamitup.account.LoginActivity;
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthPickerFragment;
 
@@ -21,7 +19,6 @@ import static com.example.graeme.beamitup.ndef.NdefMessaging.handlePushMessage;
 
 public class ReceiveRequestActivity extends Activity implements EthPickerFragment.onEthSelectedListener{
     private static final String TAG = "ReceiveRequestActivity";
-    static final int LOGIN_REQUEST = 0;
     static final int MOBILE_AUTHENTICATE_REQUEST = 1;
     Eth eth;
     Request request;
@@ -30,14 +27,7 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!Session.isAlive()){
-            Log.i(TAG, "Session is dead when receiving request");
-            Intent loginIntent = new Intent(this, LoginActivity.class);
-            startActivityForResult(loginIntent, LOGIN_REQUEST);
-        }
-        else {
-            handleRequest();
-        }
+        handleRequest();
     }
 
     private void handleRequest() {
@@ -93,10 +83,6 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
         Log.i(TAG,"request = " + request);
         Log.i(TAG, "eth = " + eth);
         switch (requestCode){
-            case LOGIN_REQUEST:
-                Log.i(TAG, "Handling login request");
-                handleLoginResponse(resultCode);
-                break;
             case MOBILE_AUTHENTICATE_REQUEST:
                 Log.i(TAG, "Handling authentication request");
                 handleMobileAuthenticateResponse(resultCode);
@@ -121,21 +107,6 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
             case RESULT_CANCELED:
                 Toast.makeText(this, "User failed to authenticate", Toast.LENGTH_LONG).show();
                 Log.i(TAG, "User is not authenticated");
-                break;
-        }
-    }
-
-    private void handleLoginResponse(int resultCode){
-        switch (resultCode){
-            case RESULT_OK:
-                Log.i(TAG, "User logged in.");
-                handleRequest();
-                break;
-            case RESULT_CANCELED:
-                //Just send them to the log in
-                Log.i(TAG, "User did not log in.");
-                Intent loginIntent = new Intent(this, LoginActivity.class);
-                startActivity(loginIntent);
                 break;
         }
     }

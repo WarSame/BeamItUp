@@ -3,7 +3,6 @@ package com.example.graeme.beamitup.eth;
 import java.io.Serializable;
 
 public class Eth implements Serializable{
-    private long accountId;
     private String nickname;
     private String address;
     private String walletName;
@@ -12,7 +11,6 @@ public class Eth implements Serializable{
     private long id;
 
     public Eth(
-            long accountId,
             String nickname,
             String address,
             String walletName,
@@ -20,7 +18,6 @@ public class Eth implements Serializable{
             byte[] IV,
             long id
             ){
-        this.accountId = accountId;
         this.nickname = nickname;
         this.address = address;
         this.walletName = walletName;
@@ -30,14 +27,12 @@ public class Eth implements Serializable{
     }
 
     public Eth(
-            long accountId,
             String nickname,
             String address,
             String walletName,
             byte[] encryptedLongPassword,
             byte[] IV
     ){
-        this.accountId = accountId;
         this.nickname = nickname;
         this.address = address;
         this.walletName = walletName;
@@ -52,14 +47,6 @@ public class Eth implements Serializable{
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    long getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(long accountId) {
-        this.accountId = accountId;
     }
 
     public String getNickname() {

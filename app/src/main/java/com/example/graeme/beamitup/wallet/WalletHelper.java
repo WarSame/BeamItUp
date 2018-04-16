@@ -32,7 +32,7 @@ public class WalletHelper {
         return WalletUtils.loadCredentials(longPassword, walletFile);
     }
 
-    public static Eth generateWallet(Context context, String nickname, long accountID) throws Exception {
+    public static Eth generateWallet(Context context, String nickname) throws Exception {
         String longPassword = Encryption.generateLongRandomString();
         String walletName = WalletUtils.generateLightNewWalletFile(longPassword, getWalletDir(context));
         EncryptedWallet encryptedWallet = Encryption.encryptWalletPassword(walletName, longPassword);
@@ -41,7 +41,6 @@ public class WalletHelper {
         Credentials credentials = retrieveCredentials(context, encryptedLongPassword, IV, walletName);
         String address = credentials.getAddress();
         Eth eth = new Eth(
-                accountID,
                 nickname,
                 address,
                 walletName,

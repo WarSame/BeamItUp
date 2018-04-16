@@ -15,6 +15,8 @@ public class LandingPageActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
 
+        Session.createSession();
+
         Button btn_add_eth = (Button)findViewById(R.id.btn_add_eth);
         Button btn_create_request = (Button)findViewById(R.id.btn_create_request);
 

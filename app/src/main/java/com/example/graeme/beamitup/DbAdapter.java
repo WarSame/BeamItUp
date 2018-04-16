@@ -7,11 +7,9 @@ import android.provider.BaseColumns;
 
 import java.sql.SQLException;
 
-import static com.example.graeme.beamitup.DbAdapter.AccountTable.ACCOUNT_TABLE_NAME;
-
 public class DbAdapter {
     //If changing schema, must update db version
-    static final int DATABASE_VERSION = 15;
+    static final int DATABASE_VERSION = 16;
     static final String DATABASE_NAME = "BeamItUp.db";
 
     private DatabaseHelper DbHelper;
@@ -19,11 +17,7 @@ public class DbAdapter {
 
     public DbAdapter(Context context){
         this.DbHelper = new DatabaseHelper(context);
-        try {
-            open();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        open();
     }
 
     static class DatabaseHelper extends SQLiteOpenHelper
@@ -35,14 +29,12 @@ public class DbAdapter {
 
         public void onCreate(SQLiteDatabase db)
         {
-            db.execSQL(AccountTable.SQL_CREATE_TABLE);
             db.execSQL(EthTable.SQL_CREATE_TABLE);
         }
 
         public void onUpgrade(SQLiteDatabase db, int oldVersion,
                               int newVersion)
         {
-            db.execSQL(AccountTable.SQL_DELETE_TABLE);
             db.execSQL(EthTable.SQL_DELETE_TABLE);
             onCreate(db);
         }
@@ -52,7 +44,7 @@ public class DbAdapter {
         }
     }
 
-    private void open() throws SQLException
+    private void open()
     {
         this.db = this.DbHelper.getWritableDatabase();
     }
@@ -62,27 +54,8 @@ public class DbAdapter {
         this.DbHelper.close();
     }
 
-    protected static class AccountTable implements BaseColumns {
-        public static final String ACCOUNT_TABLE_NAME = "account";
-        public static final String ACCOUNT_EMAIL = "email";
-        public static final String ACCOUNT_PASSWORD_HASH = "password";
-        public static final String ACCOUNT_SALT = "salt";
-
-        static final String SQL_CREATE_TABLE = "CREATE TABLE " + ACCOUNT_TABLE_NAME +
-                " (" + _ID + " INTEGER PRIMARY KEY,"
-                + ACCOUNT_EMAIL + " TEXT,"
-                + ACCOUNT_PASSWORD_HASH + " BLOB,"
-                + ACCOUNT_SALT + " BLOB,"
-                + "CONSTRAINT email_unique UNIQUE"
-                + "(" + ACCOUNT_EMAIL +")"
-                + ")";
-
-        static final String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " + ACCOUNT_TABLE_NAME;
-    }
-
     protected static class EthTable implements  BaseColumns {
         public static final String ETH_TABLE_NAME = "eth";
-        public static final String ETH_ACCOUNT_ID = "account_id";
         public static final String ETH_ADDRESS = "address";
         public static final String ETH_NICKNAME = "nickname";
         public static final String ETH_ENC_LONG_PASSWORD = "enc_long_password";
@@ -91,14 +64,11 @@ public class DbAdapter {
 
         static final String SQL_CREATE_TABLE = "CREATE TABLE " + ETH_TABLE_NAME +
             " (" + _ID + " INTEGER PRIMARY KEY,"
-                + ETH_ACCOUNT_ID + " INTEGER,"
                 + ETH_ADDRESS + " TEXT,"
                 + ETH_NICKNAME + " TEXT,"
                 + ETH_ENC_LONG_PASSWORD + " BLOB,"
                 + ETH_IV + " BLOB,"
-                + ETH_WALLET_NAME + " TEXT,"
-                + "FOREIGN KEY (" + ETH_ACCOUNT_ID + ") REFERENCES "
-                + ACCOUNT_TABLE_NAME + "(" + _ID + "))";
+                + ETH_WALLET_NAME + " TEXT)";
 
         static final String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " + ETH_TABLE_NAME;
     }

@@ -36,12 +36,10 @@ public class AddEthActivity extends Activity {
         try {
             Eth eth = WalletHelper.generateWallet(
                     this,
-                    nickname,
-                    Session.getUserDetails().getId()
+                    nickname
             );
             Log.i(TAG, "Wallet name: " + eth.getWalletName());
             Log.i(TAG, "Wallet address: " + eth.getAddress());
-            Session.getUserDetails().addEth(eth);
             onCreateEthSuccess();
         } catch (Exception e) {
             e.printStackTrace();

@@ -27,10 +27,6 @@ public class EthDbAdapter extends DbAdapter {
         Log.i(TAG, "Inserting eth into db of address: " + eth.getAddress());
         ContentValues contentValues = new ContentValues();
         contentValues.put(
-                EthTable.ETH_ACCOUNT_ID,
-                eth.getAccountId()
-        );
-        contentValues.put(
                 EthTable.ETH_NICKNAME,
                 eth.getNickname()
         );
@@ -62,7 +58,6 @@ public class EthDbAdapter extends DbAdapter {
     public Eth retrieveEthByEthID(long id){
         Cursor res = this.db.query(EthTable.ETH_TABLE_NAME,
                 new String[]{
-                        EthTable.ETH_ACCOUNT_ID,
                         EthTable.ETH_NICKNAME,
                         EthTable.ETH_ADDRESS,
                         EthTable.ETH_WALLET_NAME,
@@ -82,9 +77,20 @@ public class EthDbAdapter extends DbAdapter {
         return eth;
     }
 
-    public List<Eth> retrieveEthsByAccountId(long accountId){
+    public Eth retrieveEthByEthAddress(String address){
+        Log.i(TAG, "Retrieving eth with address " + address);
+        Cursor res = retrieveEthCursorByAddress(address);
+        Log.i(TAG, "Retrieved cursor of length " + res.getCount());
+        res.moveToFirst();
+        Eth eth = retrieveEthFromCursor(res);
+        Log.i(TAG, "Retrieved eth with address " + eth.getAddress()
+        + " and nickname " + eth.getNickname());
+        return eth;
+    }
+
+    public List<Eth> retrieveEths(){
         List<Eth> eths = new ArrayList<>();
-        Cursor res = retrieveEthCursorByAccountID(accountId);
+        Cursor res = retrieveEthCursor();
         Log.i(TAG, "Eth cursor count: " + res.getCount());
         while (res.moveToNext()) {
             Log.i(TAG, "Eth id: " + res.getLong(res.getColumnIndex(EthTable._ID)));
@@ -97,7 +103,6 @@ public class EthDbAdapter extends DbAdapter {
 
     private Eth retrieveEthFromCursor(Cursor res){
         return new Eth(
-                res.getInt(res.getColumnIndex(EthTable.ETH_ACCOUNT_ID)),
                 res.getString(res.getColumnIndex(EthTable.ETH_NICKNAME)),
                 res.getString(res.getColumnIndex(EthTable.ETH_ADDRESS)),
                 res.getString(res.getColumnIndex(EthTable.ETH_WALLET_NAME)),
@@ -107,21 +112,39 @@ public class EthDbAdapter extends DbAdapter {
         );
     }
 
-    private Cursor retrieveEthCursorByAccountID(long accountId){
-        Log.i(TAG, "Retrieving eth cursor for eths associated with account id " + accountId);
+    private Cursor retrieveEthCursor(){
+        Log.i(TAG, "Retrieving eth cursor ");
         return this.db.query(
                 EthTable.ETH_TABLE_NAME,
                 new String[]{
                         EthTable._ID,
                         EthTable.ETH_NICKNAME,
                         EthTable.ETH_ADDRESS,
-                        EthTable.ETH_ACCOUNT_ID,
                         EthTable.ETH_IV,
                         EthTable.ETH_ENC_LONG_PASSWORD,
                         EthTable.ETH_WALLET_NAME
                 },
-                EthTable.ETH_ACCOUNT_ID + "=?",
-                new String[]{Long.toString(accountId)},
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
+    private Cursor retrieveEthCursorByAddress(String address){
+        return this.db.query(
+                EthTable.ETH_TABLE_NAME,
+                new String[]{
+                        EthTable._ID,
+                        EthTable.ETH_NICKNAME,
+                        EthTable.ETH_ADDRESS,
+                        EthTable.ETH_IV,
+                        EthTable.ETH_ENC_LONG_PASSWORD,
+                        EthTable.ETH_WALLET_NAME
+                },
+                EthTable.ETH_ADDRESS + "=?",
+                new String[]{address},
                 null,
                 null,
                 null
@@ -133,10 +156,6 @@ public class EthDbAdapter extends DbAdapter {
         contentValues.put(
                 EthTable.ETH_ADDRESS,
                 eth.getAddress()
-        );
-        contentValues.put(
-                EthTable.ETH_ACCOUNT_ID,
-                eth.getAccountId()
         );
         long numRowsUpdated = this.db.update(
                 EthTable.ETH_TABLE_NAME,

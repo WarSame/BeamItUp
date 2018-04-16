@@ -12,6 +12,7 @@ import android.widget.ListView;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.Session;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -20,10 +21,6 @@ public class EthPickerFragment extends ListFragment {
 
     List<Eth> eths;
     onEthSelectedListener ethListener;
-
-    public EthPickerFragment(){
-        eths = Session.getUserDetails().getEths();
-    }
 
     @Override
     public void onListItemClick(ListView lv, View v, int position, long id){
@@ -51,6 +48,14 @@ public class EthPickerFragment extends ListFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
+        EthDbAdapter ethDbAdapter = new EthDbAdapter( getActivity().getApplicationContext() );
+        eths = ethDbAdapter.retrieveEths();
+        ethDbAdapter.close();
+        if (eths == null){
+            eths = new ArrayList<>();
+        }
+
         try {
             ethListener = (onEthSelectedListener) context;
         } catch (ClassCastException e) {

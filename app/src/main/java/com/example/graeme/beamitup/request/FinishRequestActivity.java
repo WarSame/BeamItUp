@@ -11,8 +11,8 @@ import android.widget.Toast;
 import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.Session;
-import com.example.graeme.beamitup.account.Account;
 import com.example.graeme.beamitup.eth.Eth;
+import com.example.graeme.beamitup.eth.EthDbAdapter;
 import com.example.graeme.beamitup.eth_tasks.FulfillRequestTask;
 import com.example.graeme.beamitup.eth_tasks.SendTransactionTask.SendTransactionResponse;
 import com.example.graeme.beamitup.wallet.WalletHelper;
@@ -25,7 +25,6 @@ import org.web3j.utils.Convert;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.NoSuchElementException;
 
 public class FinishRequestActivity extends Activity {
 
@@ -45,8 +44,10 @@ public class FinishRequestActivity extends Activity {
     }
 
     private void sendTransfer(final Request request) throws Exception {
-        Account account = Session.getUserDetails();
-        Eth eth = selectEthFromAccountByAddress( account, request.getFromAddress() );
+        String ethAddress = request.getFromAddress();
+        EthDbAdapter ethDbAdapter = new EthDbAdapter(getApplicationContext());
+        Eth eth = ethDbAdapter.retrieveEthByEthAddress(ethAddress);
+        ethDbAdapter.close();
 
         Credentials credentials = WalletHelper.retrieveCredentials(
                 this,
@@ -69,15 +70,6 @@ public class FinishRequestActivity extends Activity {
                 sendTransactionResponse
         );
         task.execute(request);
-    }
-
-    Eth selectEthFromAccountByAddress(Account account, String fromAddress) throws NoSuchElementException {
-        for ( Eth eth : account.getEths() ){
-            if ( eth.getAddress().equals( fromAddress ) ){
-                return eth;
-            }
-        }
-        throw new NoSuchElementException();
     }
 
     private void finishRequestSuccess(TransactionReceipt transactionReceipt) {
@@ -118,7 +110,7 @@ public class FinishRequestActivity extends Activity {
         pbSendTransfer.setVisibility(View.GONE);
     }
 
-    private String getTransactionAmount(Transaction transaction) throws Exception{
+    private String getTransactionAmount(Transaction transaction){
         BigInteger amount = transaction.getValue();
         BigDecimal amountInEth = Convert.fromWei(new BigDecimal(amount), Convert.Unit.ETHER);
         return amountInEth.toString();

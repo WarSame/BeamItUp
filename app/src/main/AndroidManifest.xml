@@ -18,25 +18,8 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".account.CreateAccountActivity"
-            android:label="@string/title_activity_create_account"
-            android:parentActivityName=".account.LoginActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.graeme.beamitup.account.LoginActivity" />
-        </activity>
-        <activity
             android:name=".LandingPageActivity"
             android:label="@string/title_activity_landing_page"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".eth.AddEthActivity"
-            android:label="@string/title_activity_add_eth"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".account.LoginActivity"
-            android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,6 +27,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".eth.AddEthActivity"
+            android:label="@string/title_activity_add_eth"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".request.CreateRequestActivity"
             android:screenOrientation="portrait"
