@@ -18,7 +18,7 @@ public class SendTransactionTask<T extends Transaction> extends AsyncTask<T, Voi
     private Credentials credentials;
     private SendTransactionResponse sendTransactionResponse;
 
-    public SendTransactionTask(
+    SendTransactionTask(
             Web3j web3j,
             Credentials credentials,
             SendTransactionResponse sendTransactionResponse
