@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.graeme.beamitup.LandingPageActivity;
@@ -30,6 +32,9 @@ public class AddEthActivity extends Activity {
     }
 
     private void createEth(Button btn_add_eth){
+        ProgressBar pbSendTransfer = (ProgressBar)findViewById(R.id.pb_create_wallet);
+        pbSendTransfer.setVisibility(View.VISIBLE);
+
         btn_add_eth.setEnabled(false);
         EditText et_eth_nickname = (EditText) findViewById(R.id.et_eth_nickname);
         String nickname = et_eth_nickname.getText().toString();
@@ -39,16 +44,27 @@ public class AddEthActivity extends Activity {
                     this,
                     nickname,
                     (Eth eth)-> {
-                        Log.i(TAG, "Created eth");
+                        if (eth == null){
+                            Log.i(TAG, "Failed to create wallet");
+                        }
+                        else {
+                            Log.i(TAG, "Created wallet");
+                            removeProgressBar();
+
+                            onCreateEthSuccess();
+                        }
                     }
             );
             generateWalletTask.execute();
-
-            onCreateEthSuccess();
         } catch (Exception e) {
             e.printStackTrace();
             onCreateEthFail();
         }
+    }
+
+    private void removeProgressBar(){
+        ProgressBar pbSendTransfer = (ProgressBar)findViewById(R.id.pb_create_wallet);
+        pbSendTransfer.setVisibility(View.GONE);
     }
 
     private void onCreateEthSuccess(){
