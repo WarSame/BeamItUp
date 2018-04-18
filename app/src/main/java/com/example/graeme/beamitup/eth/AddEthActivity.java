@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.Session;
+import com.example.graeme.beamitup.eth_tasks.GenerateWalletTask;
 import com.example.graeme.beamitup.wallet.WalletHelper;
 
 public class AddEthActivity extends Activity {
@@ -34,12 +35,15 @@ public class AddEthActivity extends Activity {
         String nickname = et_eth_nickname.getText().toString();
 
         try {
-            Eth eth = WalletHelper.generateWallet(
+            GenerateWalletTask generateWalletTask = new GenerateWalletTask(
                     this,
-                    nickname
+                    nickname,
+                    (Eth eth)-> {
+                        Log.i(TAG, "Created eth");
+                    }
             );
-            Log.i(TAG, "Wallet name: " + eth.getWalletName());
-            Log.i(TAG, "Wallet address: " + eth.getAddress());
+            generateWalletTask.execute();
+
             onCreateEthSuccess();
         } catch (Exception e) {
             e.printStackTrace();
