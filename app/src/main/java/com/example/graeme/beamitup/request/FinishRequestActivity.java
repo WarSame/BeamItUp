@@ -3,6 +3,7 @@ package com.example.graeme.beamitup.request;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -14,6 +15,7 @@ import com.example.graeme.beamitup.Session;
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthDbAdapter;
 import com.example.graeme.beamitup.eth_tasks.FulfillRequestTask;
+import com.example.graeme.beamitup.eth_tasks.RetrieveWalletTask;
 import com.example.graeme.beamitup.eth_tasks.SendTransactionTask.SendTransactionResponse;
 import com.example.graeme.beamitup.wallet.WalletHelper;
 
@@ -27,6 +29,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 public class FinishRequestActivity extends Activity {
+    private static final String TAG = "FinishRequestActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,18 +46,31 @@ public class FinishRequestActivity extends Activity {
         }
     }
 
-    private void sendTransfer(final Request request) throws Exception {
+    private void sendTransfer(final Request request) {
         String ethAddress = request.getFromAddress();
         EthDbAdapter ethDbAdapter = new EthDbAdapter(getApplicationContext());
         Eth eth = ethDbAdapter.retrieveEthByEthAddress(ethAddress);
         ethDbAdapter.close();
 
-        Credentials credentials = WalletHelper.retrieveCredentials(
-                this,
-                eth.getId()
+        RetrieveWalletTask retrieveWalletTask = new RetrieveWalletTask(
+                getApplicationContext(),
+                eth.getId(),
+                (Credentials credentials)->{
+                    if (credentials == null){
+                        Log.i(TAG, "Failed to retrieve wallet");
+                    }
+                    else {
+                        Log.i(TAG, "Retrieved wallet");
+                        sendTransaction(request, credentials);
+                    }
+                }
         );
 
-         SendTransactionResponse sendTransactionResponse = transactionReceipt -> {
+        retrieveWalletTask.execute();
+    }
+
+    private void sendTransaction(Request request, Credentials credentials){
+        SendTransactionResponse sendTransactionResponse = transactionReceipt -> {
             if (transactionReceipt == null){
                 finishRequestFail(request);
             }

@@ -14,6 +14,10 @@ public class GenerateWalletTask extends AsyncTask<Void, Void, Eth> {
 
     private GenerateWalletResponse generateWalletResponse;
 
+    public interface GenerateWalletResponse{
+        void generateWalletFinish(Eth eth);
+    }
+
     public GenerateWalletTask(
             Context context,
             String nickname,
@@ -31,15 +35,12 @@ public class GenerateWalletTask extends AsyncTask<Void, Void, Eth> {
                     this.context,
                     this.nickname
             );
-        } catch (Exception e){
+        }
+        catch (Exception e){
             e.printStackTrace();
         }
         return null;
     }
-
-    public interface GenerateWalletResponse{
-        void generateWalletFinish(Eth eth);
-    };
 
     @Override
     protected void onPostExecute(Eth eth){
