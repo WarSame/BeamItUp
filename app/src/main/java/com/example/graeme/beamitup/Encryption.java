@@ -30,7 +30,7 @@ public class Encryption {
             KeyProperties.ENCRYPTION_PADDING_NONE;
     private static final int GCM_TAG_LENGTH = 128;
 
-    private static final int USER_VALIDATION_DURATION_SECONDS = 0;
+    private static final int USER_VALIDATION_DURATION_SECONDS = 30;
 
     private static final int RANDOM_STRING_LENGTH = 128;
     private static final char[] RANDOM_STRING_CHARACTERS = "abcdefghijklmnopqrstuvwxyz0123456789".toCharArray();

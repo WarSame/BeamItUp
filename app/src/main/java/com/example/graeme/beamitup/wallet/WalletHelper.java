@@ -33,14 +33,18 @@ public class WalletHelper {
         return WalletUtils.loadCredentials(longPassword, walletFile);
     }
 
-    public static Eth generateWallet(Context context, String nickname) throws Exception {
+    public static Eth generateWallet(File walletDir, String nickname, EthDbAdapter ethDbAdapter) throws Exception {
         String longPassword = Encryption.generateLongRandomString();
-        String walletName = WalletUtils.generateLightNewWalletFile(longPassword, getWalletDir(context));
+        String walletName = WalletUtils.generateLightNewWalletFile(longPassword, walletDir);
         EncryptedWallet encryptedWallet = Encryption.encryptWalletPassword(walletName, longPassword);
         byte[] IV = encryptedWallet.getIV();
         byte[] encryptedLongPassword = encryptedWallet.getEncryptedLongPassword();
-        Credentials credentials = retrieveCredentials(context, encryptedLongPassword, IV, walletName);
+
+        File walletFile = new File(walletDir + "/" + walletName);
+
+        Credentials credentials = retrieveCredentials(walletFile, encryptedLongPassword, IV, walletName);
         String address = credentials.getAddress();
+
         Eth eth = new Eth(
                 nickname,
                 address,
@@ -48,24 +52,22 @@ public class WalletHelper {
                 encryptedLongPassword,
                 IV
         );
-        EthDbAdapter ethDbAdapter = new EthDbAdapter(context);
         long ethID = ethDbAdapter.createEth(eth);
-        ethDbAdapter.close();
         eth.setId(ethID);
+
         return eth;
     }
 
-    private static Credentials retrieveCredentials(Context context, byte[] encryptedLongPassword, byte[] IV, String walletName) throws Exception{
+    private static Credentials retrieveCredentials(File walletFile, byte[] encryptedLongPassword, byte[] IV, String walletName) throws Exception{
         String longPassword = Encryption.decryptWalletPassword(encryptedLongPassword, IV, walletName);
-        File walletFile = getWalletFile(context, walletName);
         return WalletUtils.loadCredentials(longPassword, walletFile);
     }
 
-    private static File getWalletFile(Context context, String walletName) throws Exception {
+    public static File getWalletFile(Context context, String walletName) throws Exception {
         return new File(getWalletDir(context) + "/" + walletName);
     }
 
-    private static File getWalletDir(Context context) throws IOException {
+    public static File getWalletDir(Context context) throws IOException {
         File walletDir = new File(context.getFilesDir() + WALLET_DIR_RELATIVE_PATH);
         if (!walletDir.exists()){
             if ( !walletDir.mkdir() ){

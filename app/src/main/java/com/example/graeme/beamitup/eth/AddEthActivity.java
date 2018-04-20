@@ -16,6 +16,8 @@ import com.example.graeme.beamitup.Session;
 import com.example.graeme.beamitup.eth_tasks.GenerateWalletTask;
 import com.example.graeme.beamitup.wallet.WalletHelper;
 
+import java.io.File;
+
 public class AddEthActivity extends Activity {
     private static final String TAG = "AddEthActivity";
 
@@ -40,10 +42,14 @@ public class AddEthActivity extends Activity {
         String nickname = et_eth_nickname.getText().toString();
 
         try {
+            File walletDir = WalletHelper.getWalletDir(this);
+            EthDbAdapter ethDbAdapter = new EthDbAdapter(this);
             GenerateWalletTask generateWalletTask = new GenerateWalletTask(
-                    this,
+                    walletDir,
                     nickname,
+                    ethDbAdapter,
                     (Eth eth)-> {
+                        ethDbAdapter.close();
                         if (eth == null){
                             Log.i(TAG, "Failed to create wallet");
                         }

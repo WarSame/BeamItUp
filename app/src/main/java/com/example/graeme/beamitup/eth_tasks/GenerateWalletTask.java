@@ -5,11 +5,15 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.graeme.beamitup.eth.Eth;
+import com.example.graeme.beamitup.eth.EthDbAdapter;
 import com.example.graeme.beamitup.wallet.WalletHelper;
+
+import java.io.File;
 
 public class GenerateWalletTask extends AsyncTask<Void, Void, Eth> {
     private static final String TAG = "GenerateWalletTask";
-    private Context context;
+    private EthDbAdapter ethDbAdapter;
+    private File walletDir;
     private String nickname;
 
     private GenerateWalletResponse generateWalletResponse;
@@ -19,12 +23,14 @@ public class GenerateWalletTask extends AsyncTask<Void, Void, Eth> {
     }
 
     public GenerateWalletTask(
-            Context context,
+            File walletDir,
             String nickname,
+            EthDbAdapter ethDbAdapter,
             GenerateWalletResponse generateWalletResponse
     ){
-        this.context = context;
+        this.walletDir = walletDir;
         this.nickname = nickname;
+        this.ethDbAdapter = ethDbAdapter;
         this.generateWalletResponse = generateWalletResponse;
     }
 
@@ -32,8 +38,9 @@ public class GenerateWalletTask extends AsyncTask<Void, Void, Eth> {
     protected Eth doInBackground(Void... voids) {
         try {
             return WalletHelper.generateWallet(
-                    this.context,
-                    this.nickname
+                    this.walletDir,
+                    this.nickname,
+                    this.ethDbAdapter
             );
         }
         catch (Exception e){
