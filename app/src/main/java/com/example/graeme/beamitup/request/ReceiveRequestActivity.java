@@ -100,15 +100,21 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
                 request.setFromAddress(eth.getAddress());
                 finishRequestIntent.putExtra("request", request);
 
-                Button btnAcceptRequest = (Button)findViewById(R.id.btn_accept_request);
-                btnAcceptRequest.setEnabled(true);
+                enableAcceptRequestButton();
                 startActivity(finishRequestIntent);
                 break;
             case RESULT_CANCELED:
                 Toast.makeText(this, "User failed to authenticate", Toast.LENGTH_LONG).show();
                 Log.i(TAG, "User is not authenticated");
+
+                enableAcceptRequestButton();
                 break;
         }
+    }
+
+    private void enableAcceptRequestButton(){
+        Button btnAcceptRequest = (Button)findViewById(R.id.btn_accept_request);
+        btnAcceptRequest.setEnabled(true);
     }
 
     @Override
