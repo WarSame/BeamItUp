@@ -29,6 +29,7 @@ public class WalletHelper {
                 eth.getIV(),
                 eth.getWalletName()
         );
+        Log.i(TAG, "Wallet retrieved");
         return WalletUtils.loadCredentials(longPassword, walletFile);
     }
 
