@@ -58,7 +58,10 @@ public class AddEthActivity extends Activity {
                         else {
                             Log.i(TAG, "Created wallet " + walletName);
 
-                            insertWalletEth(walletName, longPassword, nickname);
+                            EthDbAdapter ethDbAdapter = new EthDbAdapter(this);
+                            File walletFile = WalletHelper.getWalletFile(this, walletName);
+                            WalletHelper.insertWalletEth(walletName, longPassword, nickname, ethDbAdapter, walletFile);
+                            ethDbAdapter.close();
 
                             removeProgressBar();
 
@@ -71,31 +74,6 @@ public class AddEthActivity extends Activity {
             e.printStackTrace();
             onCreateEthFail();
         }
-    }
-
-    private void insertWalletEth(String walletName, String longPassword, String nickname) throws Exception {
-        EncryptedWallet encryptedWallet = Encryption.encryptWalletPassword(walletName, longPassword);
-        File walletFile = WalletHelper.getWalletFile(this, walletName);
-
-        Credentials credentials = WalletHelper.retrieveCredentials(
-                walletFile,
-                encryptedWallet.getEncryptedLongPassword(),
-                encryptedWallet.getIV(),
-                walletName
-        );
-
-        Eth eth = new Eth(
-                nickname,
-                credentials.getAddress(),
-                walletName,
-                encryptedWallet.getEncryptedLongPassword(),
-                encryptedWallet.getIV()
-        );
-
-        EthDbAdapter ethDbAdapter = new EthDbAdapter(this);
-        long ethID = ethDbAdapter.createEth(eth);
-        eth.setId(ethID);
-        ethDbAdapter.close();
     }
 
     private void removeProgressBar(){
