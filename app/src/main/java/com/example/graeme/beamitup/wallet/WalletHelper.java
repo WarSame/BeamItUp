@@ -18,11 +18,7 @@ public class WalletHelper {
     private static final String WALLET_DIR_RELATIVE_PATH = "/wallets";
 
     //Retrieve encrypted long password from DB with IV, decrypt using keystore
-    public static Credentials retrieveCredentials(Context context, long ethID) throws Exception {
-        EthDbAdapter ethDbAdapter = new EthDbAdapter(context);
-        Eth eth = ethDbAdapter.retrieveEthByEthID(ethID);
-        ethDbAdapter.close();
-        File walletFile = getWalletFile(context, eth.getWalletName());
+    public static Credentials retrieveCredentials(Eth eth, File walletFile) throws Exception {
         Log.i(TAG, "Wallet file location: " + walletFile);
         String longPassword = Encryption.decryptWalletPassword(
                 eth.getEncryptedLongPassword(),

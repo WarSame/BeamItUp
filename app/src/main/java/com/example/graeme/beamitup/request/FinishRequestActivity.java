@@ -25,6 +25,7 @@ import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.utils.Convert;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -46,15 +47,17 @@ public class FinishRequestActivity extends Activity {
         }
     }
 
-    private void sendTransfer(final Request request) {
+    private void sendTransfer(final Request request) throws Exception {
         String ethAddress = request.getFromAddress();
         EthDbAdapter ethDbAdapter = new EthDbAdapter(getApplicationContext());
         Eth eth = ethDbAdapter.retrieveEthByEthAddress(ethAddress);
         ethDbAdapter.close();
 
+        File walletFile = WalletHelper.getWalletFile(this, eth.getWalletName());
+
         RetrieveWalletTask retrieveWalletTask = new RetrieveWalletTask(
-                getApplicationContext(),
-                eth.getId(),
+                eth,
+                walletFile,
                 (Credentials credentials)->{
                     if (credentials == null){
                         Log.i(TAG, "Failed to retrieve wallet");

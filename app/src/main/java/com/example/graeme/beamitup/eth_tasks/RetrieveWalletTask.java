@@ -1,17 +1,19 @@
 package com.example.graeme.beamitup.eth_tasks;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.wallet.WalletHelper;
 
 import org.web3j.crypto.Credentials;
 
+import java.io.File;
+
 public class RetrieveWalletTask extends AsyncTask<Void, Void, Credentials> {
     private static final String TAG = "RetrieveWalletTask";
-    private Context context;
-    private long ethID;
+    private Eth eth;
+    private File walletFile;
     private RetrieveWalletResponse retrieveWalletResponse;
 
     public interface RetrieveWalletResponse{
@@ -19,13 +21,13 @@ public class RetrieveWalletTask extends AsyncTask<Void, Void, Credentials> {
     }
 
     public RetrieveWalletTask(
-            Context context,
-            long ethID,
+            Eth eth,
+            File walletFile,
             RetrieveWalletResponse retrieveWalletResponse
     ){
         Log.i(TAG, "Creating retrieveWalletTask");
-        this.context = context;
-        this.ethID = ethID;
+        this.eth = eth;
+        this.walletFile = walletFile;
         this.retrieveWalletResponse = retrieveWalletResponse;
     }
 
@@ -34,8 +36,8 @@ public class RetrieveWalletTask extends AsyncTask<Void, Void, Credentials> {
         try {
             Log.i(TAG, "Retrieving wallet");
             return WalletHelper.retrieveCredentials(
-                    this.context,
-                    this.ethID
+                    this.eth,
+                    this.walletFile
             );
         }
         catch (Exception e){
