@@ -58,7 +58,7 @@ public class AddEthActivity extends Activity {
                         else {
                             Log.i(TAG, "Created wallet " + walletName);
 
-                           insertWalletEth(walletName, longPassword, nickname);
+                            insertWalletEth(walletName, longPassword, nickname);
 
                             removeProgressBar();
 
