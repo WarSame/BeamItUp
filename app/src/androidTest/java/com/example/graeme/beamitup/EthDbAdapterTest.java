@@ -1,10 +1,13 @@
 package com.example.graeme.beamitup;
 
 import android.content.Context;
+import android.security.keystore.UserNotAuthenticatedException;
 import android.support.test.InstrumentationRegistry;
 
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthDbAdapter;
+import com.example.graeme.beamitup.wallet.EncryptedWallet;
+import com.example.graeme.beamitup.wallet.Wallet;
 import com.example.graeme.beamitup.wallet.WalletHelper;
 
 import org.junit.After;
@@ -13,16 +16,16 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.File;
+
 import static org.junit.Assert.assertTrue;
 
 public class EthDbAdapterTest {
-    private static Context appContext;
     private static EthDbAdapter ethDB;
-    private static final long INSERTED_ACCOUNT_ID = 15;
 
     @Before
-    public void setUp() throws Exception {
-        appContext = InstrumentationRegistry.getTargetContext();
+    public void setUp() {
+        Context appContext = InstrumentationRegistry.getTargetContext();
         ethDB = new EthDbAdapter(appContext);
 
         DbAdapter.DatabaseHelper dbHelper = new DbAdapter.DatabaseHelper(appContext);
@@ -30,35 +33,40 @@ public class EthDbAdapterTest {
     }
 
     @AfterClass
-    public static void tearDown() throws Exception {
+    public static void tearDown(){
         ethDB.close();
     }
 
     @Test
-    public void createEth_InsertedAccountCreated_ShouldBeOne() throws Exception {
-        Eth insertedEth = WalletHelper.generateWallet(appContext, "inserted eth", INSERTED_ACCOUNT_ID);
-        System.out.println("ethid " + insertedEth.getId());
-        assertTrue(1 == insertedEth.getId());
+    public void createEth_InsertedEthCreated_ShouldBeOne(){
+        byte[] encryptedLongPassword = new byte[]{};
+        byte[] IV = new byte[]{};
+        Eth eth = new Eth(
+                "somenick",
+                "someaddress",
+                "somewalletname",
+                encryptedLongPassword,
+                IV
+        );
+        long ethID = ethDB.createEth(eth);
+        System.out.println("ethid " + ethID);
+        assertTrue(1 == ethID);
     }
 
     @Test
-    public void retrieveEthByEthID() throws Exception {
+    public void retrieveEthByEthID() {
     }
 
     @Test
-    public void retrieveEthsByAccountId() throws Exception {
+    public void retrieveSenderPrivateKey() {
     }
 
     @Test
-    public void retrieveSenderPrivateKey() throws Exception {
+    public void updateEth() {
     }
 
     @Test
-    public void updateEth() throws Exception {
-    }
-
-    @Test
-    public void deleteEth() throws Exception {
+    public void deleteEth() {
     }
 
 }
