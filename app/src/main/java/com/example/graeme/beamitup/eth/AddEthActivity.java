@@ -10,11 +10,15 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.graeme.beamitup.Encryption;
 import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.Session;
 import com.example.graeme.beamitup.eth_tasks.GenerateWalletTask;
+import com.example.graeme.beamitup.wallet.EncryptedWallet;
 import com.example.graeme.beamitup.wallet.WalletHelper;
+
+import org.web3j.crypto.Credentials;
 
 import java.io.File;
 
@@ -42,19 +46,20 @@ public class AddEthActivity extends Activity {
         String nickname = et_eth_nickname.getText().toString();
 
         try {
+            String longPassword = Encryption.generateLongRandomString();
             File walletDir = WalletHelper.getWalletDir(this);
-            EthDbAdapter ethDbAdapter = new EthDbAdapter(this);
             GenerateWalletTask generateWalletTask = new GenerateWalletTask(
+                    longPassword,
                     walletDir,
-                    nickname,
-                    ethDbAdapter,
-                    (Eth eth)-> {
-                        ethDbAdapter.close();
-                        if (eth == null){
+                    (String walletName)-> {
+                        if (walletName == null){
                             Log.i(TAG, "Failed to create wallet");
                         }
                         else {
-                            Log.i(TAG, "Created wallet");
+                            Log.i(TAG, "Created wallet " + walletName);
+
+                           insertWalletEth(walletName, longPassword, nickname);
+
                             removeProgressBar();
 
                             onCreateEthSuccess();
@@ -66,6 +71,31 @@ public class AddEthActivity extends Activity {
             e.printStackTrace();
             onCreateEthFail();
         }
+    }
+
+    private void insertWalletEth(String walletName, String longPassword, String nickname) throws Exception {
+        EncryptedWallet encryptedWallet = Encryption.encryptWalletPassword(walletName, longPassword);
+        File walletFile = WalletHelper.getWalletFile(this, walletName);
+
+        Credentials credentials = WalletHelper.retrieveCredentials(
+                walletFile,
+                encryptedWallet.getEncryptedLongPassword(),
+                encryptedWallet.getIV(),
+                walletName
+        );
+
+        Eth eth = new Eth(
+                nickname,
+                credentials.getAddress(),
+                walletName,
+                encryptedWallet.getEncryptedLongPassword(),
+                encryptedWallet.getIV()
+        );
+
+        EthDbAdapter ethDbAdapter = new EthDbAdapter(this);
+        long ethID = ethDbAdapter.createEth(eth);
+        eth.setId(ethID);
+        ethDbAdapter.close();
     }
 
     private void removeProgressBar(){

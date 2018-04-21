@@ -29,32 +29,12 @@ public class WalletHelper {
         return WalletUtils.loadCredentials(longPassword, walletFile);
     }
 
-    public static Eth generateWallet(File walletDir, String nickname, EthDbAdapter ethDbAdapter) throws Exception {
-        String longPassword = Encryption.generateLongRandomString();
-        String walletName = WalletUtils.generateLightNewWalletFile(longPassword, walletDir);
-        EncryptedWallet encryptedWallet = Encryption.encryptWalletPassword(walletName, longPassword);
-        byte[] IV = encryptedWallet.getIV();
-        byte[] encryptedLongPassword = encryptedWallet.getEncryptedLongPassword();
+    public static String generateWallet(String longPassword, File walletDir) throws Exception {
+        return WalletUtils.generateLightNewWalletFile(longPassword, walletDir);
 
-        File walletFile = new File(walletDir + "/" + walletName);
-
-        Credentials credentials = retrieveCredentials(walletFile, encryptedLongPassword, IV, walletName);
-        String address = credentials.getAddress();
-
-        Eth eth = new Eth(
-                nickname,
-                address,
-                walletName,
-                encryptedLongPassword,
-                IV
-        );
-        long ethID = ethDbAdapter.createEth(eth);
-        eth.setId(ethID);
-
-        return eth;
     }
 
-    private static Credentials retrieveCredentials(File walletFile, byte[] encryptedLongPassword, byte[] IV, String walletName) throws Exception{
+    public static Credentials retrieveCredentials(File walletFile, byte[] encryptedLongPassword, byte[] IV, String walletName) throws Exception{
         String longPassword = Encryption.decryptWalletPassword(encryptedLongPassword, IV, walletName);
         return WalletUtils.loadCredentials(longPassword, walletFile);
     }
