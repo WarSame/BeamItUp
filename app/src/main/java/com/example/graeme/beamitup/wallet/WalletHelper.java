@@ -33,29 +33,7 @@ public class WalletHelper {
         return WalletUtils.generateLightNewWalletFile(longPassword, walletDir);
     }
 
-    public static Eth insertWalletEth(String walletName, String longPassword, String nickname, EthDbAdapter ethDbAdapter, File walletFile) throws Exception {
-        EncryptedWallet encryptedWallet = Encryption.encryptWalletPassword(walletName, longPassword);
-
-        Credentials credentials = WalletHelper.retrieveCredentials(
-                walletFile,
-                encryptedWallet.getEncryptedLongPassword(),
-                encryptedWallet.getIV(),
-                walletName
-        );
-
-        Eth eth = new Eth(
-                nickname,
-                credentials.getAddress(),
-                walletName,
-                encryptedWallet.getEncryptedLongPassword(),
-                encryptedWallet.getIV()
-        );
-        long ethID = ethDbAdapter.createEth(eth);
-        eth.setId(ethID);
-        return eth;
-    }
-
-    private static Credentials retrieveCredentials(File walletFile, byte[] encryptedLongPassword, byte[] IV, String walletName) throws Exception{
+    public static Credentials retrieveCredentials(File walletFile, byte[] encryptedLongPassword, byte[] IV, String walletName) throws Exception{
         String longPassword = Encryption.decryptWalletPassword(encryptedLongPassword, IV, walletName);
         return WalletUtils.loadCredentials(longPassword, walletFile);
     }

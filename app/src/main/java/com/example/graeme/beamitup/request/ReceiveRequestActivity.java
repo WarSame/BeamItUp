@@ -63,11 +63,11 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
                 return;
             }
 
-            authenticateAndSend();
+            authenticateMobileUser();
         });
     }
 
-    protected void authenticateAndSend(){
+    protected void authenticateMobileUser(){
         KeyguardManager kgm = (KeyguardManager) getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
         if (kgm == null){
             return;
