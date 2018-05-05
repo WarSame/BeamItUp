@@ -17,6 +17,8 @@ import org.junit.Test;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
+import java.io.File;
+
 import static junit.framework.Assert.assertTrue;
 
 public class WalletHelperTest {
@@ -24,7 +26,8 @@ public class WalletHelperTest {
     private static final String TO_ADDRESS = "0x31B98D14007bDEe637298086988A0bBd31184523";
     private static final String TRANSACTION_VALUE = "0.01";
     private static final String FILL_EMPTY_WALLET_VALUE = "0.5";
-    private static Eth filledEth;
+    private static String emptyWalletName;
+    private static String filledWalletName;
     private static Request request;
 
     private static Context appContext;
@@ -39,10 +42,11 @@ public class WalletHelperTest {
         dbHelper.onUpgrade(ethDB.db, 0, 1);//Wipe db tables
 
         long ACCOUNT_ID = 1;
-        Eth emptyEth = WalletHelper.generateWallet(appContext, "somenick", ACCOUNT_ID);
-        filledEth = WalletHelper.generateWallet(appContext, "someothernick", ACCOUNT_ID);
-        Log.i(TAG, "walletName: " + emptyEth.getWalletName());
-        Log.i(TAG, "other wallet name: " + filledEth.getWalletName());
+        File walletDir = WalletHelper.getWalletDir(appContext);
+        emptyWalletName = WalletHelper.generateWallet("", walletDir);
+        filledWalletName = WalletHelper.generateWallet("", walletDir);
+        Log.i(TAG, "walletName: " + emptyWalletName);
+        Log.i(TAG, "other wallet name: " + filledWalletName);
 
         request = new Request(TO_ADDRESS, TRANSACTION_VALUE);
     }
@@ -50,9 +54,11 @@ public class WalletHelperTest {
     @Test
     public void sendFundsFromEmptyWallet_ShouldBeNullTransactionReceipt() throws Exception{
         long ETH_ID = 1;
+        File walletFile = WalletHelper.getWalletFile(appContext, emptyWalletName);
+        String longPassword = "";
         Credentials credentials = WalletHelper.retrieveCredentials(
-                appContext,
-                ETH_ID
+                walletFile,
+                longPassword
         );
         Log.i(TAG, "credentials address: " + credentials.getAddress());
 
@@ -70,9 +76,11 @@ public class WalletHelperTest {
     public void sendFundsFromNotEmptyWallet_ShouldBeFilledTransactionReceipt() throws Exception {
         Credentials credentials = FulfillRequestTaskTest.retrieveMasterCredentials();
         fillEmptyWallet(credentials);
+        File walletFile = WalletHelper.getWalletFile(appContext, filledWalletName);
+        String longPassword = "";
         Credentials filledCredentials = WalletHelper.retrieveCredentials(
-                appContext,
-                filledEth.getId()
+                walletFile,
+                longPassword
         );
 
         Request fromFilledWalletRequest = new Request(credentials.getAddress(), TRANSACTION_VALUE);
@@ -87,7 +95,7 @@ public class WalletHelperTest {
     }
 
     private void fillEmptyWallet(Credentials credentials) throws Exception {
-        Request fillEmptyWalletRequest = new Request(filledEth.getAddress(), FILL_EMPTY_WALLET_VALUE);
+        Request fillEmptyWalletRequest = new Request("", FILL_EMPTY_WALLET_VALUE);
 
         FulfillRequestTask fulfillRequestTask = new FulfillRequestTask(
                 Session.getWeb3j(),
@@ -96,15 +104,6 @@ public class WalletHelperTest {
         );
         fulfillRequestTask.execute(fillEmptyWalletRequest);
         fulfillRequestTask.get();
-    }
-
-    @Test(expected = CursorIndexOutOfBoundsException.class)
-    public void sendFundsWithWrongEthID_ShouldBeCursorBoundException() throws Exception{
-        long WRONG_ETH_ID = 56;
-        WalletHelper.retrieveCredentials(
-                appContext,
-                WRONG_ETH_ID
-        );
     }
 
     private SendTransactionTask.SendTransactionResponse sendTransactionResponse = (response) -> {

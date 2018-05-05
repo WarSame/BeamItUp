@@ -6,10 +6,6 @@ import android.support.test.InstrumentationRegistry;
 
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthDbAdapter;
-import com.example.graeme.beamitup.wallet.EncryptedWallet;
-import com.example.graeme.beamitup.wallet.Wallet;
-import com.example.graeme.beamitup.wallet.WalletHelper;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

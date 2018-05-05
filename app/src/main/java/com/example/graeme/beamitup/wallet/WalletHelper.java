@@ -17,7 +17,6 @@ public class WalletHelper {
     private static final String TAG = "WalletHelper";
     private static final String WALLET_DIR_RELATIVE_PATH = "/wallets";
 
-    //Retrieve encrypted long password from DB with IV, decrypt using keystore
     public static Credentials retrieveCredentials(Eth eth, File walletFile) throws Exception {
         Log.i(TAG, "Wallet file location: " + walletFile);
         String longPassword = Encryption.decryptWalletPassword(
@@ -29,13 +28,12 @@ public class WalletHelper {
         return WalletUtils.loadCredentials(longPassword, walletFile);
     }
 
-    public static String generateWallet(String longPassword, File walletDir) throws Exception {
-        return WalletUtils.generateLightNewWalletFile(longPassword, walletDir);
+    public static Credentials retrieveCredentials(File walletFile, String longPassword) throws Exception{
+        return WalletUtils.loadCredentials(longPassword, walletFile);
     }
 
-    public static Credentials retrieveCredentials(File walletFile, byte[] encryptedLongPassword, byte[] IV, String walletName) throws Exception{
-        String longPassword = Encryption.decryptWalletPassword(encryptedLongPassword, IV, walletName);
-        return WalletUtils.loadCredentials(longPassword, walletFile);
+    public static String generateWallet(String longPassword, File walletDir) throws Exception {
+        return WalletUtils.generateLightNewWalletFile(longPassword, walletDir);
     }
 
     public static File getWalletFile(Context context, String walletName) throws Exception {

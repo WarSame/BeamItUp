@@ -133,9 +133,7 @@ public class AddEthActivity extends Activity {
 
         Credentials credentials = WalletHelper.retrieveCredentials(
                 walletFile,
-                encryptedWallet.getEncryptedLongPassword(),
-                encryptedWallet.getIV(),
-                walletName
+                longPassword
         );
 
         Eth eth = new Eth(
