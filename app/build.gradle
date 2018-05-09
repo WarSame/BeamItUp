@@ -24,6 +24,9 @@ android {
     }
 }
 
+apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao'
+
 dependencies {
     implementation 'com.android.support:recyclerview-v7:26.1.0'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -36,4 +39,5 @@ dependencies {
     implementation 'org.web3j:core:3.1.1-android'
     implementation 'org.apache.commons:commons-lang3:3.5'
     androidTestImplementation 'org.mockito:mockito-core:2.18.3'
+    implementation 'org.greenrobot:greendao:3.2.2'
 }
