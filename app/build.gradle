@@ -1,3 +1,4 @@
+apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'com.android.application'
 
 android {
@@ -23,9 +24,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
-
-apply plugin: 'com.android.application'
-apply plugin: 'org.greenrobot.greendao'
 
 dependencies {
     implementation 'com.android.support:recyclerview-v7:26.1.0'
