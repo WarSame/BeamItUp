@@ -24,6 +24,7 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -33,30 +34,48 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".request.CreateRequestActivity"
-            android:screenOrientation="portrait"
+            android:label="@string/title_activity_create_request"
             android:parentActivityName=".LandingPageActivity"
-            android:label="@string/title_activity_create_request" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".request.ReadyRequestActivity"
-            android:screenOrientation="portrait"
+            android:label="@string/title_activity_ready_request"
             android:parentActivityName=".LandingPageActivity"
-            android:label="@string/title_activity_ready_request" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".request.ReceiveRequestActivity"
-            android:screenOrientation="portrait"
+            android:label="@string/title_activity_receive_request"
             android:parentActivityName=".LandingPageActivity"
-            android:label="@string/title_activity_receive_request" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
                 <data android:mimeType="com.example.graeme.beamitup/request" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
             android:name=".request.FinishRequestActivity"
-            android:screenOrientation="portrait"
+            android:label="@string/title_activity_finish_request"
             android:parentActivityName=".LandingPageActivity"
-            android:label="@string/title_activity_finish_request" />
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".eth.EthListActivity"
+            android:label="@string/title_activity_eth"
+            android:parentActivityName=".LandingPageActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.graeme.beamitup.LandingPageActivity" />
+        </activity>
+        <activity
+            android:name=".eth.EthDetailActivity"
+            android:label="@string/title_activity_eth_detail"
+            android:parentActivityName=".eth.EthListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.graeme.beamitup.eth.EthListActivity" />
+        </activity>
     </application>
 
 </manifest>

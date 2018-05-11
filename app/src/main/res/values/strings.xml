@@ -18,6 +18,7 @@
 
     <!-- Buttons -->
     <string name="btn_add_eth">Add Ethereum Account</string>
+    <string name="btn_eth_list">Eth List</string>
     <string name="btn_sign_in">Sign In</string>
     <string name="btn_create_account">Create Account</string>
 
@@ -43,5 +44,8 @@
     <string name="tv_eth_nickname">Eth Nickname</string>
     <string name="tv_gas_cost_label">Gas cost:</string>
     <string name="tv_gas_cost_value">0</string>
+    <string name="title_activity_eth">Eths</string>
+    <string name="title_activity_eth_detail">EthDetailActivity</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

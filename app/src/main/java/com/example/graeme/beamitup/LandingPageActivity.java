@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import com.example.graeme.beamitup.eth.AddEthActivity;
+import com.example.graeme.beamitup.eth.EthListActivity;
 import com.example.graeme.beamitup.request.CreateRequestActivity;
 
 public class LandingPageActivity extends Activity {
@@ -17,13 +18,13 @@ public class LandingPageActivity extends Activity {
 
         Session.createSession();
 
-        Button btn_add_eth = (Button)findViewById(R.id.btn_add_eth);
-        Button btn_create_request = (Button)findViewById(R.id.btn_create_request);
+        Button btn_eth_list = findViewById(R.id.btn_eth_list);
+        Button btn_create_request = findViewById(R.id.btn_create_request);
 
-        final Intent addEthIntent = new Intent(this, AddEthActivity.class);
+        final Intent ethListIntent = new Intent(this, EthListActivity.class);
         final Intent createRequestIntent = new Intent(this, CreateRequestActivity.class);
 
-        btn_add_eth.setOnClickListener(v -> startActivity(addEthIntent));
+        btn_eth_list.setOnClickListener(v -> startActivity(ethListIntent));
 
         btn_create_request.setOnClickListener(v-> startActivity(createRequestIntent));
     }
