@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_margin="16dp"
     tools:context="com.example.graeme.beamitup.request.ReceiveRequestActivity">
 
     <fragment
@@ -11,6 +12,7 @@
         android:name="com.example.graeme.beamitup.eth.EthPickerFragment"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:layout_margin="16dp"
         tools:layout="@layout/frag_list_item_eth" />
 
     <LinearLayout

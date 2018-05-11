@@ -47,5 +47,7 @@
     <string name="title_activity_eth">Eths</string>
     <string name="title_activity_eth_detail">EthDetailActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="et_eth_address">Address</string>
+    <string name="tv_eth_wallet_name">Wallet name</string>
 
 </resources>
