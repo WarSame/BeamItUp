@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.example.graeme.beamitup.Encryption;
 import com.example.graeme.beamitup.eth.Eth;
-import com.example.graeme.beamitup.eth.EthDbAdapter;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;

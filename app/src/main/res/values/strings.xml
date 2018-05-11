@@ -3,7 +3,7 @@
 
     <!-- Titles -->
     <string name="title_activity_create_account">CreateAccount</string>
-    <string name="title_activity_landing_page">Home</string>
+    <string name="title_activity_landing_page">Beam It Up</string>
     <string name="title_activity_add_eth">Add Ethereum Account</string>
 
     <!-- Keys -->

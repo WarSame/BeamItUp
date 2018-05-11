@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.Encryption;
 import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
@@ -136,13 +137,12 @@ public class AddEthActivity extends Activity {
                 longPassword
         );
 
-        Eth eth = new Eth(
-                nickname,
-                credentials.getAddress(),
-                walletName,
-                encryptedWallet.getEncryptedLongPassword(),
-                encryptedWallet.getIV()
-        );
+        Eth eth = new Eth();
+        eth.setNickname(nickname);
+        eth.setAddress(credentials.getAddress());
+        eth.setWalletName(walletName);
+        eth.setEncryptedLongPassword(encryptedWallet.getEncryptedLongPassword());
+        eth.setIV(encryptedWallet.getIV());
 
         insertEth(eth);
 
@@ -152,10 +152,10 @@ public class AddEthActivity extends Activity {
     }
 
     private void insertEth(Eth eth){
-        EthDbAdapter ethDbAdapter = new EthDbAdapter(this);
-        long ethID = ethDbAdapter.createEth(eth);
-        eth.setId(ethID);
-        ethDbAdapter.close();
+        DaoSession daoSession = ((BeamItUp)getApplication()).getDaoSession();
+        EthDao ethDao = daoSession.getEthDao();
+        ethDao.insert(eth);
+        Log.d(TAG, "Inserted new eth " + eth.getId());
     }
 
     private void removeProgressBar(){

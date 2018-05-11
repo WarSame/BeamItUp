@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
+import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.Session;
 
@@ -49,13 +50,11 @@ public class EthPickerFragment extends ListFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        EthDbAdapter ethDbAdapter = new EthDbAdapter( getActivity().getApplicationContext() );
-        eths = ethDbAdapter.retrieveEths();
-        ethDbAdapter.close();
-        if (eths == null){
-            eths = new ArrayList<>();
-        }
+        DaoSession daoSession = ((BeamItUp)getActivity().getApplication()).getDaoSession();
+        EthDao ethDao = daoSession.getEthDao();
 
+        eths = ethDao.loadAll();
+        
         try {
             ethListener = (onEthSelectedListener) context;
         } catch (ClassCastException e) {

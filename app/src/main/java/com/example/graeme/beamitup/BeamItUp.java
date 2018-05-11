@@ -9,13 +9,18 @@ import org.greenrobot.greendao.database.Database;
 
 public class BeamItUp extends Application {
 
+    private DaoSession daoSession;
+
     @Override
     public void onCreate(){
         super.onCreate();
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "eth-db", null);
         Database db = helper.getWritableDb();
-        DaoMaster daoMaster = new DaoMaster(db);
-        DaoSession daoSession = daoMaster.newSession();
+        daoSession = new DaoMaster(db).newSession();
+    }
+
+    public DaoSession getDaoSession(){
+        return daoSession;
     }
 
 }

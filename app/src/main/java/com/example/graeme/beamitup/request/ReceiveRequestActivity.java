@@ -35,8 +35,8 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
 
         request = handlePushMessage(getIntent());
 
-        TextView tvAmount = (TextView)findViewById(R.id.tv_amount_value);
-        TextView tvToAddress = (TextView)findViewById(R.id.tv_to_address_value);
+        TextView tvAmount = findViewById(R.id.tv_amount_value);
+        TextView tvToAddress = findViewById(R.id.tv_to_address_value);
 
         if (request == null){
             Toast.makeText(this, "Error receiving message.", Toast.LENGTH_LONG).show();
@@ -48,8 +48,8 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
             tvToAddress.setText(request.getToAddress());
         }
 
-        Button btnDeclineRequest = (Button)findViewById(R.id.btn_decline_request);
-        Button btnAcceptRequest = (Button)findViewById(R.id.btn_accept_request);
+        Button btnDeclineRequest = findViewById(R.id.btn_decline_request);
+        Button btnAcceptRequest = findViewById(R.id.btn_accept_request);
 
         btnDeclineRequest.setOnClickListener(v->{
             Intent landingPageIntent = new Intent(this, LandingPageActivity.class);
@@ -97,7 +97,7 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
                 Log.i(TAG, "User is authenticated");
 
                 Intent finishRequestIntent = new Intent(this, FinishRequestActivity.class);
-                request.setFromAddress(eth.getAddress());
+                request.setFromID(eth.getId());
                 finishRequestIntent.putExtra("request", request);
 
                 enableAcceptRequestButton();
@@ -113,7 +113,7 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
     }
 
     private void enableAcceptRequestButton(){
-        Button btnAcceptRequest = (Button)findViewById(R.id.btn_accept_request);
+        Button btnAcceptRequest = findViewById(R.id.btn_accept_request);
         btnAcceptRequest.setEnabled(true);
     }
 

@@ -9,11 +9,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.Session;
+import com.example.graeme.beamitup.eth.DaoSession;
 import com.example.graeme.beamitup.eth.Eth;
-import com.example.graeme.beamitup.eth.EthDbAdapter;
+import com.example.graeme.beamitup.eth.EthDao;
 import com.example.graeme.beamitup.eth_tasks.FulfillRequestTask;
 import com.example.graeme.beamitup.eth_tasks.RetrieveWalletTask;
 import com.example.graeme.beamitup.eth_tasks.SendTransactionTask.SendTransactionResponse;
@@ -48,10 +50,10 @@ public class FinishRequestActivity extends Activity {
     }
 
     private void sendTransfer(final Request request) throws Exception {
-        String ethAddress = request.getFromAddress();
-        EthDbAdapter ethDbAdapter = new EthDbAdapter(getApplicationContext());
-        Eth eth = ethDbAdapter.retrieveEthByEthAddress(ethAddress);
-        ethDbAdapter.close();
+        DaoSession daoSession = ((BeamItUp)getApplication()).getDaoSession();
+        EthDao ethDao = daoSession.getEthDao();
+        long ethID = request.getFromID();
+        Eth eth = ethDao.load(ethID);
 
         File walletFile = WalletHelper.getWalletFile(this, eth.getWalletName());
 
@@ -98,9 +100,9 @@ public class FinishRequestActivity extends Activity {
                 Toast.LENGTH_LONG
         ).show();
 
-        TextView tvSenderAddress = (TextView)findViewById(R.id.tv_sender_address_value);
-        TextView tvReceiverAddress = (TextView)findViewById(R.id.tv_receiver_address_value);
-        TextView tvAmount = (TextView)findViewById(R.id.tv_amount_value);
+        TextView tvSenderAddress = findViewById(R.id.tv_sender_address_value);
+        TextView tvReceiverAddress = findViewById(R.id.tv_receiver_address_value);
+        TextView tvAmount = findViewById(R.id.tv_amount_value);
 
         tvSenderAddress.setText(transactionReceipt.getFrom());
         tvReceiverAddress.setText(transactionReceipt.getTo());
@@ -117,7 +119,7 @@ public class FinishRequestActivity extends Activity {
     private void finishRequestFail(Request request) {
         Toast.makeText(
                 this,
-                "Request from " + request.getFromAddress() + " not fulfilled.",
+                "Request from " + request.getFromID() + " not fulfilled.",
                 Toast.LENGTH_LONG
         ).show();
         Intent landingPageIntent = new Intent(this, LandingPageActivity.class);
@@ -125,7 +127,7 @@ public class FinishRequestActivity extends Activity {
     }
 
     private void removeProgressBar(){
-        ProgressBar pbSendTransfer = (ProgressBar)findViewById(R.id.pb_send_transfer);
+        ProgressBar pbSendTransfer = findViewById(R.id.pb_send_transfer);
         pbSendTransfer.setVisibility(View.GONE);
     }
 

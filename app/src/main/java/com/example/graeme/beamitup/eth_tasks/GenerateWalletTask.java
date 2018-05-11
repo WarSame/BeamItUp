@@ -1,12 +1,8 @@
 package com.example.graeme.beamitup.eth_tasks;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.graeme.beamitup.Encryption;
-import com.example.graeme.beamitup.eth.Eth;
-import com.example.graeme.beamitup.eth.EthDbAdapter;
 import com.example.graeme.beamitup.wallet.WalletHelper;
 
 import java.io.File;

@@ -1,12 +1,9 @@
 package com.example.graeme.beamitup;
 
 import android.content.Context;
-import android.database.CursorIndexOutOfBoundsException;
 import android.support.test.InstrumentationRegistry;
 import android.util.Log;
 
-import com.example.graeme.beamitup.eth.Eth;
-import com.example.graeme.beamitup.eth.EthDbAdapter;
 import com.example.graeme.beamitup.eth_tasks.SendTransactionTask;
 import com.example.graeme.beamitup.eth_tasks.FulfillRequestTask;
 import com.example.graeme.beamitup.request.Request;
@@ -36,10 +33,6 @@ public class WalletHelperTest {
     public static void setUpOneTime() throws Exception{
         appContext = InstrumentationRegistry.getTargetContext();
         Session.createSession();
-
-        EthDbAdapter ethDB = new EthDbAdapter(appContext);
-        DbAdapter.DatabaseHelper dbHelper = new DbAdapter.DatabaseHelper(appContext);
-        dbHelper.onUpgrade(ethDB.db, 0, 1);//Wipe db tables
 
         long ACCOUNT_ID = 1;
         File walletDir = WalletHelper.getWalletDir(appContext);

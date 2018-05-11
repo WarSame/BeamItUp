@@ -2,6 +2,7 @@ package com.example.graeme.beamitup.eth;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Index;
 import org.greenrobot.greendao.annotation.Keep;
 
 import java.io.Serializable;
@@ -17,8 +18,8 @@ public class Eth implements Serializable {
     private byte[] encryptedLongPassword;
     private byte[] IV;
 
-    @Id
-    private long id;
+    @Id(autoincrement = true)
+    private Long id;
 
     @Keep
     public Eth(
@@ -50,19 +51,21 @@ public class Eth implements Serializable {
         this.walletName = walletName;
         this.encryptedLongPassword = encryptedLongPassword;
         this.IV = IV;
-        this.id = -1;
+    }
+
+    @Generated(hash = 1393368730)
+    public Eth(String nickname, String address, String walletName,
+            byte[] encryptedLongPassword, byte[] IV, Long id) {
+        this.nickname = nickname;
+        this.address = address;
+        this.walletName = walletName;
+        this.encryptedLongPassword = encryptedLongPassword;
+        this.IV = IV;
+        this.id = id;
     }
 
     @Generated(hash = 1727113266)
     public Eth() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getNickname() {
@@ -103,5 +106,13 @@ public class Eth implements Serializable {
 
     public void setIV(byte[] IV) {
         this.IV = IV;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
