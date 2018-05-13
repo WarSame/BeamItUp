@@ -12,7 +12,6 @@ import android.widget.Toast;
 import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
-import com.example.graeme.beamitup.Session;
 import com.example.graeme.beamitup.eth.DaoSession;
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthDao;
@@ -30,6 +29,8 @@ import org.web3j.utils.Convert;
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+
+import static com.example.graeme.beamitup.BeamItUp.getWeb3j;
 
 public class FinishRequestActivity extends Activity {
     private static final String TAG = "FinishRequestActivity";
@@ -86,7 +87,7 @@ public class FinishRequestActivity extends Activity {
         };
 
         FulfillRequestTask task = new FulfillRequestTask(
-                Session.getWeb3j(),
+                getWeb3j(),
                 credentials,
                 sendTransactionResponse
         );
@@ -106,7 +107,7 @@ public class FinishRequestActivity extends Activity {
 
         tvSenderAddress.setText(transactionReceipt.getFrom());
         tvReceiverAddress.setText(transactionReceipt.getTo());
-        Web3j web3j = Session.getWeb3j();
+        Web3j web3j = getWeb3j();
         try {
             Transaction transaction = web3j.ethGetTransactionByHash(transactionReceipt.getTransactionHash())
                     .sendAsync().get().getTransaction();

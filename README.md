@@ -17,7 +17,7 @@ Completed:
 * Make handling ethereum credentials easier with wallet files
 * Allow users to modify ethereum accounts more
 
-TODO:
+TO DO:
 * Abstraction of components
 * Separation into MVP
 * Testing

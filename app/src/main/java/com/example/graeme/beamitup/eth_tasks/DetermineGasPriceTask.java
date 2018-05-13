@@ -3,8 +3,6 @@ package com.example.graeme.beamitup.eth_tasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.graeme.beamitup.Session;
-
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.core.methods.response.EthGasPrice;

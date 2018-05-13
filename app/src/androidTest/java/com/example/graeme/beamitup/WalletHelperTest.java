@@ -16,6 +16,7 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import java.io.File;
 
+import static com.example.graeme.beamitup.BeamItUp.getWeb3j;
 import static junit.framework.Assert.assertTrue;
 
 public class WalletHelperTest {
@@ -32,9 +33,7 @@ public class WalletHelperTest {
     @BeforeClass
     public static void setUpOneTime() throws Exception{
         appContext = InstrumentationRegistry.getTargetContext();
-        Session.createSession();
 
-        long ACCOUNT_ID = 1;
         File walletDir = WalletHelper.getWalletDir(appContext);
         emptyWalletName = WalletHelper.generateWallet("", walletDir);
         filledWalletName = WalletHelper.generateWallet("", walletDir);
@@ -46,7 +45,6 @@ public class WalletHelperTest {
 
     @Test
     public void sendFundsFromEmptyWallet_ShouldBeNullTransactionReceipt() throws Exception{
-        long ETH_ID = 1;
         File walletFile = WalletHelper.getWalletFile(appContext, emptyWalletName);
         String longPassword = "";
         Credentials credentials = WalletHelper.retrieveCredentials(
@@ -56,7 +54,7 @@ public class WalletHelperTest {
         Log.i(TAG, "credentials address: " + credentials.getAddress());
 
         FulfillRequestTask fulfillRequestTask = new FulfillRequestTask(
-                Session.getWeb3j(),
+                getWeb3j(),
                 credentials,
                 sendTransactionResponse
         );
@@ -78,7 +76,7 @@ public class WalletHelperTest {
 
         Request fromFilledWalletRequest = new Request(credentials.getAddress(), TRANSACTION_VALUE);
         FulfillRequestTask fulfillRequestTask = new FulfillRequestTask(
-                Session.getWeb3j(),
+                getWeb3j(),
                 filledCredentials,
                 sendTransactionResponse
         );
@@ -91,7 +89,7 @@ public class WalletHelperTest {
         Request fillEmptyWalletRequest = new Request("", FILL_EMPTY_WALLET_VALUE);
 
         FulfillRequestTask fulfillRequestTask = new FulfillRequestTask(
-                Session.getWeb3j(),
+                getWeb3j(),
                 credentials,
                 sendTransactionResponse
         );

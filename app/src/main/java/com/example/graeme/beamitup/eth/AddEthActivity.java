@@ -16,9 +16,7 @@ import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.Encryption;
 import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
-import com.example.graeme.beamitup.Session;
 import com.example.graeme.beamitup.eth_tasks.GenerateWalletTask;
-import com.example.graeme.beamitup.request.FinishRequestActivity;
 import com.example.graeme.beamitup.wallet.EncryptedWallet;
 import com.example.graeme.beamitup.wallet.WalletHelper;
 

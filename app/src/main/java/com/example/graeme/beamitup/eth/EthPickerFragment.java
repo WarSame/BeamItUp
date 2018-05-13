@@ -11,9 +11,7 @@ import android.widget.ListView;
 
 import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.R;
-import com.example.graeme.beamitup.Session;
 
-import java.util.ArrayList;
 import java.util.List;
 
 

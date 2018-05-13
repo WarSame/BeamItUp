@@ -21,6 +21,7 @@ import org.web3j.protocol.http.HttpService;
 import java.io.InputStream;
 import java.util.Scanner;
 
+import static com.example.graeme.beamitup.BeamItUp.getWeb3j;
 import static org.junit.Assert.assertTrue;
 
 public class FulfillRequestTaskTest {
@@ -42,10 +43,9 @@ public class FulfillRequestTaskTest {
         String fromPrivateKey = retrieveMasterPrivateKey();
 
         Credentials credentials = Credentials.create(fromPrivateKey);
-        Session.createSession();//Empty session for testing
 
         FulfillRequestTask task = new FulfillRequestTask(
-                Session.getWeb3j(),
+                getWeb3j(),
                 credentials,
                 sendTransactionResponse
         );
@@ -57,7 +57,7 @@ public class FulfillRequestTaskTest {
         return Credentials.create(retrieveMasterPrivateKey());
     }
 
-    static String retrieveMasterPrivateKey() throws Exception {
+    private static String retrieveMasterPrivateKey() throws Exception {
         Context testContext = InstrumentationRegistry.getInstrumentation().getContext();
         InputStream testInput = testContext.getAssets().open(SECRETS_FILE);
         Scanner in = new Scanner(testInput);
