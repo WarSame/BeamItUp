@@ -15,9 +15,12 @@ Completed:
 * Determine transfer fees when preparing transfer
 * Switch to a request-based flow
 * Make handling ethereum credentials easier with wallet files
+* Allow users to modify ethereum accounts more
 
-Todo:
-* Allow users to modify app account and ethereum accounts more
+TODO:
+* Abstraction of components
+* Separation into MVP
+* Testing
 
 Wishlist:
 * Transfers in CAD
