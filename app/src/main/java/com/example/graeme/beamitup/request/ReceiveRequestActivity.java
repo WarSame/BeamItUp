@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.graeme.beamitup.Authenticator;
+import com.example.graeme.beamitup.Authenticator.OnUserAuthenticatedListener;
 import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.eth.Eth;
@@ -63,32 +64,27 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
             }
 
             Authenticator authenticator = new Authenticator();
-            authenticator.setOnUserAuthenticatedListener(this::handleMobileAuthenticateResponse);
+            authenticator.setOnUserAuthenticatedListener(onUserAuthenticatedListener);
             authenticator.authenticateMobileUser();
         });
     }
 
-    private void handleMobileAuthenticateResponse(int resultCode) {
-        switch (resultCode){
-            case RESULT_OK:
-                Toast.makeText(this, "User authenticated", Toast.LENGTH_LONG).show();
-                Log.i(TAG, "User is authenticated");
+    OnUserAuthenticatedListener onUserAuthenticatedListener = new OnUserAuthenticatedListener() {
+        @Override
+        public void onUserAuthenticated() {
+            Intent finishRequestIntent = new Intent(getApplicationContext(), FinishRequestActivity.class);
+            request.setFromID(eth.getId());
+            finishRequestIntent.putExtra("request", request);
 
-                Intent finishRequestIntent = new Intent(this, FinishRequestActivity.class);
-                request.setFromID(eth.getId());
-                finishRequestIntent.putExtra("request", request);
-
-                enableAcceptRequestButton();
-                startActivity(finishRequestIntent);
-                break;
-            case RESULT_CANCELED:
-                Toast.makeText(this, "User failed to authenticate", Toast.LENGTH_LONG).show();
-                Log.i(TAG, "User is not authenticated");
-
-                enableAcceptRequestButton();
-                break;
+            enableAcceptRequestButton();
+            startActivity(finishRequestIntent);
         }
-    }
+
+        @Override
+        public void onUserNotAuthenticated() {
+            enableAcceptRequestButton();
+        }
+    };
 
     private void enableAcceptRequestButton(){
         Button btnAcceptRequest = findViewById(R.id.btn_accept_request);

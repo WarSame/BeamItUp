@@ -2,12 +2,12 @@ package com.example.graeme.beamitup;
 
 import android.app.Fragment;
 import android.app.KeyguardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import com.example.graeme.beamitup.eth.Eth;
-import com.example.graeme.beamitup.request.Request;
+import android.widget.Toast;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 public class Authenticator extends Fragment {
     private static final String TAG = "Authenticator";
@@ -16,18 +16,22 @@ public class Authenticator extends Fragment {
     private OnUserAuthenticatedListener onUserAuthenticatedListener;
 
     public interface OnUserAuthenticatedListener {
-        void onUserAuthenticated(int resultCode);
+        void onUserAuthenticated();
+        void onUserNotAuthenticated();
     }
 
     public Authenticator(){
-        kgm = (KeyguardManager) getActivity().getApplication().getSystemService(Context.KEYGUARD_SERVICE);
-        if (kgm == null){
-            Log.e(TAG, "kgm is null");
-        }
     }
 
     public void setOnUserAuthenticatedListener(OnUserAuthenticatedListener onUserAuthenticatedListener) {
         this.onUserAuthenticatedListener = onUserAuthenticatedListener;
+    }
+
+    public void setKGM(KeyguardManager kgm) {
+        if (this.kgm == null){
+            Log.e(TAG, "kgm is null");
+        }
+        this.kgm = kgm;
     }
 
     public boolean isDeviceSecure(){
@@ -41,12 +45,22 @@ public class Authenticator extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
         Log.i(TAG, "requestCode = " + requestCode + " resultCode = " + resultCode);
         switch (requestCode){
             case MOBILE_AUTHENTICATE_REQUEST:
-                Log.i(TAG, "Handling authentication request");
-                this.onUserAuthenticatedListener.onUserAuthenticated(resultCode);
+                Log.i(TAG, "Handling authentication request response");
+                switch (resultCode){
+                    case RESULT_OK:
+                        Toast.makeText(getActivity().getApplicationContext(), "User authenticated", Toast.LENGTH_LONG).show();
+                        Log.i(TAG, "User is authenticated");
+                        this.onUserAuthenticatedListener.onUserAuthenticated();
+                        break;
+                    case RESULT_CANCELED:
+                        Toast.makeText(getActivity().getApplicationContext(), "User failed to authenticate", Toast.LENGTH_LONG).show();
+                        Log.i(TAG, "User is not authenticated");
+                        this.onUserAuthenticatedListener.onUserNotAuthenticated();
+                        break;
+                }
                 break;
         }
     }

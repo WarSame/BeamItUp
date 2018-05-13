@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.graeme.beamitup.Authenticator;
+import com.example.graeme.beamitup.Authenticator.OnUserAuthenticatedListener;
 import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.Encryption;
 import com.example.graeme.beamitup.LandingPageActivity;
@@ -36,38 +37,35 @@ public class AddEthActivity extends Activity {
         Button btn_add_eth = findViewById(R.id.btn_add_eth);
 
         btn_add_eth.setOnClickListener(
-                (v) -> {
+                (View v) -> {
+                    KeyguardManager kgm = (KeyguardManager) getApplication().getSystemService(Context.KEYGUARD_SERVICE);
                     Authenticator authenticator = new Authenticator();
-                    authenticator.setOnUserAuthenticatedListener(this::createEth);
+                    authenticator.setKGM(kgm);
+                    authenticator.setOnUserAuthenticatedListener(onUserAuthenticatedListener);
                     authenticator.authenticateMobileUser();
                 }
         );
     }
 
-    private void createEth(int resultCode){
-        switch (resultCode){
-            case RESULT_OK:
-                Toast.makeText(this, "User authenticated", Toast.LENGTH_LONG).show();
-                Log.i(TAG, "User is authenticated");
+    OnUserAuthenticatedListener onUserAuthenticatedListener = new OnUserAuthenticatedListener() {
+        @Override
+        public void onUserAuthenticated() {
+            ProgressBar pbSendTransfer = findViewById(R.id.pb_create_wallet);
+            pbSendTransfer.setVisibility(View.VISIBLE);
 
-                ProgressBar pbSendTransfer = findViewById(R.id.pb_create_wallet);
-                pbSendTransfer.setVisibility(View.VISIBLE);
+            EditText et_eth_nickname = findViewById(R.id.et_eth_nickname);
+            String nickname = et_eth_nickname.getText().toString();
 
-                EditText et_eth_nickname = findViewById(R.id.et_eth_nickname);
-                String nickname = et_eth_nickname.getText().toString();
+            generateWallet(nickname);
 
-                generateWallet(nickname);
-
-                enableAddEthButton();
-                break;
-            case RESULT_CANCELED:
-                Toast.makeText(this, "User failed to authenticate", Toast.LENGTH_LONG).show();
-                Log.i(TAG, "User is not authenticated");
-
-                enableAddEthButton();
-                break;
+            enableAddEthButton();
         }
-    }
+
+        @Override
+        public void onUserNotAuthenticated() {
+            enableAddEthButton();
+        }
+    };
 
     private void generateWallet(String nickname){
         try {
