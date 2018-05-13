@@ -3,6 +3,7 @@ package com.example.graeme.beamitup.eth;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
+import android.widget.Button;
 
 import com.example.graeme.beamitup.R;
 
@@ -12,6 +13,11 @@ public class EthListActivity extends Activity implements EthPickerFragment.onEth
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eth_list);
+        Button btn_add_eth = findViewById(R.id.btn_add_eth);
+        btn_add_eth.setOnClickListener((v)->{
+            Intent addEthIntent = new Intent(this, AddEthActivity.class);
+            startActivity(addEthIntent);
+        });
     }
 
     @Override
