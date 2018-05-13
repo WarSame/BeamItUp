@@ -36,12 +36,22 @@ public class AddEthActivity extends Activity {
         Button btn_add_eth = findViewById(R.id.btn_add_eth);
 
         btn_add_eth.setOnClickListener(
-                (v) -> createEth((Button)v)
+                (v) -> {
+                    KeyguardManager kgm = (KeyguardManager) getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
+                    if (kgm == null || !kgm.isDeviceSecure()){
+                        Log.i(TAG, "User device is not secured");
+                        Toast.makeText(this, "Secure your device", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Log.i(TAG, "User device is secure");
+                        createEth((Button) v, kgm);
+                    }
+                }
         );
     }
 
-    private void createEth(Button btn_add_eth){
-        authenticateMobileUser();
+    private void createEth(Button btn_add_eth, KeyguardManager kgm){
+        authenticateMobileUser(kgm);
 
         ProgressBar pbSendTransfer = findViewById(R.id.pb_create_wallet);
         pbSendTransfer.setVisibility(View.VISIBLE);
@@ -54,12 +64,8 @@ public class AddEthActivity extends Activity {
         generateWallet(nickname);
     }
 
-    private void authenticateMobileUser() {
-        KeyguardManager kgm = (KeyguardManager) getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
-        if (kgm == null){
-            return;
-        }
-        Intent credIntent = kgm.createConfirmDeviceCredentialIntent("sometitle", "somedesc");
+    private void authenticateMobileUser(KeyguardManager kgm) {
+        Intent credIntent = kgm.createConfirmDeviceCredentialIntent("User authentication", "Authenticate to create an eth account");
         startActivityForResult(credIntent, MOBILE_AUTHENTICATE_REQUEST);
     }
 
