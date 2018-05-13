@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.graeme.beamitup.Authenticator;
 import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.Encryption;
 import com.example.graeme.beamitup.LandingPageActivity;
@@ -26,7 +27,6 @@ import java.io.File;
 
 public class AddEthActivity extends Activity {
     private static final String TAG = "AddEthActivity";
-    static final int MOBILE_AUTHENTICATE_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,56 +37,28 @@ public class AddEthActivity extends Activity {
 
         btn_add_eth.setOnClickListener(
                 (v) -> {
-                    KeyguardManager kgm = (KeyguardManager) getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
-                    if (kgm == null || !kgm.isDeviceSecure()){
-                        Log.i(TAG, "User device is not secured");
-                        Toast.makeText(this, "Secure your device", Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        Log.i(TAG, "User device is secure");
-                        createEth((Button) v, kgm);
-                    }
+                    Authenticator authenticator = new Authenticator();
+                    authenticator.setOnUserAuthenticatedListener(this::createEth);
+                    authenticator.authenticateMobileUser();
                 }
         );
     }
 
-    private void createEth(Button btn_add_eth, KeyguardManager kgm){
-        authenticateMobileUser(kgm);
-
-        ProgressBar pbSendTransfer = findViewById(R.id.pb_create_wallet);
-        pbSendTransfer.setVisibility(View.VISIBLE);
-
-        btn_add_eth.setEnabled(false);
-
-        EditText et_eth_nickname = findViewById(R.id.et_eth_nickname);
-        String nickname = et_eth_nickname.getText().toString();
-
-        generateWallet(nickname);
-    }
-
-    private void authenticateMobileUser(KeyguardManager kgm) {
-        Intent credIntent = kgm.createConfirmDeviceCredentialIntent("User authentication", "Authenticate to create an eth account");
-        startActivityForResult(credIntent, MOBILE_AUTHENTICATE_REQUEST);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        Log.i(TAG, "requestCode = " + requestCode + " resultCode = " + resultCode);
-
-        switch (requestCode){
-            case MOBILE_AUTHENTICATE_REQUEST:
-                Log.i(TAG, "Handling authentication request");
-                handleMobileAuthenticateResponse(resultCode);
-                break;
-        }
-    }
-
-    private void handleMobileAuthenticateResponse(int resultCode) {
+    private void createEth(int resultCode){
         switch (resultCode){
             case RESULT_OK:
                 Toast.makeText(this, "User authenticated", Toast.LENGTH_LONG).show();
                 Log.i(TAG, "User is authenticated");
 
+                ProgressBar pbSendTransfer = findViewById(R.id.pb_create_wallet);
+                pbSendTransfer.setVisibility(View.VISIBLE);
+
+                EditText et_eth_nickname = findViewById(R.id.et_eth_nickname);
+                String nickname = et_eth_nickname.getText().toString();
+
+                generateWallet(nickname);
+
+                enableAddEthButton();
                 break;
             case RESULT_CANCELED:
                 Toast.makeText(this, "User failed to authenticate", Toast.LENGTH_LONG).show();
@@ -124,22 +96,11 @@ public class AddEthActivity extends Activity {
         }
     }
 
-    private void enableAddEthButton() {
-        Button btn_add_eth = findViewById(R.id.btn_add_eth);
-        btn_add_eth.setEnabled(true);
-    }
-
-    private void handleWalletCreation(String walletName, String nickname, String longPassword) throws Exception {
-        Log.i(TAG, "Created wallet " + walletName);
-
+    private void handleWalletCreation(String walletName, String nickname, String longPassword) throws Exception{
         File walletFile = WalletHelper.getWalletFile(this, walletName);
+        Credentials credentials = WalletHelper.retrieveCredentials(walletFile, longPassword);
 
         EncryptedWallet encryptedWallet = Encryption.encryptWalletPassword(walletName, longPassword);
-
-        Credentials credentials = WalletHelper.retrieveCredentials(
-                walletFile,
-                longPassword
-        );
 
         Eth eth = new Eth();
         eth.setNickname(nickname);
@@ -153,6 +114,11 @@ public class AddEthActivity extends Activity {
         removeProgressBar();
 
         onCreateEthSuccess();
+    }
+
+    private void enableAddEthButton() {
+        Button btn_add_eth = findViewById(R.id.btn_add_eth);
+        btn_add_eth.setEnabled(true);
     }
 
     private void insertEth(Eth eth){

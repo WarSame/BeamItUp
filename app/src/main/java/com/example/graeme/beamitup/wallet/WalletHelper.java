@@ -28,7 +28,10 @@ public class WalletHelper {
     }
 
     public static Credentials retrieveCredentials(File walletFile, String longPassword) throws Exception{
-        return WalletUtils.loadCredentials(longPassword, walletFile);
+        Log.i(TAG, "Wallet file location: " + walletFile);
+        Credentials credentials = WalletUtils.loadCredentials(longPassword, walletFile);
+        Log.i(TAG, "Wallet retrieved");
+        return credentials;
     }
 
     public static String generateWallet(String longPassword, File walletDir) throws Exception {

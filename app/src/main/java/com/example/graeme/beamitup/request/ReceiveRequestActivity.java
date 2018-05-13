@@ -1,8 +1,6 @@
 package com.example.graeme.beamitup.request;
 
 import android.app.Activity;
-import android.app.KeyguardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.graeme.beamitup.Authenticator;
 import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.eth.Eth;
@@ -19,7 +18,6 @@ import static com.example.graeme.beamitup.ndef.NdefMessaging.handlePushMessage;
 
 public class ReceiveRequestActivity extends Activity implements EthPickerFragment.onEthSelectedListener{
     private static final String TAG = "ReceiveRequestActivity";
-    static final int MOBILE_AUTHENTICATE_REQUEST = 1;
     Eth eth;
     Request request;
 
@@ -55,6 +53,7 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
             Intent landingPageIntent = new Intent(this, LandingPageActivity.class);
             startActivity(landingPageIntent);
         });
+
         btnAcceptRequest.setOnClickListener(v->{
             v.setEnabled(false);
             if (eth == null){
@@ -63,31 +62,10 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
                 return;
             }
 
-            authenticateMobileUser();
+            Authenticator authenticator = new Authenticator();
+            authenticator.setOnUserAuthenticatedListener(this::handleMobileAuthenticateResponse);
+            authenticator.authenticateMobileUser();
         });
-    }
-
-    protected void authenticateMobileUser(){
-        KeyguardManager kgm = (KeyguardManager) getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
-        if (kgm == null){
-            return;
-        }
-
-        Intent credIntent = kgm.createConfirmDeviceCredentialIntent("sometitle", "somedesc");
-        startActivityForResult(credIntent, MOBILE_AUTHENTICATE_REQUEST);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        Log.i(TAG, "requestCode = " + requestCode + " resultCode = " + resultCode);
-        Log.i(TAG,"request = " + request);
-        Log.i(TAG, "eth = " + eth);
-        switch (requestCode){
-            case MOBILE_AUTHENTICATE_REQUEST:
-                Log.i(TAG, "Handling authentication request");
-                handleMobileAuthenticateResponse(resultCode);
-                break;
-        }
     }
 
     private void handleMobileAuthenticateResponse(int resultCode) {
