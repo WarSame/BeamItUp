@@ -1,16 +1,17 @@
-package com.example.graeme.beamitup.transfer;
+package com.example.graeme.beamitup.transaction;
 
 import java.io.Serializable;
 
 public class Transaction implements Serializable {
     public static final String TAG = "Transaction";
+    private static final long serialVersionUID = 9124947053743920362L;
     private String amount;
-    private String fromAddress;//Requestee
+    private long fromID;//Requestee
     private String toAddress;//Requester
 
     protected Transaction(String toAddress, String amount){
         this.amount = amount;
-        this.fromAddress = null;
+        this.fromID = -1;
         this.toAddress = toAddress;
     }
 
@@ -25,12 +26,12 @@ public class Transaction implements Serializable {
         this.toAddress = toAddress;
     }
 
-    public String getFromAddress() {
-        return fromAddress;
+    public long getFromID() {
+        return fromID;
     }
 
-    public void setFromAddress(String fromAddress) {
-        this.fromAddress = fromAddress;
+    public void setFromID(long fromID) {
+        this.fromID = fromID;
     }
 
     public String getAmount() {
@@ -43,7 +44,7 @@ public class Transaction implements Serializable {
 
     public String toString(){
         return "Amount: "+ this.amount
-                + " fromAddress: " + this.fromAddress
+                + " fromAddress: " + this.fromID
                 + " toAddress: " + this.toAddress;
     }
 }

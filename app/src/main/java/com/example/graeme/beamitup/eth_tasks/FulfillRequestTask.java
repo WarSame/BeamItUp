@@ -1,6 +1,6 @@
-package com.example.graeme.beamitup.request;
+package com.example.graeme.beamitup.eth_tasks;
 
-import com.example.graeme.beamitup.SendTransactionTask;
+import com.example.graeme.beamitup.request.Request;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;

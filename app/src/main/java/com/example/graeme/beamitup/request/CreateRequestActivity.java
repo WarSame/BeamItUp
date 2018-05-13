@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthPickerFragment.onEthSelectedListener;
+import com.example.graeme.beamitup.eth_tasks.DetermineGasPriceTask;
 
 public class CreateRequestActivity extends Activity implements onEthSelectedListener {
     Eth eth;
@@ -30,6 +32,11 @@ public class CreateRequestActivity extends Activity implements onEthSelectedList
 
             readyRequestMessage(eth, amount);
         });
+
+        new DetermineGasPriceTask((String gasCost) ->{
+            TextView tvGasCost = (TextView)findViewById(R.id.tv_gas_cost);
+            tvGasCost.setText(gasCost);
+        }).execute();
     }
 
     private void readyRequestMessage(Eth eth, String amount) {

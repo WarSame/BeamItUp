@@ -1,18 +1,28 @@
 package com.example.graeme.beamitup.eth;
 
-import java.io.Serializable;
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Index;
+import org.greenrobot.greendao.annotation.Keep;
 
-public class Eth implements Serializable{
-    private long accountId;
+import java.io.Serializable;
+import org.greenrobot.greendao.annotation.Generated;
+
+@Entity
+public class Eth implements Serializable {
+    private static final long serialVersionUID = -4347720392132901969L;
+
     private String nickname;
     private String address;
     private String walletName;
     private byte[] encryptedLongPassword;
     private byte[] IV;
-    private long id;
 
+    @Id(autoincrement = true)
+    private Long id;
+
+    @Keep
     public Eth(
-            long accountId,
             String nickname,
             String address,
             String walletName,
@@ -20,7 +30,6 @@ public class Eth implements Serializable{
             byte[] IV,
             long id
             ){
-        this.accountId = accountId;
         this.nickname = nickname;
         this.address = address;
         this.walletName = walletName;
@@ -29,37 +38,34 @@ public class Eth implements Serializable{
         this.id = id;
     }
 
+    @Keep
     public Eth(
-            long accountId,
             String nickname,
             String address,
             String walletName,
             byte[] encryptedLongPassword,
             byte[] IV
     ){
-        this.accountId = accountId;
         this.nickname = nickname;
         this.address = address;
         this.walletName = walletName;
         this.encryptedLongPassword = encryptedLongPassword;
         this.IV = IV;
-        this.id = -1;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
+    @Generated(hash = 1393368730)
+    public Eth(String nickname, String address, String walletName,
+            byte[] encryptedLongPassword, byte[] IV, Long id) {
+        this.nickname = nickname;
+        this.address = address;
+        this.walletName = walletName;
+        this.encryptedLongPassword = encryptedLongPassword;
+        this.IV = IV;
         this.id = id;
     }
 
-    long getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(long accountId) {
-        this.accountId = accountId;
+    @Generated(hash = 1727113266)
+    public Eth() {
     }
 
     public String getNickname() {
@@ -100,5 +106,13 @@ public class Eth implements Serializable{
 
     public void setIV(byte[] IV) {
         this.IV = IV;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

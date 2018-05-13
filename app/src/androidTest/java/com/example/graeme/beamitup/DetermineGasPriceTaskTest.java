@@ -2,8 +2,8 @@ package com.example.graeme.beamitup;
 
 import android.util.Log;
 
-import com.example.graeme.beamitup.transfer.DetermineGasPriceTask;
-import com.example.graeme.beamitup.transfer.DetermineGasPriceTask.DetermineGasPriceResponse;
+import com.example.graeme.beamitup.eth_tasks.DetermineGasPriceTask;
+import com.example.graeme.beamitup.eth_tasks.DetermineGasPriceTask.DetermineGasPriceResponse;
 
 import org.junit.After;
 import org.junit.BeforeClass;
@@ -16,27 +16,18 @@ import static org.junit.Assert.assertTrue;
 
 public class DetermineGasPriceTaskTest {
     private static final String TAG = "DetermineGasPriceTaskTest";
-    private static EthGasPrice ethGasPrice;
+    private static String gasPrice;
 
     @BeforeClass
     public static void oneTimeSetUp() throws Exception {
-        DetermineGasPriceResponse response = gasPrice -> {
-            //Empty because we are running sync
-        };
-        Session.createSession();//Empty session for testing
-
-        DetermineGasPriceTask task = new DetermineGasPriceTask(response);
+        DetermineGasPriceTask task = new DetermineGasPriceTask(gasPrice->{});
         task.execute();
-        ethGasPrice = task.get();
-    }
-
-    @After
-    public void tearDown() throws Exception {
+        gasPrice = task.get();
     }
 
     @Test
     public void checkGasPrice(){
-        Log.i(TAG, "Gas price: " + ethGasPrice.getGasPrice());
-        assertTrue( ethGasPrice.getGasPrice().compareTo(new BigInteger(("0"))) != 0 );
+        Log.i(TAG, "Gas price: " + gasPrice);
+        assertTrue( gasPrice.compareTo("0") != 0 );
     }
 }
