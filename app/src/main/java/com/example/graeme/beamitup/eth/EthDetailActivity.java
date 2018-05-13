@@ -1,5 +1,6 @@
 package com.example.graeme.beamitup.eth;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
 import android.widget.Button;
@@ -39,6 +40,9 @@ public class EthDetailActivity extends Activity {
         EthDao ethDao = daoSession.getEthDao();
         ethDao.update(eth);
         Toast.makeText(this, "Eth saved", Toast.LENGTH_LONG).show();
+
+        Intent ethListIntent = new Intent(this, EthListActivity.class);
+        startActivity(ethListIntent);
     }
 
 }
