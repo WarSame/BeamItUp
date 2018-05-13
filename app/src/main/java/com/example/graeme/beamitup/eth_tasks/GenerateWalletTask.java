@@ -7,6 +7,7 @@ import com.example.graeme.beamitup.wallet.WalletHelper;
 
 import java.io.File;
 
+//TODO: Replace with service
 public class GenerateWalletTask extends AsyncTask<Void, Void, String> {
     private static final String TAG = "GenerateWalletTask";
     private File walletDir;

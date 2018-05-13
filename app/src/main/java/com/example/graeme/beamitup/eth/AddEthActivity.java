@@ -1,6 +1,7 @@
 package com.example.graeme.beamitup.eth;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
@@ -12,8 +13,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.graeme.beamitup.Authenticator;
-import com.example.graeme.beamitup.Authenticator.OnUserAuthenticatedListener;
+import com.example.graeme.beamitup.AuthenticatorFragment;
+import com.example.graeme.beamitup.AuthenticatorFragment.OnUserAuthenticatedListener;
 import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.Encryption;
 import com.example.graeme.beamitup.LandingPageActivity;
@@ -36,14 +37,17 @@ public class AddEthActivity extends Activity {
 
         Button btn_add_eth = findViewById(R.id.btn_add_eth);
 
+        KeyguardManager kgm = (KeyguardManager) getApplication().getSystemService(Context.KEYGUARD_SERVICE);
+        AuthenticatorFragment authenticatorFragment = new AuthenticatorFragment()
+                .setKGM(kgm)
+                .setOnUserAuthenticatedListener(onUserAuthenticatedListener);
+        getFragmentManager()
+                .beginTransaction()
+                .add(authenticatorFragment, "AuthenticatorFragment")
+                .commit();
+
         btn_add_eth.setOnClickListener(
-                (View v) -> {
-                    KeyguardManager kgm = (KeyguardManager) getApplication().getSystemService(Context.KEYGUARD_SERVICE);
-                    Authenticator authenticator = new Authenticator();
-                    authenticator.setKGM(kgm);
-                    authenticator.setOnUserAuthenticatedListener(onUserAuthenticatedListener);
-                    authenticator.authenticateMobileUser();
-                }
+                (View v) -> authenticatorFragment.authenticateMobileUser()
         );
     }
 

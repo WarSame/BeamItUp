@@ -9,8 +9,8 @@ import android.widget.Toast;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-public class Authenticator extends Fragment {
-    private static final String TAG = "Authenticator";
+public class AuthenticatorFragment extends Fragment {
+    private static final String TAG = "AuthenticatorFragment";
     private static final int MOBILE_AUTHENTICATE_REQUEST = 1;
     private KeyguardManager kgm;
     private OnUserAuthenticatedListener onUserAuthenticatedListener;
@@ -20,18 +20,20 @@ public class Authenticator extends Fragment {
         void onUserNotAuthenticated();
     }
 
-    public Authenticator(){
+    public AuthenticatorFragment(){
     }
 
-    public void setOnUserAuthenticatedListener(OnUserAuthenticatedListener onUserAuthenticatedListener) {
+    public AuthenticatorFragment setOnUserAuthenticatedListener(OnUserAuthenticatedListener onUserAuthenticatedListener) {
         this.onUserAuthenticatedListener = onUserAuthenticatedListener;
+        return this;
     }
 
-    public void setKGM(KeyguardManager kgm) {
+    public AuthenticatorFragment setKGM(KeyguardManager kgm) {
         if (this.kgm == null){
             Log.e(TAG, "kgm is null");
         }
         this.kgm = kgm;
+        return this;
     }
 
     public boolean isDeviceSecure(){
@@ -39,6 +41,9 @@ public class Authenticator extends Fragment {
     }
 
     public void authenticateMobileUser(){
+        if (kgm == null){
+            Log.e(TAG, "KGM is null");
+        }
         Intent credIntent = kgm.createConfirmDeviceCredentialIntent("Authenticate user", "Authenticate with your phone credentials");
         startActivityForResult(credIntent, MOBILE_AUTHENTICATE_REQUEST);
     }

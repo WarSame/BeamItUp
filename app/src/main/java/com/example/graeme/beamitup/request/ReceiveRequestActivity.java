@@ -1,15 +1,16 @@
 package com.example.graeme.beamitup.request;
 
 import android.app.Activity;
+import android.app.KeyguardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.graeme.beamitup.Authenticator;
-import com.example.graeme.beamitup.Authenticator.OnUserAuthenticatedListener;
+import com.example.graeme.beamitup.AuthenticatorFragment;
+import com.example.graeme.beamitup.AuthenticatorFragment.OnUserAuthenticatedListener;
 import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.eth.Eth;
@@ -55,6 +56,16 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
             startActivity(landingPageIntent);
         });
 
+        KeyguardManager kgm = (KeyguardManager) getApplication().getSystemService(Context.KEYGUARD_SERVICE);
+        AuthenticatorFragment authenticatorFragment = new AuthenticatorFragment()
+                .setKGM(kgm)
+                .setOnUserAuthenticatedListener(onUserAuthenticatedListener);
+
+        getFragmentManager()
+                .beginTransaction()
+                .add(authenticatorFragment, "AuthenticatorFragment")
+                .commit();
+
         btnAcceptRequest.setOnClickListener(v->{
             v.setEnabled(false);
             if (eth == null){
@@ -62,10 +73,7 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
                 v.setEnabled(true);
                 return;
             }
-
-            Authenticator authenticator = new Authenticator();
-            authenticator.setOnUserAuthenticatedListener(onUserAuthenticatedListener);
-            authenticator.authenticateMobileUser();
+            authenticatorFragment.authenticateMobileUser();
         });
     }
 
