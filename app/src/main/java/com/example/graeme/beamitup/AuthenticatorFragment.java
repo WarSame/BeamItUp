@@ -56,7 +56,6 @@ public class AuthenticatorFragment extends Fragment {
                 Log.i(TAG, "Handling authentication request response");
                 switch (resultCode){
                     case RESULT_OK:
-                        Toast.makeText(getActivity().getApplicationContext(), "User authenticated", Toast.LENGTH_LONG).show();
                         Log.i(TAG, "User is authenticated");
                         this.onUserAuthenticatedListener.onUserAuthenticated();
                         break;
