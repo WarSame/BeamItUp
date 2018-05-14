@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 
 import com.example.graeme.beamitup.AuthenticatorFragment;
 import com.example.graeme.beamitup.AuthenticatorFragment.OnUserAuthenticatedListener;
@@ -42,13 +41,13 @@ public class AddEthActivity extends Activity {
     OnUserAuthenticatedListener onUserAuthenticatedListener = new OnUserAuthenticatedListener() {
         @Override
         public void onUserAuthenticated() {
-            ProgressBar pbSendTransfer = findViewById(R.id.pb_create_wallet);
-            pbSendTransfer.setVisibility(View.VISIBLE);
-
             EditText et_eth_nickname = findViewById(R.id.et_eth_nickname);
             String nickname = et_eth_nickname.getText().toString();
 
             generateWallet(nickname);
+
+            Intent ethListIntent = new Intent(getApplicationContext(), EthListActivity.class);
+            startActivity(ethListIntent);
         }
 
         @Override

@@ -1,23 +1,15 @@
 package com.example.graeme.beamitup.eth_tasks;
 
 import android.app.IntentService;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.Encryption;
-import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.eth.DaoSession;
 import com.example.graeme.beamitup.eth.Eth;
@@ -45,7 +37,8 @@ public class GenerateWalletService extends IntentService {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "BeamItUp")
                 .setContentTitle("Creating eth")
                 .setContentText(nickname)
-                .setSmallIcon(R.mipmap.ic_launcher);
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setProgress(0, 0, true);
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
         notificationManagerCompat.notify(0, builder.build());

@@ -8,12 +8,6 @@
     android:orientation="vertical"
     tools:context="com.example.graeme.beamitup.eth.AddEthActivity">
 
-    <ProgressBar
-        android:id="@+id/pb_create_wallet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
     <EditText
         android:layout_width="match_parent"
         android:layout_height="match_parent"
