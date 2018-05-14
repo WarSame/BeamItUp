@@ -76,6 +76,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.graeme.beamitup.eth.EthListActivity" />
         </activity>
+
+        <service android:name=".eth_tasks.GenerateWalletService" />
     </application>
 
 </manifest>

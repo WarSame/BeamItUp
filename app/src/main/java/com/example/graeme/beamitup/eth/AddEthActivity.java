@@ -1,31 +1,19 @@
 package com.example.graeme.beamitup.eth;
 
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.example.graeme.beamitup.AuthenticatorFragment;
 import com.example.graeme.beamitup.AuthenticatorFragment.OnUserAuthenticatedListener;
-import com.example.graeme.beamitup.BeamItUp;
-import com.example.graeme.beamitup.Encryption;
-import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
-import com.example.graeme.beamitup.eth_tasks.GenerateWalletTask;
-import com.example.graeme.beamitup.wallet.EncryptedWallet;
-import com.example.graeme.beamitup.wallet.WalletHelper;
-
-import org.web3j.crypto.Credentials;
-
-import java.io.File;
+import com.example.graeme.beamitup.eth_tasks.GenerateWalletService;
 
 public class AddEthActivity extends Activity {
     private static final String TAG = "AddEthActivity";
@@ -61,95 +49,21 @@ public class AddEthActivity extends Activity {
             String nickname = et_eth_nickname.getText().toString();
 
             generateWallet(nickname);
-
-            enableAddEthButton();
         }
 
         @Override
         public void onUserNotAuthenticated() {
-            enableAddEthButton();
         }
     };
 
     private void generateWallet(String nickname){
         try {
-            String longPassword = Encryption.generateLongRandomString();
-            File walletDir = WalletHelper.getWalletDir(this);
-            GenerateWalletTask generateWalletTask = new GenerateWalletTask(
-                    longPassword,
-                    walletDir,
-                    (String walletName)-> {
-                        if (walletName == null){
-                            Log.i(TAG, "Failed to create wallet");
-                            Toast.makeText(this, "Failed to create eth", Toast.LENGTH_LONG).show();
-                        }
-                        else {
-                            handleWalletCreation(walletName, nickname, longPassword);
-                        }
-                    }
-            );
-            generateWalletTask.execute();
+            Intent generateWalletIntent = new Intent(this, GenerateWalletService.class)
+                .putExtra("nickname", nickname);
+            startService(generateWalletIntent);
         } catch (Exception e) {
             e.printStackTrace();
-            onCreateEthFail();
         }
-        finally {
-            enableAddEthButton();
-        }
-    }
-
-    private void handleWalletCreation(String walletName, String nickname, String longPassword) throws Exception{
-        File walletFile = WalletHelper.getWalletFile(this, walletName);
-        Credentials credentials = WalletHelper.retrieveCredentials(walletFile, longPassword);
-
-        EncryptedWallet encryptedWallet = Encryption.encryptWalletPassword(walletName, longPassword);
-
-        Eth eth = new Eth();
-        eth.setNickname(nickname);
-        eth.setAddress(credentials.getAddress());
-        eth.setWalletName(walletName);
-        eth.setEncryptedLongPassword(encryptedWallet.getEncryptedLongPassword());
-        eth.setIV(encryptedWallet.getIV());
-
-        insertEth(eth);
-
-        removeProgressBar();
-
-        onCreateEthSuccess();
-    }
-
-    private void enableAddEthButton() {
-        Button btn_add_eth = findViewById(R.id.btn_add_eth);
-        btn_add_eth.setEnabled(true);
-    }
-
-    private void insertEth(Eth eth){
-        DaoSession daoSession = ((BeamItUp)getApplication()).getDaoSession();
-        EthDao ethDao = daoSession.getEthDao();
-        ethDao.insert(eth);
-        Log.d(TAG, "Inserted new eth " + eth.getId());
-    }
-
-    private void removeProgressBar(){
-        ProgressBar pbSendTransfer = findViewById(R.id.pb_create_wallet);
-        pbSendTransfer.setVisibility(View.GONE);
-    }
-
-    private void onCreateEthSuccess(){
-        Button btn_add_eth = findViewById(R.id.btn_add_eth);
-        btn_add_eth.setEnabled(true);
-
-        Toast.makeText(this, "Eth created.", Toast.LENGTH_LONG).show();
-
-        final Intent landingPageIntent = new Intent(this, LandingPageActivity.class);
-        startActivity(landingPageIntent);
-    }
-
-    private void onCreateEthFail(){
-        Button btn_add_eth = findViewById(R.id.btn_add_eth);
-        btn_add_eth.setEnabled(true);
-
-        Toast.makeText(this, "Eth creation failed.", Toast.LENGTH_LONG).show();
     }
 
 }
