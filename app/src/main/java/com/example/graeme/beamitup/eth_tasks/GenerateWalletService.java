@@ -40,10 +40,19 @@ public class GenerateWalletService extends IntentService {
             return;
         }
 
+        String nickname = intent.getStringExtra("nickname");
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "BeamItUp")
+                .setContentTitle("Creating eth")
+                .setContentText(nickname)
+                .setSmallIcon(R.mipmap.ic_launcher);
+
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+        notificationManagerCompat.notify(0, builder.build());
+
         String longPassword = Encryption.generateLongRandomString();
 
         try {
-            String nickname = intent.getStringExtra("nickname");
             File walletDir = WalletHelper.getWalletDir(this);
             String walletName = WalletHelper.generateWallet(longPassword, walletDir);
             Eth eth = handleWalletCreation(walletName, nickname, longPassword);
@@ -96,7 +105,7 @@ public class GenerateWalletService extends IntentService {
                 PendingIntent.FLAG_NO_CREATE
         );
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "")
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "BeamItUp")
                 .setContentTitle("Eth created")
                 .setContentText(eth.getNickname())
                 .setSmallIcon(R.mipmap.ic_launcher)

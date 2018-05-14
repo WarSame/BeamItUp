@@ -51,4 +51,7 @@
     <string name="tv_eth_wallet_name">Wallet name</string>
     <string name="btn_save_eth">Save Eth</string>
 
+    <!-- Notifications -->
+    <string name="channel_name">Beam It Up</string>
+
 </resources>
