@@ -21,38 +21,6 @@ public class Eth implements Serializable {
     @Id(autoincrement = true)
     private Long id;
 
-    @Keep
-    public Eth(
-            String nickname,
-            String address,
-            String walletName,
-            byte[] encryptedLongPassword,
-            byte[] IV,
-            long id
-            ){
-        this.nickname = nickname;
-        this.address = address;
-        this.walletName = walletName;
-        this.encryptedLongPassword = encryptedLongPassword;
-        this.IV = IV;
-        this.id = id;
-    }
-
-    @Keep
-    public Eth(
-            String nickname,
-            String address,
-            String walletName,
-            byte[] encryptedLongPassword,
-            byte[] IV
-    ){
-        this.nickname = nickname;
-        this.address = address;
-        this.walletName = walletName;
-        this.encryptedLongPassword = encryptedLongPassword;
-        this.IV = IV;
-    }
-
     @Generated(hash = 1393368730)
     public Eth(String nickname, String address, String walletName,
             byte[] encryptedLongPassword, byte[] IV, Long id) {
@@ -72,47 +40,53 @@ public class Eth implements Serializable {
         return nickname;
     }
 
-    public void setNickname(String nickname) {
+    public Eth setNickname(String nickname) {
         this.nickname = nickname;
+        return this;
     }
 
     public String getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public Eth setAddress(String address) {
         this.address = address;
+        return this;
     }
 
     public String getWalletName() {
         return walletName;
     }
 
-    public void setWalletName(String walletName) {
+    public Eth setWalletName(String walletName) {
         this.walletName = walletName;
+        return this;
     }
 
     public byte[] getEncryptedLongPassword() {
         return encryptedLongPassword;
     }
 
-    public void setEncryptedLongPassword(byte[] encryptedLongPassword) {
+    public Eth setEncryptedLongPassword(byte[] encryptedLongPassword) {
         this.encryptedLongPassword = encryptedLongPassword;
+        return this;
     }
 
     public byte[] getIV() {
         return IV;
     }
 
-    public void setIV(byte[] IV) {
+    public Eth setIV(byte[] IV) {
         this.IV = IV;
+        return this;
     }
 
     public Long getId() {
         return this.id;
     }
 
-    public void setId(Long id) {
+    public Eth setId(Long id) {
         this.id = id;
+        return this;
     }
 }

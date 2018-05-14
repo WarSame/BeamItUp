@@ -59,12 +59,12 @@ public class GenerateWalletService extends IntentService {
 
         EncryptedWallet encryptedWallet = Encryption.encryptWalletPassword(walletName, longPassword);
 
-        Eth eth = new Eth();
-        eth.setNickname(nickname);
-        eth.setAddress(credentials.getAddress());
-        eth.setWalletName(walletName);
-        eth.setEncryptedLongPassword(encryptedWallet.getEncryptedLongPassword());
-        eth.setIV(encryptedWallet.getIV());
+        Eth eth = new Eth()
+            .setNickname(nickname)
+            .setAddress(credentials.getAddress())
+            .setWalletName(walletName)
+            .setEncryptedLongPassword(encryptedWallet.getEncryptedLongPassword())
+            .setIV(encryptedWallet.getIV());
 
         insertEth(eth);
     }
