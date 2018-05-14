@@ -26,6 +26,8 @@ import java.io.File;
 public class GenerateWalletService extends IntentService {
     private static final String TAG = "GenerateWalletService";
 
+    private int id = (int)System.currentTimeMillis();
+
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent == null){
@@ -42,7 +44,7 @@ public class GenerateWalletService extends IntentService {
                 .setProgress(0, 0, true);
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-        notificationManagerCompat.notify(0, builder.build());
+        notificationManagerCompat.notify(id, builder.build());
 
         String longPassword = Encryption.generateLongRandomString();
 
@@ -104,7 +106,7 @@ public class GenerateWalletService extends IntentService {
                 .setContentIntent(viewEthPendingIntent);
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-        notificationManagerCompat.notify(0, builder.build());
+        notificationManagerCompat.notify(id, builder.build());
     }
 
     private void onCreateEthFail(){
