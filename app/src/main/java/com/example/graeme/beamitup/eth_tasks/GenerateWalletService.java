@@ -2,6 +2,7 @@ package com.example.graeme.beamitup.eth_tasks;
 
 import android.app.IntentService;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -91,12 +92,10 @@ public class GenerateWalletService extends IntentService {
         Intent viewEthIntent = new Intent(this, EthDetailActivity.class);
         viewEthIntent.putExtra("eth", eth);
 
-        PendingIntent viewEthPendingIntent = PendingIntent.getActivity(
-                this,
-                1,
-                viewEthIntent,
-                PendingIntent.FLAG_NO_CREATE
-        );
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this)
+                .addNextIntentWithParentStack(viewEthIntent);
+
+        PendingIntent viewEthPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "BeamItUp")
                 .setContentTitle("Eth created")

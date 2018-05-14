@@ -31,7 +31,12 @@
         <activity
             android:name=".eth.AddEthActivity"
             android:label="@string/title_activity_add_eth"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:parentActivityName=".eth.EthListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.graeme.beamitup.eth.EthListActivity" />
+        </activity>
         <activity
             android:name=".request.CreateRequestActivity"
             android:label="@string/title_activity_create_request"
