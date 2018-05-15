@@ -1,7 +1,10 @@
 package com.example.graeme.beamitup.eth_tasks;
 
+import android.app.Fragment;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.example.graeme.beamitup.BeamItUp;
 
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
@@ -12,39 +15,22 @@ import org.web3j.utils.Convert;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-public class DetermineGasPriceTask extends AsyncTask<Void, Void, String> {
-    private static final String TAG = "DetermineGasPriceTask";
-    private DetermineGasPriceResponse determineGasPriceResponse;
-    static private final String INFURA_URL = "https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9";
+public class GasPriceFragment extends Fragment {
+    private static final String TAG = "GasPriceFragment";
 
-    public DetermineGasPriceTask(DetermineGasPriceResponse determineGasPriceResponse){
-        this.determineGasPriceResponse = determineGasPriceResponse;
+    public GasPriceFragment(){
     }
 
-    @Override
-    protected String doInBackground(Void... voids) {
+    public String getTransactionGasCost(){
         Log.i(TAG, "Determining gas price async");
-        Web3j web3j = Web3jFactory.build(new HttpService(INFURA_URL));
+        Web3j web3j = ((BeamItUp)getActivity().getApplication()).getWeb3j();
         try {
             EthGasPrice ethGasPrice = web3j.ethGasPrice().sendAsync().get();
             return getGasCost(ethGasPrice);
         } catch ( Exception e ){
             e.printStackTrace();
         }
-        return null;
-    }
-
-    @Override
-    protected void onPostExecute(String gasPrice) {
-        super.onPostExecute(gasPrice);
-
-        Log.i(TAG, "gasPrice is " + gasPrice);
-
-        determineGasPriceResponse.determineGasPriceFinish(gasPrice);
-    }
-
-    public interface DetermineGasPriceResponse {
-        void determineGasPriceFinish(String gasPrice);
+        return "0";
     }
 
     private String getGasCost(EthGasPrice ethGasPrice){
@@ -54,6 +40,4 @@ public class DetermineGasPriceTask extends AsyncTask<Void, Void, String> {
         BigInteger gasCost = GAS_USED.multiply(currentGasPrice);
         return Convert.fromWei(new BigDecimal(gasCost), Convert.Unit.ETHER ).toString();
     }
-
-
 }

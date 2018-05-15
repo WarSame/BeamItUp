@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:text="@string/tv_gas_cost_value"
             android:layout_weight="1"
-            android:id="@+id/tv_gas_cost"/>
+            android:id="@+id/tv_gas_cost_value"/>
     </LinearLayout>
 
     <Button

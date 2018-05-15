@@ -11,7 +11,7 @@ import android.widget.Toast;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthPickerFragment.onEthSelectedListener;
-import com.example.graeme.beamitup.eth_tasks.DetermineGasPriceTask;
+import com.example.graeme.beamitup.eth_tasks.GasPriceFragment;
 
 public class CreateRequestActivity extends Activity implements onEthSelectedListener {
     Eth eth;
@@ -21,9 +21,20 @@ public class CreateRequestActivity extends Activity implements onEthSelectedList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_request);
 
-        Button btnCreateRequest = (Button)findViewById(R.id.btn_create_request);
+        Button btnCreateRequest = findViewById(R.id.btn_create_request);
+
+        GasPriceFragment gasPriceFragment = new GasPriceFragment();
+
+        TextView tv_gas_price_value = findViewById(R.id.tv_gas_cost_value);
+        tv_gas_price_value.setText(gasPriceFragment.getTransactionGasCost());
+
+        getFragmentManager()
+                .beginTransaction()
+                .add(gasPriceFragment, "GasPriceFragment")
+                .commit();
+
         btnCreateRequest.setOnClickListener((v)->{
-            EditText etAmount = (EditText)findViewById(R.id.et_amount_value);
+            EditText etAmount = findViewById(R.id.et_amount_value);
             String amount = etAmount.getText().toString();
 
             if (!isValidRequest(amount)){
@@ -32,11 +43,6 @@ public class CreateRequestActivity extends Activity implements onEthSelectedList
 
             readyRequestMessage(eth, amount);
         });
-
-        new DetermineGasPriceTask((String gasCost) ->{
-            TextView tvGasCost = (TextView)findViewById(R.id.tv_gas_cost);
-            tvGasCost.setText(gasCost);
-        }).execute();
     }
 
     private void readyRequestMessage(Eth eth, String amount) {
