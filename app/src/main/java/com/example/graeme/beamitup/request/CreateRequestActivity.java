@@ -5,13 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthPickerFragment.onEthSelectedListener;
-import com.example.graeme.beamitup.eth_tasks.GasPriceFragment;
 
 public class CreateRequestActivity extends Activity implements onEthSelectedListener {
     Eth eth;
@@ -22,16 +20,6 @@ public class CreateRequestActivity extends Activity implements onEthSelectedList
         setContentView(R.layout.activity_create_request);
 
         Button btnCreateRequest = findViewById(R.id.btn_create_request);
-
-        GasPriceFragment gasPriceFragment = new GasPriceFragment();
-
-        TextView tv_gas_price_value = findViewById(R.id.tv_gas_cost_value);
-        tv_gas_price_value.setText(gasPriceFragment.getTransactionGasCost());
-
-        getFragmentManager()
-                .beginTransaction()
-                .add(gasPriceFragment, "GasPriceFragment")
-                .commit();
 
         btnCreateRequest.setOnClickListener((v)->{
             EditText etAmount = findViewById(R.id.et_amount_value);
