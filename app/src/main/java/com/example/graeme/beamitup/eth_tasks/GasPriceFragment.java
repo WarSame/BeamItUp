@@ -30,15 +30,10 @@ public class GasPriceFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        return inflater.inflate(R.layout.frag_gas_cost, container, false);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        //TextView tv_gas_price_value = getActivity().findViewById(R.id.tv_gas_cost_value);
-        //tv_gas_price_value.setText(getTransactionGasCost());
+        View view = inflater.inflate(R.layout.frag_gas_cost, container, false);
+        TextView tv_gas_price_value = view.findViewById(R.id.tv_gas_cost_value);
+        tv_gas_price_value.setText(getTransactionGasCost());
+        return view;
     }
 
     private String getTransactionGasCost(){
