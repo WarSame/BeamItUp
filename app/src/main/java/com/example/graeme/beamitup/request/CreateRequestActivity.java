@@ -5,11 +5,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.eth.Eth;
 import com.example.graeme.beamitup.eth.EthPickerFragment.onEthSelectedListener;
+import com.example.graeme.beamitup.eth_tasks.GasPriceTask;
+
+import org.web3j.protocol.Web3j;
 
 public class CreateRequestActivity extends Activity implements onEthSelectedListener {
     Eth eth;
@@ -31,6 +36,13 @@ public class CreateRequestActivity extends Activity implements onEthSelectedList
 
             readyRequestMessage(eth, amount);
         });
+
+        Web3j web3j = ((BeamItUp)getApplication()).getWeb3j();
+        GasPriceTask.DetermineGasPriceResponse gasPriceResponse = (String gasCost) ->{
+            TextView tvGasCost = findViewById(R.id.tv_gas_cost_value);
+            tvGasCost.setText(gasCost);
+        };
+        new GasPriceTask(gasPriceResponse, web3j).execute();
     }
 
     private void readyRequestMessage(Eth eth, String amount) {

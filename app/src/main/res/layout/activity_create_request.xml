@@ -46,14 +46,12 @@
             android:text="@string/tv_gas_cost_label"
             android:layout_weight="1"/>
 
-        <fragment
-            android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:name="com.example.graeme.beamitup.eth_tasks.GasPriceFragment"
-            android:id="@+id/frag_get_gas_cost"
-            tools:layout="@layout/frag_gas_cost"
+            android:text="@string/tv_gas_cost_value"
             android:layout_weight="1"
-            />
+            android:id="@+id/tv_gas_cost_value"/>
     </LinearLayout>
 
     <Button
