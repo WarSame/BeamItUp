@@ -16,8 +16,8 @@ import org.web3j.protocol.http.HttpService;
 public class BeamItUp extends Application {
 
     private DaoSession daoSession;
-    static private final String INFURA_URL = "https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9";
-    static private Web3j web3j;
+    static private final String INFURA_URL = "https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9";//TODO switch to websockets
+    private Web3j web3j;
 
     @Override
     public void onCreate(){
@@ -29,13 +29,13 @@ public class BeamItUp extends Application {
         createNotificationChannel();
     }
 
-    private static Web3j buildWeb3j(){
+    private Web3j buildWeb3j(){
         return Web3jFactory.build(
                 new HttpService(INFURA_URL)
         );
     }
 
-    public static Web3j getWeb3j() {
+    public Web3j getWeb3j() {
         return web3j;
     }
 

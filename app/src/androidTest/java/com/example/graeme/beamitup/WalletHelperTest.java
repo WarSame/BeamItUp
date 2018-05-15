@@ -4,20 +4,16 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.util.Log;
 
-import com.example.graeme.beamitup.eth_tasks.SendTransactionTask;
-import com.example.graeme.beamitup.eth_tasks.FulfillRequestTask;
 import com.example.graeme.beamitup.request.Request;
 import com.example.graeme.beamitup.wallet.WalletHelper;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.web3j.crypto.Credentials;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import java.io.File;
-
-import static com.example.graeme.beamitup.BeamItUp.getWeb3j;
-import static junit.framework.Assert.assertTrue;
+import java.io.InputStream;
+import java.util.Scanner;
 
 public class WalletHelperTest {
     private static final String TAG = "WalletHelperTest";
@@ -27,6 +23,7 @@ public class WalletHelperTest {
     private static String emptyWalletName;
     private static String filledWalletName;
     private static Request request;
+    private static final String SECRETS_FILE = "eth.secrets";
 
     private static Context appContext;
 
@@ -43,61 +40,25 @@ public class WalletHelperTest {
         request = new Request(TO_ADDRESS, TRANSACTION_VALUE);
     }
 
+    private static Credentials retrieveMasterCredentials() throws  Exception {
+        return Credentials.create(retrieveMasterPrivateKey());
+    }
+
+    private static String retrieveMasterPrivateKey() throws Exception {
+        Context testContext = InstrumentationRegistry.getInstrumentation().getContext();
+        InputStream testInput = testContext.getAssets().open(SECRETS_FILE);
+        Scanner in = new Scanner(testInput);
+        return in.next();
+    }
+
     @Test
     public void sendFundsFromEmptyWallet_ShouldBeNullTransactionReceipt() throws Exception{
-        File walletFile = WalletHelper.getWalletFile(appContext, emptyWalletName);
-        String longPassword = "";
-        Credentials credentials = WalletHelper.retrieveCredentials(
-                walletFile,
-                longPassword
-        );
-        Log.i(TAG, "credentials address: " + credentials.getAddress());
-
-        FulfillRequestTask fulfillRequestTask = new FulfillRequestTask(
-                getWeb3j(),
-                credentials,
-                sendTransactionResponse
-        );
-        fulfillRequestTask.execute(request);
-        TransactionReceipt transactionReceipt = fulfillRequestTask.get();
-        assertTrue(transactionReceipt == null);
     }
 
     @Test
     public void sendFundsFromNotEmptyWallet_ShouldBeFilledTransactionReceipt() throws Exception {
-        Credentials credentials = FulfillRequestTaskTest.retrieveMasterCredentials();
-        fillEmptyWallet(credentials);
-        File walletFile = WalletHelper.getWalletFile(appContext, filledWalletName);
-        String longPassword = "";
-        Credentials filledCredentials = WalletHelper.retrieveCredentials(
-                walletFile,
-                longPassword
-        );
-
-        Request fromFilledWalletRequest = new Request(credentials.getAddress(), TRANSACTION_VALUE);
-        FulfillRequestTask fulfillRequestTask = new FulfillRequestTask(
-                getWeb3j(),
-                filledCredentials,
-                sendTransactionResponse
-        );
-        fulfillRequestTask.execute(fromFilledWalletRequest);
-        TransactionReceipt transactionReceipt = fulfillRequestTask.get();
-        assertTrue(transactionReceipt != null);
     }
 
     private void fillEmptyWallet(Credentials credentials) throws Exception {
-        Request fillEmptyWalletRequest = new Request("", FILL_EMPTY_WALLET_VALUE);
-
-        FulfillRequestTask fulfillRequestTask = new FulfillRequestTask(
-                getWeb3j(),
-                credentials,
-                sendTransactionResponse
-        );
-        fulfillRequestTask.execute(fillEmptyWalletRequest);
-        fulfillRequestTask.get();
     }
-
-    private SendTransactionTask.SendTransactionResponse sendTransactionResponse = (response) -> {
-        Log.i(TAG, "Received transaction response");
-    };
 }

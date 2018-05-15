@@ -80,14 +80,12 @@ public class GenerateWalletService extends IntentService {
         return eth;
     }
 
-
     private void insertEth(Eth eth){
         DaoSession daoSession = ((BeamItUp)getApplication()).getDaoSession();
         EthDao ethDao = daoSession.getEthDao();
         ethDao.insert(eth);
         Log.d(TAG, "Inserted new eth " + eth.getId());
     }
-
 
     private void onCreateEthSuccess(Eth eth){
         Log.i(TAG, "Eth created");
