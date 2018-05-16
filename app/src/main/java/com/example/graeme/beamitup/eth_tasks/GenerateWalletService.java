@@ -47,7 +47,6 @@ public class GenerateWalletService extends IntentService {
         notificationManagerCompat.notify(id, builder.build());
 
         String longPassword = Encryption.generateLongRandomString();
-
         try {
             File walletDir = WalletHelper.getWalletDir(this);
             String walletName = WalletHelper.generateWallet(longPassword, walletDir);
@@ -67,14 +66,16 @@ public class GenerateWalletService extends IntentService {
         File walletFile = WalletHelper.getWalletFile(this, walletName);
         Credentials credentials = WalletHelper.retrieveCredentials(walletFile, longPassword);
 
-        EncryptedWallet encryptedWallet = Encryption.encryptWalletPassword(walletName, longPassword);
+        Encryption encryption = new Encryption();
+        Encryption.Encryptor encryptor = encryption.new Encryptor()
+                .encryptWalletPassword(walletName, longPassword);
 
         Eth eth = new Eth()
             .setNickname(nickname)
             .setAddress(credentials.getAddress())
             .setWalletName(walletName)
-            .setEncryptedLongPassword(encryptedWallet.getEncryptedLongPassword())
-            .setIV(encryptedWallet.getIV());
+            .setEncryptedLongPassword(encryptor.getEncryptedLongPassword())
+            .setIV(encryptor.getIV());
 
         insertEth(eth);
         return eth;

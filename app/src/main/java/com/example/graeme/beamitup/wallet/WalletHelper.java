@@ -18,7 +18,7 @@ public class WalletHelper {
 
     public static Credentials retrieveCredentials(Eth eth, File walletFile) throws Exception {
         Log.i(TAG, "Wallet file location: " + walletFile);
-        String longPassword = Encryption.decryptWalletPassword(
+        String longPassword = new Encryption().new Decryptor().decryptWalletPassword(
                 eth.getEncryptedLongPassword(),
                 eth.getIV(),
                 eth.getWalletName()
