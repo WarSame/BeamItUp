@@ -36,10 +36,6 @@ public class AuthenticatorFragment extends Fragment {
         return this;
     }
 
-    public boolean isDeviceSecure(){
-        return kgm.isDeviceSecure();
-    }
-
     public void authenticateMobileUser(){
         if (kgm == null){
             Log.e(TAG, "KGM is null");

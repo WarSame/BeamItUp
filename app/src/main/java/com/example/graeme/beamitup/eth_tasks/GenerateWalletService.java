@@ -62,6 +62,7 @@ public class GenerateWalletService extends IntentService {
         super("GenerateWalletService");
     }
 
+    //TODO remove encrypted stuff from Eth, put into Encrypted Wallet, check if auth is needed before doing it
     private Eth handleWalletCreation(String walletName, String nickname, String longPassword) throws Exception{
         File walletFile = WalletHelper.getWalletFile(this, walletName);
         Credentials credentials = WalletHelper.retrieveCredentials(walletFile, longPassword);
@@ -70,12 +71,13 @@ public class GenerateWalletService extends IntentService {
         Encryption.Encryptor encryptor = encryption.new Encryptor()
                 .encryptWalletPassword(walletName, longPassword);
 
-        Eth eth = new Eth()
-            .setNickname(nickname)
-            .setAddress(credentials.getAddress())
-            .setWalletName(walletName)
-            .setEncryptedLongPassword(encryptor.getEncryptedLongPassword())
-            .setIV(encryptor.getIV());
+        Eth eth = new Eth.EthBuilder()
+            .nickname(nickname)
+            .address(credentials.getAddress())
+            .walletName(walletName)
+            .encryptedLongPassword(encryptor.getEncryptedLongPassword())
+            .IV(encryptor.getIV())
+            .build();
 
         insertEth(eth);
         return eth;
