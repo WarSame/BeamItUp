@@ -39,10 +39,8 @@ public class SendTransactionService extends IntentService {
         Web3j web3j = ((BeamItUp)getApplication()).getWeb3j();
         Request request = (Request) intent.getSerializableExtra("request");
 
-        DaoSession daoSession = ((BeamItUp) getApplication()).getDaoSession();
-        EthDao ethDao = daoSession.getEthDao();
         long ethID = request.getFromID();
-        Eth eth = ethDao.load(ethID);
+        Eth eth = retrieveEth(ethID);
 
         TransactionReceipt receipt;
         try {
@@ -62,6 +60,13 @@ public class SendTransactionService extends IntentService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private Eth retrieveEth(long ethID){
+        Log.i(TAG, "Retrieving eth: " + ethID);
+        DaoSession daoSession = ((BeamItUp) getApplication()).getDaoSession();
+        EthDao ethDao = daoSession.getEthDao();
+        return ethDao.load(ethID);
     }
 
     private Credentials retrieveWallet(Eth eth) throws Exception {

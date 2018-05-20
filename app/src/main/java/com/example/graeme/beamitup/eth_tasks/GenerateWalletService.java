@@ -62,7 +62,6 @@ public class GenerateWalletService extends IntentService {
         super("GenerateWalletService");
     }
 
-    //TODO remove encrypted stuff from Eth, put into Encrypted Wallet, check if auth is needed before doing it
     private Eth handleWalletCreation(String walletName, String nickname, String longPassword) throws Exception{
         File walletFile = WalletHelper.getWalletFile(this, walletName);
         Credentials credentials = WalletHelper.retrieveCredentials(walletFile, longPassword);
@@ -84,10 +83,11 @@ public class GenerateWalletService extends IntentService {
     }
 
     private void insertEth(Eth eth){
+        Log.i(TAG, "Inserting new eth");
         DaoSession daoSession = ((BeamItUp)getApplication()).getDaoSession();
         EthDao ethDao = daoSession.getEthDao();
         ethDao.insert(eth);
-        Log.d(TAG, "Inserted new eth " + eth.getId());
+        Log.i(TAG, "Inserted new eth " + eth.getId());
     }
 
     private void onCreateEthSuccess(Eth eth){
