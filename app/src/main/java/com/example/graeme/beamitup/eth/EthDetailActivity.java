@@ -29,6 +29,7 @@ public class EthDetailActivity extends Activity {
         et_eth_nickname.setText(eth.getNickname());
 
         Button btn_save_eth = findViewById(R.id.btn_save_eth);
+
         btn_save_eth.setOnClickListener((v)->{
             eth.setNickname(et_eth_nickname.getText().toString());
             updateEth(eth);
