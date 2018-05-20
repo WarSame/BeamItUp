@@ -1,5 +1,7 @@
 package com.example.graeme.beamitup.eth;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.graeme.beamitup.BeamItUp;
+import com.example.graeme.beamitup.QRCodeDisplayFragment;
 import com.example.graeme.beamitup.R;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -26,12 +29,15 @@ public class EthDetailActivity extends Activity {
         setContentView(R.layout.activity_eth_detail);
 
         EditText et_eth_nickname = findViewById(R.id.et_eth_nickname);
-        TextView tv_eth_address = findViewById(R.id.tv_eth_address);
 
         Eth eth = (Eth) getIntent().getSerializableExtra("eth");
-
-        tv_eth_address.setText(eth.getAddress());
         et_eth_nickname.setText(eth.getNickname());
+
+        Fragment qrCodeDisplayFragment = QRCodeDisplayFragment.newInstance(eth.getAddress());
+        getFragmentManager()
+                .beginTransaction()
+                .add(qrCodeDisplayFragment, "QRCodeDisplayFragment")
+                .commit();
 
         Button btn_save_eth = findViewById(R.id.btn_save_eth);
 

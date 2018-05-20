@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -53,6 +54,9 @@ public class QRCodeDisplayFragment extends Fragment {
         if (ethAddress == null){
             return;
         }
+
+        TextView tv_eth_address = getActivity().findViewById(R.id.tv_eth_address);
+        tv_eth_address.setText(ethAddress);
 
         QRCodeWriter writer = new QRCodeWriter();
         try {
