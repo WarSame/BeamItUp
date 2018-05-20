@@ -21,11 +21,16 @@
     <string name="btn_eth_list">Eth List</string>
     <string name="btn_sign_in">Sign In</string>
     <string name="btn_create_account">Create Account</string>
+    <string name="btn_accept_request">Accept Request</string>
+    <string name="btn_decline_request">Decline Request</string>
+    <string name="btn_create_request">Create Request</string>
+    <string name="btn_save_eth">Save Eth</string>
 
     <!-- Hints -->
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="hint_confirm_password">Confirm Password</string>
+    <string name="desc_address_qr_code">Address QR Code</string>
 
     <string name="tv_eth_id_default">Eth ID</string>
     <string name="tv_eth_address_default">Eth address</string>
@@ -35,11 +40,8 @@
     <string name="title_activity_ready_request">ReadyRequestActivity</string>
     <string name="title_activity_receive_request">ReceiveRequestActivity</string>
     <string name="title_activity_finish_request">FinishRequestActivity</string>
-    <string name="btn_create_request">Create Request</string>
     <string name="to_address_label">To address:</string>
     <string name="to_address_value">to</string>
-    <string name="btn_accept_request">Accept Request</string>
-    <string name="btn_decline_request">Decline Request</string>
     <string name="et_eth_nickname">Nickname</string>
     <string name="tv_eth_nickname">Eth Nickname</string>
     <string name="tv_gas_cost_label">Gas cost:</string>
@@ -49,10 +51,7 @@
     <string name="action_settings">Settings</string>
     <string name="et_eth_address">Address</string>
     <string name="tv_eth_wallet_name">Wallet name</string>
-    <string name="btn_save_eth">Save Eth</string>
 
     <!-- Notifications -->
     <string name="channel_name">Beam It Up</string>
-    <string name="desc_address_qr_code">Address QR Code</string>
-
 </resources>

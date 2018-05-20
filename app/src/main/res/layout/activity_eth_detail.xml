@@ -31,57 +31,14 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <fragment
+        android:layout_gravity="center"
+        android:name="com.example.graeme.beamitup.QRCodeDisplayFragment"
+        android:id="@+id/frag_qrcode_display"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:weightSum="2">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/tv_eth_address_default"
-            android:layout_margin="16dp"
-            android:layout_weight="1"/>
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="16dp"
-            android:text="@string/et_eth_address"
-            android:id="@+id/tv_eth_address"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:weightSum="2">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/tv_eth_wallet_name"
-            android:layout_margin="16dp"
-            android:layout_weight="1"/>
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="16dp"
-            android:id="@+id/tv_eth_wallet_name"
-            android:text="@string/tv_eth_wallet_name"/>
-
-    </LinearLayout>
-
-    <ImageView
-        android:contentDescription="@string/desc_address_qr_code"
-        android:id="@+id/qr_code"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        tools:layout="@layout/fragment_qrcode_display"
+        />
 
     <Button
         android:layout_width="wrap_content"
