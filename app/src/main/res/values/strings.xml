@@ -53,5 +53,6 @@
 
     <!-- Notifications -->
     <string name="channel_name">Beam It Up</string>
+    <string name="desc_address_qr_code">Address QR Code</string>
 
 </resources>

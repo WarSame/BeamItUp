@@ -77,6 +77,12 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:contentDescription="@string/desc_address_qr_code"
+        android:id="@+id/qr_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

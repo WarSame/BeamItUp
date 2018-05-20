@@ -1,15 +1,22 @@
 package com.example.graeme.beamitup.eth;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.app.Activity;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.R;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 public class EthDetailActivity extends Activity {
 
@@ -30,6 +37,16 @@ public class EthDetailActivity extends Activity {
 
         Button btn_save_eth = findViewById(R.id.btn_save_eth);
 
+        QRCodeWriter writer = new QRCodeWriter();
+        try {
+            BitMatrix bitMatrix = writer.encode(eth.getAddress(), BarcodeFormat.QR_CODE, 200, 200);
+            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+            Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
+            ImageView qr_code = findViewById(R.id.qr_code);
+            qr_code.setImageBitmap(bitmap);
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
         btn_save_eth.setOnClickListener((v)->{
             eth.setNickname(et_eth_nickname.getText().toString());
             updateEth(eth);
