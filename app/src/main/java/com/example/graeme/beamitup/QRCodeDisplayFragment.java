@@ -16,21 +16,10 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link QRCodeDisplayFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link QRCodeDisplayFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class QRCodeDisplayFragment extends Fragment {
     private static final String ARG_ETH_ADDRESS = "ethAddress";
 
     private String ethAddress;
-
-    private OnFragmentInteractionListener mListener;
 
     public QRCodeDisplayFragment() {
         // Required empty public constructor
@@ -43,7 +32,6 @@ public class QRCodeDisplayFragment extends Fragment {
      * @param ethAddress eth address of wallet
      * @return A new instance of fragment QRCodeDisplayFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static QRCodeDisplayFragment newInstance(String ethAddress) {
         QRCodeDisplayFragment fragment = new QRCodeDisplayFragment();
         Bundle args = new Bundle();
@@ -55,8 +43,15 @@ public class QRCodeDisplayFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+        Bundle args = getArguments();
+        if (args == null) {
+            return;
+        }
+        else {
             ethAddress = getArguments().getString(ARG_ETH_ADDRESS);
+        }
+        if (ethAddress == null){
+            return;
         }
 
         QRCodeWriter writer = new QRCodeWriter();
@@ -78,42 +73,4 @@ public class QRCodeDisplayFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_qrcode_display, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }
