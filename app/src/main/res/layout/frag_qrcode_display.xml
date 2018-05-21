@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_gravity="center_horizontal"
     tools:context=".QRCodeDisplayFragment">
 
     <ImageView
@@ -15,8 +14,10 @@
         android:layout_margin="8dp"
         android:contentDescription="@string/desc_address_qr_code"
         android:src="@mipmap/ic_launcher"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        >
+    </ImageView>
 
     <TextView
         android:id="@+id/tv_eth_address"
@@ -25,6 +26,8 @@
         android:layout_margin="8dp"
         android:text="@string/tv_eth_address_default"
         app:layout_constraintTop_toBottomOf="@+id/iv_qr_code"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         />
 
 </android.support.constraint.ConstraintLayout>
