@@ -1,5 +1,8 @@
 package com.example.graeme.beamitup;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -50,14 +53,25 @@ public class AddressQRCodeDisplayFragment extends Fragment {
         if (ethAddress == null){
             return;
         }
+        ImageView iv_qr_code = getActivity().findViewById(R.id.iv_qr_code);
+        createQRImage(iv_qr_code);
+        iv_qr_code.setOnClickListener((v)->{
+            ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("Eth address", ethAddress);
+            if (clipboard == null || clip == null){
+                return;
+            }
+            clipboard.setPrimaryClip(clip);
+        });
+    }
 
+    private void createQRImage(ImageView iv_qr_code) {
         QRCodeWriter writer = new QRCodeWriter();
         try {
             BitMatrix bitMatrix = writer.encode(ethAddress, BarcodeFormat.QR_CODE, 200, 200);
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
             Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
-            ImageView qr_code = getActivity().findViewById(R.id.iv_qr_code);
-            qr_code.setImageBitmap(bitmap);
+            iv_qr_code.setImageBitmap(bitmap);
         } catch (WriterException e) {
             e.printStackTrace();
         }

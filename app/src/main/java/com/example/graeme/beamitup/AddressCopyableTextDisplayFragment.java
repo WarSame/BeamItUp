@@ -1,5 +1,8 @@
 package com.example.graeme.beamitup;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -40,6 +43,15 @@ public class AddressCopyableTextDisplayFragment extends Fragment {
         TextView tv_eth_address = getActivity().findViewById(R.id.tv_eth_address);
         String formattedAddress = ethAddress.substring(0, ADDRESS_DISPLAY_LENGTH) + "…";
         tv_eth_address.setText(formattedAddress);
+
+        tv_eth_address.setOnClickListener((v)->{
+            ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("Eth address", ethAddress);
+            if (clipboard == null || clip == null){
+                return;
+            }
+            clipboard.setPrimaryClip(clip);
+        });
     }
 
     @Override
