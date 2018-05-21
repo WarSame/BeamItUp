@@ -17,6 +17,7 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 public class QRCodeDisplayFragment extends Fragment {
     private static final String ARG_ETH_ADDRESS = "ethAddress";
+    private static final int ADDRESS_DISPLAY_LENGTH = 8;
 
     private String ethAddress;
 
@@ -54,7 +55,8 @@ public class QRCodeDisplayFragment extends Fragment {
         }
 
         TextView tv_eth_address = getActivity().findViewById(R.id.tv_eth_address);
-        tv_eth_address.setText(ethAddress);
+        String formattedAddress = ethAddress.substring(0, ADDRESS_DISPLAY_LENGTH) + "…";
+        tv_eth_address.setText(formattedAddress);
 
         QRCodeWriter writer = new QRCodeWriter();
         try {
