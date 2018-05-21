@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.graeme.beamitup.AuthenticatorFragment;
-import com.example.graeme.beamitup.AuthenticatorFragment.OnUserAuthenticatedListener;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.eth_tasks.GenerateWalletService;
 
@@ -27,9 +26,11 @@ public class AddEthActivity extends Activity {
         Button btn_add_eth = findViewById(R.id.btn_add_eth);
 
         KeyguardManager kgm = (KeyguardManager) getApplication().getSystemService(Context.KEYGUARD_SERVICE);
-        AuthenticatorFragment authenticatorFragment = new AuthenticatorFragment()
-                .setKGM(kgm)
-                .setOnUserAuthenticatedListener(onUserAuthenticatedListener);
+        AuthenticatorFragment authenticatorFragment = new AuthenticatorFragment.AuthenticatorFragmentBuilder()
+                .KGM(kgm)
+                .onUserAuthenticatedListener(onUserAuthenticatedListener)
+                .build();
+
         getFragmentManager()
                 .beginTransaction()
                 .add(authenticatorFragment, "AuthenticatorFragment")
@@ -40,7 +41,7 @@ public class AddEthActivity extends Activity {
         );
     }
 
-    OnUserAuthenticatedListener onUserAuthenticatedListener = new OnUserAuthenticatedListener() {
+    AuthenticatorFragment.OnUserAuthenticatedListener onUserAuthenticatedListener = new AuthenticatorFragment.OnUserAuthenticatedListener() {
         @Override
         public void onUserAuthenticated() {
             EditText et_eth_nickname = findViewById(R.id.et_eth_nickname);
@@ -69,5 +70,4 @@ public class AddEthActivity extends Activity {
             e.printStackTrace();
         }
     }
-
 }

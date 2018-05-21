@@ -57,9 +57,10 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
         });
 
         KeyguardManager kgm = (KeyguardManager) getApplication().getSystemService(Context.KEYGUARD_SERVICE);
-        AuthenticatorFragment authenticatorFragment = new AuthenticatorFragment()
-                .setKGM(kgm)
-                .setOnUserAuthenticatedListener(onUserAuthenticatedListener);
+        AuthenticatorFragment authenticatorFragment = new AuthenticatorFragment.AuthenticatorFragmentBuilder()
+                .KGM(kgm)
+                .onUserAuthenticatedListener(onUserAuthenticatedListener)
+                .build();
 
         getFragmentManager()
                 .beginTransaction()

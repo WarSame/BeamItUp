@@ -23,12 +23,12 @@ public class AuthenticatorFragment extends Fragment {
     public AuthenticatorFragment(){
     }
 
-    public AuthenticatorFragment setOnUserAuthenticatedListener(OnUserAuthenticatedListener onUserAuthenticatedListener) {
+    AuthenticatorFragment setOnUserAuthenticatedListener(OnUserAuthenticatedListener onUserAuthenticatedListener) {
         this.onUserAuthenticatedListener = onUserAuthenticatedListener;
         return this;
     }
 
-    public AuthenticatorFragment setKGM(KeyguardManager kgm) {
+    AuthenticatorFragment setKGM(KeyguardManager kgm) {
         if (this.kgm == null){
             Log.e(TAG, "kgm is null");
         }
@@ -62,6 +62,30 @@ public class AuthenticatorFragment extends Fragment {
                         break;
                 }
                 break;
+        }
+    }
+
+    public static class AuthenticatorFragmentBuilder {
+        private KeyguardManager kgm;
+        private OnUserAuthenticatedListener onUserAuthenticatedListener;
+
+        public AuthenticatorFragment build(){
+            return new AuthenticatorFragment()
+                .setKGM(this.kgm)
+                .setOnUserAuthenticatedListener(onUserAuthenticatedListener);
+        }
+
+        public AuthenticatorFragmentBuilder onUserAuthenticatedListener(OnUserAuthenticatedListener onUserAuthenticatedListener) {
+            this.onUserAuthenticatedListener = onUserAuthenticatedListener;
+            return this;
+        }
+
+        public AuthenticatorFragmentBuilder KGM(KeyguardManager kgm) {
+            if (this.kgm == null){
+                Log.e(TAG, "kgm is null");
+            }
+            this.kgm = kgm;
+            return this;
         }
     }
 
