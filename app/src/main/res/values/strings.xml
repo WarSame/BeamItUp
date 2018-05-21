@@ -47,7 +47,7 @@
     <string name="tv_gas_cost_label">Gas cost:</string>
     <string name="tv_gas_cost_value">0</string>
     <string name="title_activity_eth">Eths</string>
-    <string name="title_activity_eth_detail">EthDetailActivity</string>
+    <string name="title_activity_eth_detail">Eth Details</string>
     <string name="action_settings">Settings</string>
     <string name="et_eth_address">Address</string>
     <string name="tv_eth_wallet_name">Wallet name</string>

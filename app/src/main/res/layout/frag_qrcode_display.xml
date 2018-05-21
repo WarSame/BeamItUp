@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/iv_qr_code"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_margin="8dp"
         android:contentDescription="@string/desc_address_qr_code"
         android:src="@mipmap/ic_launcher"

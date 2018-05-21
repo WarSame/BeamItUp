@@ -37,14 +37,14 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_margin="8dp"
         android:name="com.example.graeme.beamitup.QRCodeDisplayFragment"
-        android:id="@+id/frag_qrcode_display"
+        android:id="@+id/frag_qr_code_display"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:layout="@layout/frag_qrcode_display"
         />
 
     <Button
-        app:layout_constraintTop_toBottomOf="@+id/frag_qrcode_display"
+        app:layout_constraintTop_toBottomOf="@+id/frag_qr_code_display"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
