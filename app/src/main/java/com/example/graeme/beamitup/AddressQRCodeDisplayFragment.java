@@ -15,13 +15,12 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
-public class QRCodeDisplayFragment extends Fragment {
+public class AddressQRCodeDisplayFragment extends Fragment {
     private static final String ARG_ETH_ADDRESS = "ethAddress";
-    private static final int ADDRESS_DISPLAY_LENGTH = 8;
 
     private String ethAddress;
 
-    public QRCodeDisplayFragment() {
+    public AddressQRCodeDisplayFragment() {
         // Required empty public constructor
     }
 
@@ -30,10 +29,10 @@ public class QRCodeDisplayFragment extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param ethAddress eth address of wallet
-     * @return A new instance of fragment QRCodeDisplayFragment.
+     * @return A new instance of fragment AddressQRCodeDisplayFragment.
      */
-    public static QRCodeDisplayFragment newInstance(String ethAddress) {
-        QRCodeDisplayFragment fragment = new QRCodeDisplayFragment();
+    public static AddressQRCodeDisplayFragment newInstance(String ethAddress) {
+        AddressQRCodeDisplayFragment fragment = new AddressQRCodeDisplayFragment();
         Bundle args = new Bundle();
         args.putString(ARG_ETH_ADDRESS, ethAddress);
         fragment.setArguments(args);
@@ -47,16 +46,10 @@ public class QRCodeDisplayFragment extends Fragment {
         if (args == null) {
             return;
         }
-        else {
-            ethAddress = getArguments().getString(ARG_ETH_ADDRESS);
-        }
+        ethAddress = getArguments().getString(ARG_ETH_ADDRESS);
         if (ethAddress == null){
             return;
         }
-
-        TextView tv_eth_address = getActivity().findViewById(R.id.tv_eth_address);
-        String formattedAddress = ethAddress.substring(0, ADDRESS_DISPLAY_LENGTH) + "…";
-        tv_eth_address.setText(formattedAddress);
 
         QRCodeWriter writer = new QRCodeWriter();
         try {

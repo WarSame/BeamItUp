@@ -1,25 +1,17 @@
 package com.example.graeme.beamitup.eth;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.app.Activity;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.graeme.beamitup.AddressCopyableTextDisplayFragment;
 import com.example.graeme.beamitup.BeamItUp;
-import com.example.graeme.beamitup.QRCodeDisplayFragment;
+import com.example.graeme.beamitup.AddressQRCodeDisplayFragment;
 import com.example.graeme.beamitup.R;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
-import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 public class EthDetailActivity extends Activity {
 
@@ -33,10 +25,12 @@ public class EthDetailActivity extends Activity {
         Eth eth = (Eth) getIntent().getSerializableExtra("eth");
         et_eth_nickname.setText(eth.getNickname());
 
-        Fragment qrCodeDisplayFragment = QRCodeDisplayFragment.newInstance(eth.getAddress());
+        Fragment qrCodeDisplayFragment = AddressQRCodeDisplayFragment.newInstance(eth.getAddress());
+        Fragment addressCopyableTextDisplayFragment = AddressCopyableTextDisplayFragment.newInstance(eth.getAddress());
         getFragmentManager()
                 .beginTransaction()
-                .add(qrCodeDisplayFragment, "QRCodeDisplayFragment")
+                .add(qrCodeDisplayFragment, "AddressQRCodeDisplayFragment")
+                .add(addressCopyableTextDisplayFragment, "AddressCopyableTextDisplayFragment")
                 .commit();
 
         Button btn_save_eth = findViewById(R.id.btn_save_eth);
