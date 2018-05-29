@@ -1,4 +1,4 @@
-package com.example.graeme.beamitup.eth;
+package com.example.graeme.beamitup.wallet;
 
 import android.app.Activity;
 import android.app.KeyguardManager;
@@ -13,17 +13,16 @@ import android.widget.Toast;
 
 import com.example.graeme.beamitup.AuthenticatorFragment;
 import com.example.graeme.beamitup.R;
-import com.example.graeme.beamitup.eth_tasks.GenerateWalletService;
 
-public class AddEthActivity extends Activity {
-    private static final String TAG = "AddEthActivity";
+public class AddWalletActivity extends Activity {
+    private static final String TAG = "AddWalletActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_eth);
+        setContentView(R.layout.activity_add_wallet);
 
-        Button btn_add_eth = findViewById(R.id.btn_add_eth);
+        Button btn_add_wallet = findViewById(R.id.btn_add_wallet);
 
         KeyguardManager kgm = (KeyguardManager) getApplication().getSystemService(Context.KEYGUARD_SERVICE);
         AuthenticatorFragment authenticatorFragment = new AuthenticatorFragment.AuthenticatorFragmentBuilder()
@@ -36,7 +35,7 @@ public class AddEthActivity extends Activity {
                 .add(authenticatorFragment, "AuthenticatorFragment")
                 .commit();
 
-        btn_add_eth.setOnClickListener(
+        btn_add_wallet.setOnClickListener(
                 (View v) -> authenticatorFragment.authenticateMobileUser()
         );
     }
@@ -44,16 +43,16 @@ public class AddEthActivity extends Activity {
     AuthenticatorFragment.OnUserAuthenticatedListener onUserAuthenticatedListener = new AuthenticatorFragment.OnUserAuthenticatedListener() {
         @Override
         public void onUserAuthenticated() {
-            EditText et_eth_nickname = findViewById(R.id.et_eth_nickname);
-            String nickname = et_eth_nickname.getText().toString();
+            EditText et_wallet_nickname = findViewById(R.id.et_wallet_nickname);
+            String nickname = et_wallet_nickname.getText().toString();
 
             generateWallet(nickname);
 
-            Toast.makeText(getApplicationContext(), "Creating eth", Toast.LENGTH_LONG).show();
-            Log.i(TAG, "Creating eth");
+            Toast.makeText(getApplicationContext(), "Creating wallet", Toast.LENGTH_LONG).show();
+            Log.i(TAG, "Creating wallet");
 
-            Intent ethListIntent = new Intent(getApplicationContext(), EthListActivity.class);
-            startActivity(ethListIntent);
+            Intent walletListIntent = new Intent(getApplicationContext(), WalletListActivity.class);
+            startActivity(walletListIntent);
         }
 
         @Override

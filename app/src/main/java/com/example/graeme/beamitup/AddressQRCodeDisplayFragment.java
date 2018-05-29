@@ -19,9 +19,9 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 public class AddressQRCodeDisplayFragment extends Fragment {
-    private static final String ARG_ETH_ADDRESS = "ethAddress";
+    private static final String ARG_WALLET_ADDRESS = "walletAddress";
 
-    private String ethAddress;
+    private String walletAddress;
 
     public AddressQRCodeDisplayFragment() {
         // Required empty public constructor
@@ -31,13 +31,13 @@ public class AddressQRCodeDisplayFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param ethAddress eth address of wallet
+     * @param walletAddress wallet address of wallet
      * @return A new instance of fragment AddressQRCodeDisplayFragment.
      */
-    public static AddressQRCodeDisplayFragment newInstance(String ethAddress) {
+    public static AddressQRCodeDisplayFragment newInstance(String walletAddress) {
         AddressQRCodeDisplayFragment fragment = new AddressQRCodeDisplayFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_ETH_ADDRESS, ethAddress);
+        args.putString(ARG_WALLET_ADDRESS, walletAddress);
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,15 +49,15 @@ public class AddressQRCodeDisplayFragment extends Fragment {
         if (args == null) {
             return;
         }
-        ethAddress = getArguments().getString(ARG_ETH_ADDRESS);
-        if (ethAddress == null){
+        walletAddress = getArguments().getString(ARG_WALLET_ADDRESS);
+        if (walletAddress == null){
             return;
         }
         ImageView iv_qr_code = getActivity().findViewById(R.id.iv_qr_code);
         createQRImage(iv_qr_code);
         iv_qr_code.setOnClickListener((v)->{
             ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText("Eth address", ethAddress);
+            ClipData clip = ClipData.newPlainText("Wallet address", walletAddress);
             if (clipboard == null || clip == null){
                 return;
             }
@@ -68,7 +68,7 @@ public class AddressQRCodeDisplayFragment extends Fragment {
     private void createQRImage(ImageView iv_qr_code) {
         QRCodeWriter writer = new QRCodeWriter();
         try {
-            BitMatrix bitMatrix = writer.encode(ethAddress, BarcodeFormat.QR_CODE, 200, 200);
+            BitMatrix bitMatrix = writer.encode(walletAddress, BarcodeFormat.QR_CODE, 200, 200);
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
             Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
             iv_qr_code.setImageBitmap(bitmap);

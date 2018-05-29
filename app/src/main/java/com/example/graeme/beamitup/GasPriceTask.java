@@ -1,4 +1,4 @@
-package com.example.graeme.beamitup.eth_tasks;
+package com.example.graeme.beamitup;
 
 import android.content.Context;
 import android.os.AsyncTask;

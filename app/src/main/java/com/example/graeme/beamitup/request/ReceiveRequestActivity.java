@@ -13,14 +13,14 @@ import com.example.graeme.beamitup.AuthenticatorFragment;
 import com.example.graeme.beamitup.AuthenticatorFragment.OnUserAuthenticatedListener;
 import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
-import com.example.graeme.beamitup.eth.Eth;
-import com.example.graeme.beamitup.eth.EthPickerFragment;
+import com.example.graeme.beamitup.wallet.Wallet;
+import com.example.graeme.beamitup.wallet.WalletPickerFragment;
 
 import static com.example.graeme.beamitup.ndef.NdefMessaging.handlePushMessage;
 
-public class ReceiveRequestActivity extends Activity implements EthPickerFragment.onEthSelectedListener{
+public class ReceiveRequestActivity extends Activity implements WalletPickerFragment.onWalletSelectedListener{
     private static final String TAG = "ReceiveRequestActivity";
-    Eth eth;
+    Wallet wallet;
     Request request;
 
     @Override
@@ -69,8 +69,8 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
 
         btnAcceptRequest.setOnClickListener(v->{
             v.setEnabled(false);
-            if (eth == null){
-                Toast.makeText(this, "You must select an eth account.", Toast.LENGTH_LONG).show();
+            if (wallet == null){
+                Toast.makeText(this, "You must select an wallet account.", Toast.LENGTH_LONG).show();
                 v.setEnabled(true);
                 return;
             }
@@ -82,7 +82,7 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
         @Override
         public void onUserAuthenticated() {
             Intent finishRequestIntent = new Intent(getApplicationContext(), FinishRequestActivity.class);
-            request.setFromID(eth.getId());
+            request.setFromID(wallet.getId());
             finishRequestIntent.putExtra("request", request);
 
             enableAcceptRequestButton();
@@ -101,7 +101,7 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
     }
 
     @Override
-    public void onEthSelected(Eth eth) {
-        this.eth = eth;
+    public void onWalletSelected(Wallet wallet) {
+        this.wallet = wallet;
     }
 }

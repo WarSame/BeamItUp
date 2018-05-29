@@ -1,17 +1,15 @@
-package com.example.graeme.beamitup.eth_tasks;
+package com.example.graeme.beamitup.transaction;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.graeme.beamitup.BeamItUp;
-import com.example.graeme.beamitup.eth.DaoSession;
-import com.example.graeme.beamitup.eth.Eth;
-import com.example.graeme.beamitup.eth.EthDao;
+import com.example.graeme.beamitup.wallet.DaoSession;
+import com.example.graeme.beamitup.wallet.Wallet;
+import com.example.graeme.beamitup.wallet.WalletDao;
 import com.example.graeme.beamitup.request.Request;
-import com.example.graeme.beamitup.transaction.Transaction;
 import com.example.graeme.beamitup.wallet.WalletHelper;
 
 import org.web3j.crypto.Credentials;
@@ -39,12 +37,12 @@ public class SendTransactionService extends IntentService {
         Web3j web3j = ((BeamItUp)getApplication()).getWeb3j();
         Request request = (Request) intent.getSerializableExtra("request");
 
-        long ethID = request.getFromID();
-        Eth eth = retrieveEth(ethID);
+        long walletID = request.getFromID();
+        Wallet wallet = retrieveWallet(walletID);
 
         TransactionReceipt receipt;
         try {
-            Credentials credentials = retrieveWallet(eth);
+            Credentials credentials = retrieveWallet(wallet);
             Log.d(TAG, "Sender address: " + credentials.getAddress());
 
             receipt = org.web3j.tx.Transfer.sendFunds(
@@ -62,15 +60,15 @@ public class SendTransactionService extends IntentService {
         }
     }
 
-    private Eth retrieveEth(long ethID){
-        Log.i(TAG, "Retrieving eth: " + ethID);
+    private Wallet retrieveWallet(long walletID){
+        Log.i(TAG, "Retrieving wallet: " + walletID);
         DaoSession daoSession = ((BeamItUp) getApplication()).getDaoSession();
-        EthDao ethDao = daoSession.getEthDao();
-        return ethDao.load(ethID);
+        WalletDao walletDao = daoSession.getWalletDao();
+        return walletDao.load(walletID);
     }
 
-    private Credentials retrieveWallet(Eth eth) throws Exception {
-        File walletFile = WalletHelper.getWalletFile(this, eth.getWalletName());
-        return WalletHelper.retrieveCredentials(eth, walletFile);
+    private Credentials retrieveWallet(Wallet wallet) throws Exception {
+        File walletFile = WalletHelper.getWalletFile(this, wallet.getWalletName());
+        return WalletHelper.retrieveCredentials(wallet, walletFile);
     }
 }

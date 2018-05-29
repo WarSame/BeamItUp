@@ -1,15 +1,13 @@
-package com.example.graeme.beamitup.eth;
+package com.example.graeme.beamitup.wallet;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Index;
-import org.greenrobot.greendao.annotation.Keep;
 
 import java.io.Serializable;
 import org.greenrobot.greendao.annotation.Generated;
 
 @Entity
-public class Eth implements Serializable {
+public class Wallet implements Serializable {
     private static final long serialVersionUID = -4347720392132901969L;
 
     private String nickname;
@@ -21,8 +19,8 @@ public class Eth implements Serializable {
     @Id(autoincrement = true)
     private Long id;
 
-    @Generated(hash = 1393368730)
-    public Eth(String nickname, String address, String walletName,
+    @Generated(hash = 1077495790)
+    public Wallet(String nickname, String address, String walletName,
             byte[] encryptedLongPassword, byte[] IV, Long id) {
         this.nickname = nickname;
         this.address = address;
@@ -32,16 +30,16 @@ public class Eth implements Serializable {
         this.id = id;
     }
 
-    private Eth(EthBuilder ethBuilder){
-        this.nickname = ethBuilder.getNickname();
-        this.address = ethBuilder.getAddress();
-        this.walletName = ethBuilder.getWalletName();
-        this.encryptedLongPassword = ethBuilder.getEncryptedLongPassword();
-        this.IV = ethBuilder.getIV();
+    private Wallet(WalletBuilder walletBuilder){
+        this.nickname = walletBuilder.getNickname();
+        this.address = walletBuilder.getAddress();
+        this.walletName = walletBuilder.getWalletName();
+        this.encryptedLongPassword = walletBuilder.getEncryptedLongPassword();
+        this.IV = walletBuilder.getIV();
     }
 
-    @Generated(hash = 1727113266)
-    public Eth() {
+    @Generated(hash = 1197745249)
+    public Wallet() {
     }
 
     public String getNickname() {
@@ -68,7 +66,7 @@ public class Eth implements Serializable {
         return this.id;
     }
 
-    public Eth setId(Long id) {
+    public Wallet setId(Long id) {
         this.id = id;
         return this;
     }
@@ -93,17 +91,17 @@ public class Eth implements Serializable {
         this.IV = IV;
     }
 
-    public static class EthBuilder{
+    public static class WalletBuilder{
         private String nickname;
         private String address;
         private String walletName;
         private byte[] encryptedLongPassword;
         private byte[] IV;
 
-        public EthBuilder(){}
+        public WalletBuilder(){}
 
-        public Eth build(){
-            return new Eth(this);
+        public Wallet build(){
+            return new Wallet(this);
         }
 
         String getNickname() {
@@ -126,27 +124,27 @@ public class Eth implements Serializable {
             return IV;
         }
 
-        public EthBuilder nickname(String nickname) {
+        public WalletBuilder nickname(String nickname) {
             this.nickname = nickname;
             return this;
         }
 
-        public EthBuilder address(String address) {
+        public WalletBuilder address(String address) {
             this.address = address;
             return this;
         }
 
-        public EthBuilder walletName(String walletName) {
+        public WalletBuilder walletName(String walletName) {
             this.walletName = walletName;
             return this;
         }
 
-        public EthBuilder encryptedLongPassword(byte[] encryptedLongPassword) {
+        public WalletBuilder encryptedLongPassword(byte[] encryptedLongPassword) {
             this.encryptedLongPassword = encryptedLongPassword;
             return this;
         }
 
-        public EthBuilder IV(byte[] IV) {
+        public WalletBuilder IV(byte[] IV) {
             this.IV = IV;
             return this;
         }

@@ -6,21 +6,21 @@
     android:gravity="center_horizontal"
     android:layout_margin="16dp"
     android:orientation="vertical"
-    tools:context="com.example.graeme.beamitup.eth.AddEthActivity">
+    tools:context="com.example.graeme.beamitup.wallet.AddWalletActivity">
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:inputType="text"
-        android:id="@+id/et_eth_nickname"
-        android:hint="@string/et_eth_nickname"
+        android:id="@+id/et_wallet_nickname"
+        android:hint="@string/et_wallet_nickname"
         android:layout_margin="16dp"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:text="@string/btn_add_eth"
-        android:id="@+id/btn_add_eth"
+        android:text="@string/btn_add_wallet"
+        android:id="@+id/btn_add_wallet"
         android:layout_gravity="center_horizontal"
         android:layout_margin="16dp"/>
 

@@ -12,18 +12,18 @@ import android.widget.TextView;
 
 
 public class AddressCopyableTextDisplayFragment extends Fragment {
-    private static final String ARG_ETH_ADDRESS = "ethAddress";
+    private static final String ARG_WALLET_ADDRESS = "walletAddress";
     private static final int ADDRESS_DISPLAY_LENGTH = 8;
-    private String ethAddress;
+    private String walletAddress;
 
     public AddressCopyableTextDisplayFragment() {
         // Required empty public constructor
     }
 
-    public static AddressCopyableTextDisplayFragment newInstance(String ethAddress) {
+    public static AddressCopyableTextDisplayFragment newInstance(String walletAddress) {
         AddressCopyableTextDisplayFragment fragment = new AddressCopyableTextDisplayFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_ETH_ADDRESS, ethAddress);
+        args.putString(ARG_WALLET_ADDRESS, walletAddress);
         fragment.setArguments(args);
         return fragment;
     }
@@ -35,18 +35,18 @@ public class AddressCopyableTextDisplayFragment extends Fragment {
         if (args == null) {
             return;
         }
-        ethAddress = getArguments().getString(ARG_ETH_ADDRESS);
-        if (ethAddress == null){
+        walletAddress = getArguments().getString(ARG_WALLET_ADDRESS);
+        if (walletAddress == null){
             return;
         }
 
-        TextView tv_eth_address = getActivity().findViewById(R.id.tv_eth_address);
-        String formattedAddress = ethAddress.substring(0, ADDRESS_DISPLAY_LENGTH) + "…";
-        tv_eth_address.setText(formattedAddress);
+        TextView tv_wallet_address = getActivity().findViewById(R.id.tv_wallet_address);
+        String formattedAddress = walletAddress.substring(0, ADDRESS_DISPLAY_LENGTH) + "…";
+        tv_wallet_address.setText(formattedAddress);
 
-        tv_eth_address.setOnClickListener((v)->{
+        tv_wallet_address.setOnClickListener((v)->{
             ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText("Eth address", ethAddress);
+            ClipData clip = ClipData.newPlainText("Wallet address", walletAddress);
             if (clipboard == null || clip == null){
                 return;
             }

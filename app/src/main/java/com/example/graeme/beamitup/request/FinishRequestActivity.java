@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import com.example.graeme.beamitup.R;
-import com.example.graeme.beamitup.eth_tasks.SendTransactionService;
+import com.example.graeme.beamitup.transaction.SendTransactionService;
 
 public class FinishRequestActivity extends Activity {
     private static final String TAG = "FinishRequestActivity";

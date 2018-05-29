@@ -9,8 +9,8 @@
     android:layout_margin="16dp">
 
     <fragment
-        android:id="@+id/frag_eth_picker"
-        android:name="com.example.graeme.beamitup.eth.EthPickerFragment"
+        android:id="@+id/frag_wallet_picker"
+        android:name="com.example.graeme.beamitup.wallet.WalletPickerFragment"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         />

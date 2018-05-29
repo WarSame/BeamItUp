@@ -5,34 +5,34 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="16dp"
-    tools:context=".eth.EthDetailActivity">
+    tools:context=".wallet.WalletDetailActivity">
 
     <TextView
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/et_eth_nickname"
+        app:layout_constraintBottom_toBottomOf="@+id/et_wallet_nickname"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/et_eth_nickname"
+        app:layout_constraintRight_toLeftOf="@+id/et_wallet_nickname"
         android:layout_margin="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tv_eth_nickname"
-        android:text="@string/tv_eth_nickname" >
+        android:id="@+id/tv_wallet_nickname"
+        android:text="@string/tv_wallet_nickname" >
     </TextView>
 
     <EditText
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_eth_nickname"
-        app:layout_constraintLeft_toRightOf="@+id/tv_eth_nickname"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_wallet_nickname"
+        app:layout_constraintLeft_toRightOf="@+id/tv_wallet_nickname"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="text"
         android:layout_margin="8dp"
-        android:text="@string/et_eth_nickname"
-        android:id="@+id/et_eth_nickname"/>
+        android:text="@string/et_wallet_nickname"
+        android:id="@+id/et_wallet_nickname"/>
 
     <fragment
-        app:layout_constraintTop_toBottomOf="@+id/tv_eth_nickname"
+        app:layout_constraintTop_toBottomOf="@+id/tv_wallet_nickname"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_margin="8dp"
@@ -61,9 +61,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="@string/btn_save_eth"
+        android:text="@string/btn_save_wallet"
         android:layout_margin="8dp"
         android:layout_gravity="center"
-        android:id="@+id/btn_save_eth"/>
+        android:id="@+id/btn_save_wallet"/>
 
 </android.support.constraint.ConstraintLayout>

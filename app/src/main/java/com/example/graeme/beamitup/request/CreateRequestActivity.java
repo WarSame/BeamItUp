@@ -10,14 +10,14 @@ import android.widget.Toast;
 
 import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.R;
-import com.example.graeme.beamitup.eth.Eth;
-import com.example.graeme.beamitup.eth.EthPickerFragment.onEthSelectedListener;
-import com.example.graeme.beamitup.eth_tasks.GasPriceTask;
+import com.example.graeme.beamitup.wallet.Wallet;
+import com.example.graeme.beamitup.wallet.WalletPickerFragment.onWalletSelectedListener;
+import com.example.graeme.beamitup.GasPriceTask;
 
 import org.web3j.protocol.Web3j;
 
-public class CreateRequestActivity extends Activity implements onEthSelectedListener {
-    Eth eth;
+public class CreateRequestActivity extends Activity implements onWalletSelectedListener {
+    Wallet wallet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +34,7 @@ public class CreateRequestActivity extends Activity implements onEthSelectedList
                 return;
             }
 
-            readyRequestMessage(eth, amount);
+            readyRequestMessage(wallet, amount);
         });
 
         Web3j web3j = ((BeamItUp)getApplication()).getWeb3j();
@@ -45,20 +45,20 @@ public class CreateRequestActivity extends Activity implements onEthSelectedList
         new GasPriceTask(gasPriceResponse, web3j).execute();
     }
 
-    private void readyRequestMessage(Eth eth, String amount) {
-        Request request = new Request(eth.getAddress(), amount);
+    private void readyRequestMessage(Wallet wallet, String amount) {
+        Request request = new Request(wallet.getAddress(), amount);
         Intent readyRequestIntent = new Intent(this, ReadyRequestActivity.class);
         readyRequestIntent.putExtra("request", request);
         startActivity(readyRequestIntent);
     }
 
     @Override
-    public void onEthSelected(Eth eth) {
-        this.eth = eth;
+    public void onWalletSelected(Wallet wallet) {
+        this.wallet = wallet;
     }
 
     private boolean isValidRequest(String amount){
-        return isValidAmount(amount) && isValidEth();
+        return isValidAmount(amount) && isValidWallet();
     }
 
     private boolean isValidAmount(String amount){
@@ -69,11 +69,11 @@ public class CreateRequestActivity extends Activity implements onEthSelectedList
         return isValidAmount;
     }
 
-    private boolean isValidEth(){
-        boolean isValidEth = eth != null;
-        if (!isValidEth) {
-            Toast.makeText(this, "Invalid eth.", Toast.LENGTH_LONG).show();
+    private boolean isValidWallet(){
+        boolean isValidWallet = wallet != null;
+        if (!isValidWallet) {
+            Toast.makeText(this, "Invalid wallet.", Toast.LENGTH_LONG).show();
         }
-        return isValidEth;
+        return isValidWallet;
     }
 }

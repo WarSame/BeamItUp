@@ -5,8 +5,8 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 
-import com.example.graeme.beamitup.eth.DaoMaster;
-import com.example.graeme.beamitup.eth.DaoSession;
+import com.example.graeme.beamitup.wallet.DaoMaster;
+import com.example.graeme.beamitup.wallet.DaoSession;
 
 import org.greenrobot.greendao.database.Database;
 import org.web3j.protocol.Web3j;
@@ -22,7 +22,7 @@ public class BeamItUp extends Application {
     @Override
     public void onCreate(){
         super.onCreate();
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "eth-db", null);
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "wallet-db", null);
         Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
         web3j = buildWeb3j();

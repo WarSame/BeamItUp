@@ -28,10 +28,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".eth.AddEthActivity"
-            android:label="@string/title_activity_add_eth"
+            android:name=".wallet.AddWalletActivity"
+            android:label="@string/title_activity_add_wallet"
             android:screenOrientation="portrait"
-            android:parentActivityName=".eth.EthListActivity">
+            android:parentActivityName=".wallet.WalletListActivity">
         </activity>
         <activity
             android:name=".request.CreateRequestActivity"
@@ -60,18 +60,18 @@
             android:parentActivityName=".LandingPageActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".eth.EthListActivity"
-            android:label="@string/title_activity_eth"
+            android:name=".wallet.WalletListActivity"
+            android:label="@string/title_activity_wallet"
             android:parentActivityName=".LandingPageActivity">
         </activity>
         <activity
-            android:name=".eth.EthDetailActivity"
-            android:label="@string/title_activity_eth_detail"
-            android:parentActivityName=".eth.EthListActivity">
+            android:name=".wallet.WalletDetailActivity"
+            android:label="@string/title_activity_wallet_detail"
+            android:parentActivityName=".wallet.WalletListActivity">
         </activity>
 
-        <service android:name=".eth_tasks.GenerateWalletService" />
-        <service android:name=".eth_tasks.SendTransactionService" />
+        <service android:name=".wallet.GenerateWalletService" />
+        <service android:name=".transaction.SendTransactionService" />
     </application>
 
 </manifest>

@@ -6,26 +6,26 @@
     >
 
     <TextView
-        android:id="@+id/tv_eth_id"
+        android:id="@+id/tv_wallet_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/tv_eth_id_default"
+        android:text="@string/tv_wallet_id_default"
         android:layout_margin="16dp"
         />
 
     <TextView
-        android:id="@+id/tv_eth_nickname"
+        android:id="@+id/tv_wallet_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/tv_eth_nickname"
+        android:text="@string/tv_wallet_nickname"
         android:layout_margin="16dp"
         />
 
     <TextView
-        android:id="@+id/tv_eth_address"
+        android:id="@+id/tv_wallet_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/tv_eth_address_default"
+        android:text="@string/tv_wallet_address_default"
         android:layout_margin="16dp"
         />
 

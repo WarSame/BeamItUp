@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.graeme.beamitup.Encryption;
-import com.example.graeme.beamitup.eth.Eth;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
@@ -16,12 +15,12 @@ public class WalletHelper {
     private static final String TAG = "WalletHelper";
     private static final String WALLET_DIR_RELATIVE_PATH = "/wallets";
 
-    public static Credentials retrieveCredentials(Eth eth, File walletFile) throws Exception {
+    public static Credentials retrieveCredentials(Wallet wallet, File walletFile) throws Exception {
         Log.i(TAG, "Wallet file location: " + walletFile);
         String longPassword = new Encryption().new Decryptor().decryptWalletPassword(
-                eth.getEncryptedLongPassword(),
-                eth.getIV(),
-                eth.getWalletName()
+                wallet.getEncryptedLongPassword(),
+                wallet.getIV(),
+                wallet.getWalletName()
         );
         Log.i(TAG, "Wallet retrieved");
         return WalletUtils.loadCredentials(longPassword, walletFile);

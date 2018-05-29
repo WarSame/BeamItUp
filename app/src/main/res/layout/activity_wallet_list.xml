@@ -4,20 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".eth.EthListActivity">
+    tools:context=".wallet.WalletListActivity">
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_add_eth"
-        android:id="@+id/btn_add_eth"/>
+        android:text="@string/btn_add_wallet"
+        android:id="@+id/btn_add_wallet"/>
 
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/frag_eth_picker"
-        android:name="com.example.graeme.beamitup.eth.EthPickerFragment"
-        tools:layout="@layout/frag_list_item_eth"
+        android:id="@+id/frag_wallet_picker"
+        android:name="com.example.graeme.beamitup.wallet.WalletPickerFragment"
+        tools:layout="@layout/frag_list_item_wallet"
         >
 
     </fragment>

@@ -1,4 +1,4 @@
-package com.example.graeme.beamitup.eth_tasks;
+package com.example.graeme.beamitup.wallet;
 
 import android.app.IntentService;
 import android.app.PendingIntent;
@@ -12,11 +12,10 @@ import android.util.Log;
 import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.Encryption;
 import com.example.graeme.beamitup.R;
-import com.example.graeme.beamitup.eth.DaoSession;
-import com.example.graeme.beamitup.eth.Eth;
-import com.example.graeme.beamitup.eth.EthDao;
-import com.example.graeme.beamitup.eth.EthDetailActivity;
-import com.example.graeme.beamitup.wallet.EncryptedWallet;
+import com.example.graeme.beamitup.wallet.DaoSession;
+import com.example.graeme.beamitup.wallet.Wallet;
+import com.example.graeme.beamitup.wallet.WalletDao;
+import com.example.graeme.beamitup.wallet.WalletDetailActivity;
 import com.example.graeme.beamitup.wallet.WalletHelper;
 
 import org.web3j.crypto.Credentials;
@@ -38,7 +37,7 @@ public class GenerateWalletService extends IntentService {
         String nickname = intent.getStringExtra("nickname");
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "BeamItUp")
-                .setContentTitle("Creating eth")
+                .setContentTitle("Creating wallet")
                 .setContentText(nickname)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setProgress(0, 0, true);
@@ -50,11 +49,11 @@ public class GenerateWalletService extends IntentService {
         try {
             File walletDir = WalletHelper.getWalletDir(this);
             String walletName = WalletHelper.generateWallet(longPassword, walletDir);
-            Eth eth = handleWalletCreation(walletName, nickname, longPassword);
-            onCreateEthSuccess(eth);
+            Wallet wallet = handleWalletCreation(walletName, nickname, longPassword);
+            onCreateWalletSuccess(wallet);
         } catch (Exception e) {
             e.printStackTrace();
-            onCreateEthFail();
+            onCreateWalletFail();
         }
     }
 
@@ -62,7 +61,7 @@ public class GenerateWalletService extends IntentService {
         super("GenerateWalletService");
     }
 
-    private Eth handleWalletCreation(String walletName, String nickname, String longPassword) throws Exception{
+    private Wallet handleWalletCreation(String walletName, String nickname, String longPassword) throws Exception{
         File walletFile = WalletHelper.getWalletFile(this, walletName);
         Credentials credentials = WalletHelper.retrieveCredentials(walletFile, longPassword);
 
@@ -70,7 +69,7 @@ public class GenerateWalletService extends IntentService {
         Encryption.Encryptor encryptor = encryption.new Encryptor()
                 .encryptWalletPassword(walletName, longPassword);
 
-        Eth eth = new Eth.EthBuilder()
+        Wallet wallet = new Wallet.WalletBuilder()
             .nickname(nickname)
             .address(credentials.getAddress())
             .walletName(walletName)
@@ -78,40 +77,40 @@ public class GenerateWalletService extends IntentService {
             .IV(encryptor.getIV())
             .build();
 
-        insertEth(eth);
-        return eth;
+        insertWallet(wallet);
+        return wallet;
     }
 
-    private void insertEth(Eth eth){
-        Log.i(TAG, "Inserting new eth");
+    private void insertWallet(Wallet wallet){
+        Log.i(TAG, "Inserting new wallet");
         DaoSession daoSession = ((BeamItUp)getApplication()).getDaoSession();
-        EthDao ethDao = daoSession.getEthDao();
-        ethDao.insert(eth);
-        Log.i(TAG, "Inserted new eth " + eth.getId());
+        WalletDao walletDao = daoSession.getWalletDao();
+        walletDao.insert(wallet);
+        Log.i(TAG, "Inserted new wallet " + wallet.getId());
     }
 
-    private void onCreateEthSuccess(Eth eth){
-        Log.i(TAG, "Eth created");
-        Intent viewEthIntent = new Intent(this, EthDetailActivity.class);
-        viewEthIntent.putExtra("eth", eth);
+    private void onCreateWalletSuccess(Wallet wallet){
+        Log.i(TAG, "Wallet created");
+        Intent viewWalletIntent = new Intent(this, WalletDetailActivity.class);
+        viewWalletIntent.putExtra("wallet", wallet);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this)
-                .addNextIntentWithParentStack(viewEthIntent);
+                .addNextIntentWithParentStack(viewWalletIntent);
 
-        PendingIntent viewEthPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent viewWalletPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "BeamItUp")
-                .setContentTitle("Eth created")
-                .setContentText(eth.getNickname())
+                .setContentTitle("Wallet created")
+                .setContentText(wallet.getNickname())
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(viewEthPendingIntent);
+                .setContentIntent(viewWalletPendingIntent);
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
         notificationManagerCompat.notify(id, builder.build());
     }
 
-    private void onCreateEthFail(){
-        Log.i(TAG, "Eth creation failed");
+    private void onCreateWalletFail(){
+        Log.i(TAG, "Wallet creation failed");
     }
 
 }
