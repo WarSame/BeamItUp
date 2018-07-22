@@ -1,34 +1,47 @@
 package com.example.graeme.beamitup;
 
-import com.example.graeme.beamitup.wallet.EncryptedWallet;
+import android.content.Context;
+import android.security.keystore.UserNotAuthenticatedException;
+import android.support.test.InstrumentationRegistry;
+
+import com.example.graeme.beamitup.wallet.WalletHelper;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+
+import static junit.framework.Assert.assertTrue;
+
 public class EncryptionTest {
     private static final String TAG = "EncryptionTest";
+    private Context appContext;
 
     @Before
-    public void setUp() throws Exception {
-    }
-
-    @After
-    public void tearDown() throws Exception {
+    public void setUp() {
+        appContext = InstrumentationRegistry.getTargetContext();
     }
 
     @Test
-    public void hashPassword() throws Exception {
-    }
-
-    @Test
-    public void generateSalt() throws Exception {
-    }
-
-    @Test
-    public void storeWalletFile() throws Exception {
+    public void encryptWalletPassword_AuthenticationNotRequired_Filled() throws Exception {
         String longPassword = Encryption.generateLongRandomString();
-        EncryptedWallet encryptedWallet = Encryption.encryptWalletPassword("somewallet", longPassword);
+        File walletDir = WalletHelper.getWalletDir(appContext);
+        String walletName = WalletHelper.generateWallet(longPassword, walletDir);
+        Encryption.Encryptor encryptor = new Encryption().new Encryptor()
+                .encryptWalletPassword(walletName, longPassword);
+        assertTrue(encryptor.getEncryptedLongPassword() != null);
+    }
+
+    @Test(expected = UserNotAuthenticatedException.class)
+    public void encryptWalletPassword_AuthenticationRequired_UserNotAuthenticatedException() throws Exception {
+        String longPassword = Encryption.generateLongRandomString();
+        File walletDir = WalletHelper.getWalletDir(appContext);
+        String walletName = WalletHelper.generateWallet(longPassword, walletDir);
+        Encryption.Encryptor encryptor = new Encryption().new Encryptor()
+                .setUserAuthenticationRequired(true)
+                .encryptWalletPassword(walletName, longPassword);
+        assertTrue(encryptor.getEncryptedLongPassword() != null);
     }
 
 }

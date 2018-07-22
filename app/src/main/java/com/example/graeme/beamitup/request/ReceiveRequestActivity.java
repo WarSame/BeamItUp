@@ -5,22 +5,22 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.graeme.beamitup.AuthenticatorFragment;
+import com.example.graeme.beamitup.AuthenticatorFragment.OnUserAuthenticatedListener;
 import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
-import com.example.graeme.beamitup.eth.Eth;
-import com.example.graeme.beamitup.eth.EthPickerFragment;
+import com.example.graeme.beamitup.wallet.Wallet;
+import com.example.graeme.beamitup.wallet.WalletPickerFragment;
 
 import static com.example.graeme.beamitup.ndef.NdefMessaging.handlePushMessage;
 
-public class ReceiveRequestActivity extends Activity implements EthPickerFragment.onEthSelectedListener{
+public class ReceiveRequestActivity extends Activity implements WalletPickerFragment.onWalletSelectedListener{
     private static final String TAG = "ReceiveRequestActivity";
-    static final int MOBILE_AUTHENTICATE_REQUEST = 1;
-    Eth eth;
+    Wallet wallet;
     Request request;
 
     @Override
@@ -55,62 +55,45 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
             Intent landingPageIntent = new Intent(this, LandingPageActivity.class);
             startActivity(landingPageIntent);
         });
+
+        KeyguardManager kgm = (KeyguardManager) getApplication().getSystemService(Context.KEYGUARD_SERVICE);
+        AuthenticatorFragment authenticatorFragment = new AuthenticatorFragment.AuthenticatorFragmentBuilder()
+                .KGM(kgm)
+                .onUserAuthenticatedListener(onUserAuthenticatedListener)
+                .build();
+
+        getFragmentManager()
+                .beginTransaction()
+                .add(authenticatorFragment, "AuthenticatorFragment")
+                .commit();
+
         btnAcceptRequest.setOnClickListener(v->{
             v.setEnabled(false);
-            if (eth == null){
-                Toast.makeText(this, "You must select an eth account.", Toast.LENGTH_LONG).show();
+            if (wallet == null){
+                Toast.makeText(this, "You must select an wallet account.", Toast.LENGTH_LONG).show();
                 v.setEnabled(true);
                 return;
             }
-
-            authenticateMobileUser();
+            authenticatorFragment.authenticateMobileUser();
         });
     }
 
-    protected void authenticateMobileUser(){
-        KeyguardManager kgm = (KeyguardManager) getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
-        if (kgm == null){
-            return;
+    OnUserAuthenticatedListener onUserAuthenticatedListener = new OnUserAuthenticatedListener() {
+        @Override
+        public void onUserAuthenticated() {
+            Intent finishRequestIntent = new Intent(getApplicationContext(), FinishRequestActivity.class);
+            request.setFromID(wallet.getId());
+            finishRequestIntent.putExtra("request", request);
+
+            enableAcceptRequestButton();
+            startActivity(finishRequestIntent);
         }
 
-        Intent credIntent = kgm.createConfirmDeviceCredentialIntent("sometitle", "somedesc");
-        startActivityForResult(credIntent, MOBILE_AUTHENTICATE_REQUEST);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        Log.i(TAG, "requestCode = " + requestCode + " resultCode = " + resultCode);
-        Log.i(TAG,"request = " + request);
-        Log.i(TAG, "eth = " + eth);
-        switch (requestCode){
-            case MOBILE_AUTHENTICATE_REQUEST:
-                Log.i(TAG, "Handling authentication request");
-                handleMobileAuthenticateResponse(resultCode);
-                break;
+        @Override
+        public void onUserNotAuthenticated() {
+            enableAcceptRequestButton();
         }
-    }
-
-    private void handleMobileAuthenticateResponse(int resultCode) {
-        switch (resultCode){
-            case RESULT_OK:
-                Toast.makeText(this, "User authenticated", Toast.LENGTH_LONG).show();
-                Log.i(TAG, "User is authenticated");
-
-                Intent finishRequestIntent = new Intent(this, FinishRequestActivity.class);
-                request.setFromID(eth.getId());
-                finishRequestIntent.putExtra("request", request);
-
-                enableAcceptRequestButton();
-                startActivity(finishRequestIntent);
-                break;
-            case RESULT_CANCELED:
-                Toast.makeText(this, "User failed to authenticate", Toast.LENGTH_LONG).show();
-                Log.i(TAG, "User is not authenticated");
-
-                enableAcceptRequestButton();
-                break;
-        }
-    }
+    };
 
     private void enableAcceptRequestButton(){
         Button btnAcceptRequest = findViewById(R.id.btn_accept_request);
@@ -118,7 +101,7 @@ public class ReceiveRequestActivity extends Activity implements EthPickerFragmen
     }
 
     @Override
-    public void onEthSelected(Eth eth) {
-        this.eth = eth;
+    public void onWalletSelected(Wallet wallet) {
+        this.wallet = wallet;
     }
 }

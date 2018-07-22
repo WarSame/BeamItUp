@@ -24,14 +24,15 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".eth.AddEthActivity"
-            android:label="@string/title_activity_add_eth"
-            android:screenOrientation="portrait" />
+            android:name=".wallet.AddWalletActivity"
+            android:label="@string/title_activity_add_wallet"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".wallet.WalletListActivity">
+        </activity>
         <activity
             android:name=".request.CreateRequestActivity"
             android:label="@string/title_activity_create_request"
@@ -49,9 +50,7 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-
                 <data android:mimeType="com.example.graeme.beamitup/request" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -61,21 +60,18 @@
             android:parentActivityName=".LandingPageActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".eth.EthListActivity"
-            android:label="@string/title_activity_eth"
+            android:name=".wallet.WalletListActivity"
+            android:label="@string/title_activity_wallet"
             android:parentActivityName=".LandingPageActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.graeme.beamitup.LandingPageActivity" />
         </activity>
         <activity
-            android:name=".eth.EthDetailActivity"
-            android:label="@string/title_activity_eth_detail"
-            android:parentActivityName=".eth.EthListActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.graeme.beamitup.eth.EthListActivity" />
+            android:name=".wallet.WalletDetailActivity"
+            android:label="@string/title_activity_wallet_detail"
+            android:parentActivityName=".wallet.WalletListActivity">
         </activity>
+
+        <service android:name=".wallet.GenerateWalletService" />
+        <service android:name=".transaction.SendTransactionService" />
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.example.graeme.beamitup.eth;
+package com.example.graeme.beamitup.wallet;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -13,54 +13,54 @@ import com.example.graeme.beamitup.R;
 import java.util.List;
 import java.util.Locale;
 
-public class EthPickerAdapter extends ArrayAdapter {
+public class WalletPickerAdapter extends ArrayAdapter {
 
-    private List<Eth> eths;
+    private List<Wallet> wallets;
 
-    EthPickerAdapter(@NonNull Context context, @NonNull List<Eth> eths) {
-        super(context, 0, eths);
-        this.eths = eths;
+    WalletPickerAdapter(@NonNull Context context, @NonNull List<Wallet> wallets) {
+        super(context, 0, wallets);
+        this.wallets = wallets;
     }
 
     @Override
     public int getCount() {
-        return eths.size();
+        return wallets.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return eths.get(position);
+        return wallets.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return eths.get(position).getId();
+        return wallets.get(position).getId();
     }
 
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        Eth eth = (Eth)getItem(position);
+        Wallet wallet = (Wallet)getItem(position);
         if (convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(
-                    R.layout.frag_list_item_eth,
+                    R.layout.frag_list_item_wallet,
                     parent,
                     false
             );
         }
-        TextView tv_id = (TextView)convertView.findViewById(R.id.tv_eth_id);
-        TextView tv_nickname = (TextView)convertView.findViewById(R.id.tv_eth_nickname);
-        TextView tv_address = (TextView)convertView.findViewById(R.id.tv_eth_address);
+        TextView tv_id = (TextView)convertView.findViewById(R.id.tv_wallet_id);
+        TextView tv_nickname = (TextView)convertView.findViewById(R.id.tv_wallet_nickname);
+        TextView tv_address = (TextView)convertView.findViewById(R.id.tv_wallet_address);
 
-        if (eth == null){
+        if (wallet == null){
             tv_id.setText( String.format( Locale.CANADA, "%d", 0 ) );
             tv_nickname.setText( "" );
             tv_address.setText( "" );
         }
         else {
-            tv_id.setText( String.format( Locale.CANADA, "%d", eth.getId() ) );
-            tv_nickname.setText( eth.getNickname() );
-            tv_address.setText( eth.getAddress() );
+            tv_id.setText( String.format( Locale.CANADA, "%d", wallet.getId() ) );
+            tv_nickname.setText( wallet.getNickname() );
+            tv_address.setText( wallet.getAddress() );
         }
         return convertView;
     }

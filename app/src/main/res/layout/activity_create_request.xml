@@ -9,8 +9,8 @@
     android:layout_margin="16dp">
 
     <fragment
-        android:id="@+id/frag_eth_picker"
-        android:name="com.example.graeme.beamitup.eth.EthPickerFragment"
+        android:id="@+id/frag_wallet_picker"
+        android:name="com.example.graeme.beamitup.wallet.WalletPickerFragment"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         />
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:text="@string/tv_gas_cost_value"
             android:layout_weight="1"
-            android:id="@+id/tv_gas_cost"/>
+            android:id="@+id/tv_gas_cost_value"/>
     </LinearLayout>
 
     <Button

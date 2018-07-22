@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="16dp"
+    tools:context=".wallet.WalletDetailActivity">
+
+    <TextView
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/et_wallet_nickname"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/et_wallet_nickname"
+        android:layout_margin="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_wallet_nickname"
+        android:text="@string/tv_wallet_nickname" >
+    </TextView>
+
+    <EditText
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_wallet_nickname"
+        app:layout_constraintLeft_toRightOf="@+id/tv_wallet_nickname"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:layout_margin="8dp"
+        android:text="@string/et_wallet_nickname"
+        android:id="@+id/et_wallet_nickname"/>
+
+    <fragment
+        app:layout_constraintTop_toBottomOf="@+id/tv_wallet_nickname"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_margin="8dp"
+        android:name="com.example.graeme.beamitup.qr.CopyableQRImageFragment"
+        android:id="@+id/frag_qr_code_display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/frag_copyable_qrcode"
+        />
+
+    <fragment
+        app:layout_constraintTop_toBottomOf="@+id/frag_qr_code_display"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_margin="8dp"
+        android:name="com.example.graeme.beamitup.CopyableAddressFragment"
+        android:id="@+id/frag_copyable_text_display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/frag_copyable_address"
+        />
+
+    <Button
+        app:layout_constraintTop_toBottomOf="@+id/frag_copyable_text_display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="@string/btn_save_wallet"
+        android:layout_margin="8dp"
+        android:layout_gravity="center"
+        android:id="@+id/btn_save_wallet"/>
+
+</android.support.constraint.ConstraintLayout>

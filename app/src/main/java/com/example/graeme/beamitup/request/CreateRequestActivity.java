@@ -8,51 +8,59 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.R;
-import com.example.graeme.beamitup.eth.Eth;
-import com.example.graeme.beamitup.eth.EthPickerFragment.onEthSelectedListener;
-import com.example.graeme.beamitup.eth_tasks.DetermineGasPriceTask;
+import com.example.graeme.beamitup.wallet.Wallet;
+import com.example.graeme.beamitup.wallet.WalletPickerFragment.onWalletSelectedListener;
 
-public class CreateRequestActivity extends Activity implements onEthSelectedListener {
-    Eth eth;
+import org.web3j.protocol.Web3j;
+
+import static org.web3j.tx.Transfer.GAS_LIMIT;
+
+public class CreateRequestActivity extends Activity implements onWalletSelectedListener {
+    Wallet wallet;
+    private static final String TAG = "CreateRequestActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_request);
 
-        Button btnCreateRequest = (Button)findViewById(R.id.btn_create_request);
+        Button btnCreateRequest = findViewById(R.id.btn_create_request);
+
         btnCreateRequest.setOnClickListener((v)->{
-            EditText etAmount = (EditText)findViewById(R.id.et_amount_value);
+            EditText etAmount = findViewById(R.id.et_amount_value);
             String amount = etAmount.getText().toString();
 
             if (!isValidRequest(amount)){
                 return;
             }
 
-            readyRequestMessage(eth, amount);
+            readyRequestMessage(wallet, amount);
         });
 
-        new DetermineGasPriceTask((String gasCost) ->{
-            TextView tvGasCost = (TextView)findViewById(R.id.tv_gas_cost);
-            tvGasCost.setText(gasCost);
-        }).execute();
+        Web3j web3j = ((BeamItUp)getApplication()).getWeb3j();
+        web3j.ethGasPrice().observable().subscribe(price -> {
+            String transferCost = price.getGasPrice().multiply(GAS_LIMIT).toString();
+            TextView tv_gas_cost = findViewById(R.id.tv_gas_cost_value);
+            tv_gas_cost.setText(transferCost);
+        });
     }
 
-    private void readyRequestMessage(Eth eth, String amount) {
-        Request request = new Request(eth.getAddress(), amount);
+    private void readyRequestMessage(Wallet wallet, String amount) {
+        Request request = new Request(wallet.getAddress(), amount);
         Intent readyRequestIntent = new Intent(this, ReadyRequestActivity.class);
         readyRequestIntent.putExtra("request", request);
         startActivity(readyRequestIntent);
     }
 
     @Override
-    public void onEthSelected(Eth eth) {
-        this.eth = eth;
+    public void onWalletSelected(Wallet wallet) {
+        this.wallet = wallet;
     }
 
     private boolean isValidRequest(String amount){
-        return isValidAmount(amount) && isValidEth();
+        return isValidAmount(amount) && isValidWallet();
     }
 
     private boolean isValidAmount(String amount){
@@ -63,11 +71,11 @@ public class CreateRequestActivity extends Activity implements onEthSelectedList
         return isValidAmount;
     }
 
-    private boolean isValidEth(){
-        boolean isValidEth = eth != null;
-        if (!isValidEth) {
-            Toast.makeText(this, "Invalid eth.", Toast.LENGTH_LONG).show();
+    private boolean isValidWallet(){
+        boolean isValidWallet = wallet != null;
+        if (!isValidWallet) {
+            Toast.makeText(this, "Invalid wallet.", Toast.LENGTH_LONG).show();
         }
-        return isValidEth;
+        return isValidWallet;
     }
 }

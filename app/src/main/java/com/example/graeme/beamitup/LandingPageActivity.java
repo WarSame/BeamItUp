@@ -5,8 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
-import com.example.graeme.beamitup.eth.AddEthActivity;
-import com.example.graeme.beamitup.eth.EthListActivity;
+import com.example.graeme.beamitup.wallet.WalletListActivity;
 import com.example.graeme.beamitup.request.CreateRequestActivity;
 
 public class LandingPageActivity extends Activity {
@@ -16,15 +15,13 @@ public class LandingPageActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
 
-        Session.createSession();
-
-        Button btn_eth_list = findViewById(R.id.btn_eth_list);
+        Button btn_wallet_list = findViewById(R.id.btn_wallet_list);
         Button btn_create_request = findViewById(R.id.btn_create_request);
 
-        final Intent ethListIntent = new Intent(this, EthListActivity.class);
+        final Intent walletListIntent = new Intent(this, WalletListActivity.class);
         final Intent createRequestIntent = new Intent(this, CreateRequestActivity.class);
 
-        btn_eth_list.setOnClickListener(v -> startActivity(ethListIntent));
+        btn_wallet_list.setOnClickListener(v -> startActivity(walletListIntent));
 
         btn_create_request.setOnClickListener(v-> startActivity(createRequestIntent));
     }
