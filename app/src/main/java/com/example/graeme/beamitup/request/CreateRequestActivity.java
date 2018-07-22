@@ -12,12 +12,14 @@ import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.wallet.Wallet;
 import com.example.graeme.beamitup.wallet.WalletPickerFragment.onWalletSelectedListener;
-import com.example.graeme.beamitup.GasPriceTask;
 
 import org.web3j.protocol.Web3j;
 
+import static org.web3j.tx.Transfer.GAS_LIMIT;
+
 public class CreateRequestActivity extends Activity implements onWalletSelectedListener {
     Wallet wallet;
+    private static final String TAG = "CreateRequestActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +40,11 @@ public class CreateRequestActivity extends Activity implements onWalletSelectedL
         });
 
         Web3j web3j = ((BeamItUp)getApplication()).getWeb3j();
-        GasPriceTask.DetermineGasPriceResponse gasPriceResponse = (String gasCost) ->{
-            TextView tvGasCost = findViewById(R.id.tv_gas_cost_value);
-            tvGasCost.setText(gasCost);
-        };
-        new GasPriceTask(gasPriceResponse, web3j).execute();
+        web3j.ethGasPrice().observable().subscribe(price -> {
+            String transferCost = price.getGasPrice().multiply(GAS_LIMIT).toString();
+            TextView tv_gas_cost = findViewById(R.id.tv_gas_cost_value);
+            tv_gas_cost.setText(transferCost);
+        });
     }
 
     private void readyRequestMessage(Wallet wallet, String amount) {
