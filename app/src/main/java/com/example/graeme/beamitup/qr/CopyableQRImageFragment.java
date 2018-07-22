@@ -1,23 +1,23 @@
 package com.example.graeme.beamitup.qr;
 
+import android.app.Fragment;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.graeme.beamitup.Copyable;
+import com.example.graeme.beamitup.R;
+import com.google.zxing.WriterException;
 
-public class AbstractCopyableFragment extends Fragment implements Copyable {
-    private static final String ARG_FRAG_ID = "frag_id";
-    private static final String ARG_LABEL = "label";
-    private static final String ARG_DATA = "data";
-    private static final String ARG_VIEW_ID = "view_id";
+public class CopyableQRImageFragment extends Fragment implements Copyable {
+    private static final String ARG_WALLET_ADDRESS = "wallet_address";
 
-    public AbstractCopyableFragment() {
+    public CopyableQRImageFragment() {
         // Required empty public constructor
     }
 
@@ -25,16 +25,13 @@ public class AbstractCopyableFragment extends Fragment implements Copyable {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param data string to copy
-     * @return A new instance of fragment AbstractCopyableFragment.
+     * @param walletAddress - string to copy
+     * @return A new instance of fragment CopyableQRImageFragment.
      */
-    public static AbstractCopyableFragment newInstance(int fragID, String data, String label, int viewID) {
-        AbstractCopyableFragment fragment = new AbstractCopyableFragment();
+    public static CopyableQRImageFragment newInstance(String walletAddress) {
+        CopyableQRImageFragment fragment = new CopyableQRImageFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_FRAG_ID, fragID);
-        args.putString(ARG_DATA, data);
-        args.putString(ARG_LABEL, label);
-        args.putInt(ARG_VIEW_ID, viewID);
+        args.putString(ARG_WALLET_ADDRESS, walletAddress);
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,23 +45,30 @@ public class AbstractCopyableFragment extends Fragment implements Copyable {
             return;
         }
 
-        int fragID = getArguments().getInt(ARG_FRAG_ID);
-        String data = getArguments().getString(ARG_DATA);
-        String label = getArguments().getString(ARG_LABEL);
-        int viewID = getArguments().getInt(ARG_VIEW_ID);
+        String address = getArguments().getString(ARG_WALLET_ADDRESS);
 
-        View view = getActivity().findViewById(viewID);
+        ImageView qr = getActivity().findViewById(R.id.iv_qr_code);
+        QRImage qrImage = new QRImage(address);
+        try {
+            qr.setImageBitmap(qrImage.generateQRImage());
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
+
+        qr.setOnClickListener(
+                v -> copy("Wallet Address", qrImage.getAddress())
+        );
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(getArguments().getInt(ARG_FRAG_ID), container, false);
+        return inflater.inflate(R.layout.frag_copyable_qrcode, container, false);
     }
 
     @Override
-    public void copy() {
+    public void copy(String label, String data) {
         ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText(label, data);
         if (clipboard == null || clip == null){

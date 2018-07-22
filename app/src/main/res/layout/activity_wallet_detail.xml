@@ -36,11 +36,11 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_margin="8dp"
-        android:name="com.example.graeme.beamitup.AddressQRCodeDisplayFragment"
+        android:name="com.example.graeme.beamitup.qr.CopyableQRImageFragment"
         android:id="@+id/frag_qr_code_display"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:layout="@layout/frag_qrcode_display"
+        tools:layout="@layout/frag_copyable_qrcode"
         />
 
     <fragment
@@ -48,11 +48,11 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_margin="8dp"
-        android:name="com.example.graeme.beamitup.AddressCopyableTextDisplayFragment"
+        android:name="com.example.graeme.beamitup.CopyableAddressFragment"
         android:id="@+id/frag_copyable_text_display"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:layout="@layout/frag_address_copyable_text_display"
+        tools:layout="@layout/frag_copyable_address"
         />
 
     <Button

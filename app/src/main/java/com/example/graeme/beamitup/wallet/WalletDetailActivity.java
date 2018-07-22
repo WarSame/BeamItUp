@@ -8,12 +8,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.graeme.beamitup.AddressCopyableTextDisplayFragment;
+import com.example.graeme.beamitup.CopyableAddressFragment;
 import com.example.graeme.beamitup.BeamItUp;
-import com.example.graeme.beamitup.AddressQRCodeDisplayFragment;
 import com.example.graeme.beamitup.R;
-import com.example.graeme.beamitup.wallet.DaoSession;
-import com.example.graeme.beamitup.wallet.WalletDao;
+import com.example.graeme.beamitup.qr.CopyableQRImageFragment;
 
 public class WalletDetailActivity extends Activity {
 
@@ -27,12 +25,17 @@ public class WalletDetailActivity extends Activity {
         Wallet wallet = (Wallet) getIntent().getSerializableExtra("wallet");
         et_wallet_nickname.setText(wallet.getNickname());
 
-        Fragment qrCodeDisplayFragment = AddressQRCodeDisplayFragment.newInstance(wallet.getAddress());
-        Fragment addressCopyableTextDisplayFragment = AddressCopyableTextDisplayFragment.newInstance(wallet.getAddress());
+        Fragment qrCodeDisplayFragment = CopyableQRImageFragment.newInstance(
+                wallet.getAddress()
+        );
+
+        Fragment addressCopyableTextDisplayFragment = CopyableAddressFragment.newInstance(
+                wallet.getAddress()
+        );
         getFragmentManager()
                 .beginTransaction()
-                .add(qrCodeDisplayFragment, "AddressQRCodeDisplayFragment")
-                .add(addressCopyableTextDisplayFragment, "AddressCopyableTextDisplayFragment")
+                .add(qrCodeDisplayFragment, "CopyableQRImageFragment")
+                .add(addressCopyableTextDisplayFragment, "CopyableAddressFragment")
                 .commit();
 
         Button btn_save_wallet = findViewById(R.id.btn_save_wallet);

@@ -11,17 +11,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-public class AddressCopyableTextDisplayFragment extends Fragment {
+public class CopyableAddressFragment extends Fragment {
     private static final String ARG_WALLET_ADDRESS = "walletAddress";
     private static final int ADDRESS_DISPLAY_LENGTH = 8;
     private String walletAddress;
 
-    public AddressCopyableTextDisplayFragment() {
+    public CopyableAddressFragment() {
         // Required empty public constructor
     }
 
-    public static AddressCopyableTextDisplayFragment newInstance(String walletAddress) {
-        AddressCopyableTextDisplayFragment fragment = new AddressCopyableTextDisplayFragment();
+    public static CopyableAddressFragment newInstance(String walletAddress) {
+        CopyableAddressFragment fragment = new CopyableAddressFragment();
         Bundle args = new Bundle();
         args.putString(ARG_WALLET_ADDRESS, walletAddress);
         fragment.setArguments(args);
@@ -58,6 +58,6 @@ public class AddressCopyableTextDisplayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.frag_address_copyable_text_display, container, false);
+        return inflater.inflate(R.layout.frag_copyable_address, container, false);
     }
 }
