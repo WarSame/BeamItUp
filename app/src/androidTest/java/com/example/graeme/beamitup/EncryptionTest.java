@@ -19,12 +19,8 @@ public class EncryptionTest {
     private Context appContext;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         appContext = InstrumentationRegistry.getTargetContext();
-    }
-
-    @After
-    public void tearDown() throws Exception {
     }
 
     @Test
