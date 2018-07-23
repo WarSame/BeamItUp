@@ -19,7 +19,6 @@ import com.example.graeme.beamitup.wallet.WalletPickerFragment;
 
 import org.web3j.protocol.Web3j;
 import rx.schedulers.Schedulers;
-import com.example.graeme.beamitup.utils.AndroidSchedulers;
 
 import static org.web3j.tx.Transfer.GAS_LIMIT;
 
@@ -48,7 +47,7 @@ public class CreateRequestActivity extends Activity implements WalletPickerFragm
         Web3j web3j = ((BeamItUp)getApplication()).getWeb3j();
         web3j.ethGasPrice().observable()
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.from( runnable -> new Handler( Looper.getMainLooper() ).post(runnable) ))
                 .subscribe(price -> setGasPrice(price.getGasPrice().multiply(GAS_LIMIT).toString()),
                 Throwable::printStackTrace);
     }
