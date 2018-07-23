@@ -1,8 +1,12 @@
 package com.example.graeme.beamitup.request;
 
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -11,13 +15,15 @@ import android.widget.Toast;
 import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.wallet.Wallet;
-import com.example.graeme.beamitup.wallet.WalletPickerFragment.onWalletSelectedListener;
+import com.example.graeme.beamitup.wallet.WalletPickerFragment;
 
 import org.web3j.protocol.Web3j;
+import rx.schedulers.Schedulers;
+import com.example.graeme.beamitup.utils.AndroidSchedulers;
 
 import static org.web3j.tx.Transfer.GAS_LIMIT;
 
-public class CreateRequestActivity extends Activity implements onWalletSelectedListener {
+public class CreateRequestActivity extends Activity implements WalletPickerFragment.onWalletSelectedListener {
     Wallet wallet;
     private static final String TAG = "CreateRequestActivity";
 
@@ -40,11 +46,17 @@ public class CreateRequestActivity extends Activity implements onWalletSelectedL
         });
 
         Web3j web3j = ((BeamItUp)getApplication()).getWeb3j();
-        web3j.ethGasPrice().observable().subscribe(price -> {
-            String transferCost = price.getGasPrice().multiply(GAS_LIMIT).toString();
-            TextView tv_gas_cost = findViewById(R.id.tv_gas_cost_value);
-            tv_gas_cost.setText(transferCost);
-        });
+        web3j.ethGasPrice().observable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(price -> setGasPrice(price.getGasPrice().multiply(GAS_LIMIT).toString()),
+                Throwable::printStackTrace);
+    }
+
+    private void setGasPrice(String gasPrice){
+        Log.i(TAG, "Setting gas price to " + gasPrice);
+        TextView tv_gas_cost = findViewById(R.id.tv_gas_cost_value);
+        tv_gas_cost.setText(gasPrice);
     }
 
     private void readyRequestMessage(Wallet wallet, String amount) {
