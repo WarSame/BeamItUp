@@ -1,14 +1,14 @@
 
 echo "here"
 
-#clean
+rem clean
 .\gradlew clean --stacktrace
 
-# build
+rem build
 .\gradlew assembleDebug --stacktrace
 
-#test
+rem test
 .\gradlew testDebugUnitTest --stacktrace
 
-#report
+rem report
 mkdir report\test-results
