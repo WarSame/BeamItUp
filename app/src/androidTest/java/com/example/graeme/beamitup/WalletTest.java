@@ -15,8 +15,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Scanner;
 
-public class WalletHelperTest {
-    private static final String TAG = "WalletHelperTest";
+public class WalletTest {
+    private static final String TAG = "WalletTest";
     private static final String TO_ADDRESS = "0x31B98D14007bDEe637298086988A0bBd31184523";
     private static final String TRANSACTION_VALUE = "0.01";
     private static final String FILL_EMPTY_WALLET_VALUE = "0.5";
