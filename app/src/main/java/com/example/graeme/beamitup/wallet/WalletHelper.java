@@ -3,7 +3,6 @@ package com.example.graeme.beamitup.wallet;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.graeme.beamitup.Encryption;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
@@ -11,17 +10,20 @@ import org.web3j.crypto.WalletUtils;
 import java.io.File;
 import java.io.IOException;
 
+import encryption.Decryptor;
+
 public class WalletHelper {
     private static final String TAG = "WalletHelper";
     private static final String WALLET_DIR_RELATIVE_PATH = "/wallets";
 
     public static Credentials retrieveCredentials(Wallet wallet, File walletFile) throws Exception {
         Log.i(TAG, "Wallet file location: " + walletFile);
-        String longPassword = new Encryption().new Decryptor().decryptWalletPassword(
-                wallet.getEncryptedLongPassword(),
-                wallet.getIV(),
-                wallet.getWalletName()
-        );
+        String longPassword = new Decryptor.DecryptorBuilder()
+                .setWalletName(wallet.getWalletName())
+                .setIV(wallet.getIV())
+                .setEncryptedLongPassword(wallet.getEncryptedLongPassword())
+                .build()
+                .decryptWalletPassword();
         Log.i(TAG, "Wallet retrieved");
         return WalletUtils.loadCredentials(longPassword, walletFile);
     }

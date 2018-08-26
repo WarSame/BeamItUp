@@ -10,13 +10,10 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.example.graeme.beamitup.BeamItUp;
-import com.example.graeme.beamitup.Encryption;
+import encryption.Encryption;
+import encryption.Encryptor;
+
 import com.example.graeme.beamitup.R;
-import com.example.graeme.beamitup.wallet.DaoSession;
-import com.example.graeme.beamitup.wallet.Wallet;
-import com.example.graeme.beamitup.wallet.WalletDao;
-import com.example.graeme.beamitup.wallet.WalletDetailActivity;
-import com.example.graeme.beamitup.wallet.WalletHelper;
 
 import org.web3j.crypto.Credentials;
 
@@ -65,7 +62,7 @@ public class GenerateWalletService extends IntentService {
         File walletFile = WalletHelper.getWalletFile(this, walletName);
         Credentials credentials = WalletHelper.retrieveCredentials(walletFile, longPassword);
 
-        Encryption.Encryptor encryptor = new Encryption().new Encryptor()
+        Encryptor encryptor = new Encryptor()
                 .encryptWalletPassword(walletName, longPassword);
 
         Wallet wallet = new Wallet.WalletBuilder()
