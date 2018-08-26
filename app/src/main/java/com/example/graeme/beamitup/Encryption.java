@@ -2,6 +2,7 @@ package com.example.graeme.beamitup;
 
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
+import android.security.keystore.UserNotAuthenticatedException;
 import android.util.Log;
 
 import java.security.Key;
@@ -44,7 +45,7 @@ public class Encryption {
     //Encrypt long password with key
     //Store encrypted blob in DB
     public class Encryptor{
-        private boolean isUserAuthenticationRequired = false;
+        private boolean isUserAuthenticationRequired = true;
         private byte[] IV;
         private String walletName;
         private byte[] encryptedLongPassword;

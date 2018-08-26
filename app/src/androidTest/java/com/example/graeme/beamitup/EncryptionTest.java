@@ -24,11 +24,12 @@ public class EncryptionTest {
     }
 
     @Test
-    public void encryptWalletPassword_AuthenticationNotRequired_Filled() throws Exception {
+    public void encryptWalletPassword_AuthenticationNotRequired_EncryptedLongPasswordIsSet() throws Exception {
         String longPassword = Encryption.generateLongRandomString();
         File walletDir = WalletHelper.getWalletDir(appContext);
         String walletName = WalletHelper.generateWallet(longPassword, walletDir);
         Encryption.Encryptor encryptor = new Encryption().new Encryptor()
+                .setUserAuthenticationRequired(false)
                 .encryptWalletPassword(walletName, longPassword);
         assertTrue(encryptor.getEncryptedLongPassword() != null);
     }

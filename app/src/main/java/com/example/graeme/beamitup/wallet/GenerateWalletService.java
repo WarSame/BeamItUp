@@ -65,8 +65,7 @@ public class GenerateWalletService extends IntentService {
         File walletFile = WalletHelper.getWalletFile(this, walletName);
         Credentials credentials = WalletHelper.retrieveCredentials(walletFile, longPassword);
 
-        Encryption encryption = new Encryption();
-        Encryption.Encryptor encryptor = encryption.new Encryptor()
+        Encryption.Encryptor encryptor = new Encryption().new Encryptor()
                 .encryptWalletPassword(walletName, longPassword);
 
         Wallet wallet = new Wallet.WalletBuilder()
