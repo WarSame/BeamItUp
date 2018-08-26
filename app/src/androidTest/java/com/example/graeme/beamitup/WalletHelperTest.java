@@ -5,7 +5,7 @@ import android.support.test.InstrumentationRegistry;
 import android.util.Log;
 
 import com.example.graeme.beamitup.request.Request;
-import com.example.graeme.beamitup.wallet.WalletHelper;
+import com.example.graeme.beamitup.wallet.Wallet;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -31,9 +31,9 @@ public class WalletHelperTest {
     public static void setUpOneTime() throws Exception{
         appContext = InstrumentationRegistry.getTargetContext();
 
-        File walletDir = WalletHelper.getWalletDir(appContext);
-        emptyWalletName = WalletHelper.generateWallet("", walletDir);
-        filledWalletName = WalletHelper.generateWallet("", walletDir);
+        File walletDir = Wallet.getWalletDir(appContext);
+        emptyWalletName = Wallet.generateWallet("", walletDir);
+        filledWalletName = Wallet.generateWallet("", walletDir);
         Log.i(TAG, "walletName: " + emptyWalletName);
         Log.i(TAG, "other wallet name: " + filledWalletName);
 

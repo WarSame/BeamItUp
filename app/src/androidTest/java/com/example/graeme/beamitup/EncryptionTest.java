@@ -4,7 +4,7 @@ import android.content.Context;
 import android.security.keystore.UserNotAuthenticatedException;
 import android.support.test.InstrumentationRegistry;
 
-import com.example.graeme.beamitup.wallet.WalletHelper;
+import com.example.graeme.beamitup.wallet.Wallet;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,8 +29,8 @@ public class EncryptionTest {
     @Test
     public void encryptWalletPassword_AuthenticationNotRequired_EncryptedLongPasswordIsSet() throws Exception {
         String longPassword = Encryption.generateLongRandomString();
-        File walletDir = WalletHelper.getWalletDir(appContext);
-        String walletName = WalletHelper.generateWallet(longPassword, walletDir);
+        File walletDir = Wallet.getWalletDir(appContext);
+        String walletName = Wallet.generateWallet(longPassword, walletDir);
         Encryptor encryptor = new Encryptor()
                 .setUserAuthenticationRequired(false)
                 .encryptWalletPassword(walletName, longPassword);
@@ -40,8 +40,8 @@ public class EncryptionTest {
     @Test(expected = UserNotAuthenticatedException.class)
     public void encryptWalletPassword_AuthenticationRequired_UserNotAuthenticatedException() throws Exception {
         String longPassword = Encryption.generateLongRandomString();
-        File walletDir = WalletHelper.getWalletDir(appContext);
-        String walletName = WalletHelper.generateWallet(longPassword, walletDir);
+        File walletDir = Wallet.getWalletDir(appContext);
+        String walletName = Wallet.generateWallet(longPassword, walletDir);
         Encryptor encryptor = new Encryptor()
                 .setUserAuthenticationRequired(true)
                 .encryptWalletPassword(walletName, longPassword);
@@ -51,8 +51,8 @@ public class EncryptionTest {
     @Test
     public void decryptWalletPassword_AuthenticationNotRequired_ReturnsGivenString() throws Exception {
         String longPassword = Encryption.generateLongRandomString();
-        File walletDir = WalletHelper.getWalletDir(appContext);
-        String walletName = WalletHelper.generateWallet(longPassword, walletDir);
+        File walletDir = Wallet.getWalletDir(appContext);
+        String walletName = Wallet.generateWallet(longPassword, walletDir);
         Encryptor encryptor = new Encryptor()
                 .setUserAuthenticationRequired(false)
                 .encryptWalletPassword(walletName, longPassword);
@@ -70,8 +70,8 @@ public class EncryptionTest {
     @Test(expected = UserNotAuthenticatedException.class)
     public void decryptWalletPassword_AuthenticationRequired_UserNotAuthenticatedException() throws Exception {
         String longPassword = Encryption.generateLongRandomString();
-        File walletDir = WalletHelper.getWalletDir(appContext);
-        String walletName = WalletHelper.generateWallet(longPassword, walletDir);
+        File walletDir = Wallet.getWalletDir(appContext);
+        String walletName = Wallet.generateWallet(longPassword, walletDir);
 
         Encryptor encryptor = new Encryptor()
                 .setUserAuthenticationRequired(true)

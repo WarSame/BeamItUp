@@ -1,14 +1,25 @@
 package com.example.graeme.beamitup.wallet;
 
+import android.content.Context;
+import android.util.Log;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import org.greenrobot.greendao.annotation.Generated;
+import org.web3j.crypto.Credentials;
+import org.web3j.crypto.WalletUtils;
+
+import encryption.Decryptor;
 
 @Entity
 public class Wallet implements Serializable {
     private static final long serialVersionUID = -4347720392132901969L;
+    private static final String TAG = "Wallet";
+    private static final String WALLET_DIR_RELATIVE_PATH = "/wallets";
 
     private String nickname;
     private String address;
@@ -36,6 +47,44 @@ public class Wallet implements Serializable {
         this.walletName = walletBuilder.getWalletName();
         this.encryptedLongPassword = walletBuilder.getEncryptedLongPassword();
         this.IV = walletBuilder.getIV();
+    }
+
+
+    public static Credentials retrieveCredentials(Wallet wallet, File walletFile) throws Exception {
+        Log.i(TAG, "Wallet file location: " + walletFile);
+        String longPassword = new Decryptor.DecryptorBuilder()
+                .setWalletName(wallet.getWalletName())
+                .setIV(wallet.getIV())
+                .setEncryptedLongPassword(wallet.getEncryptedLongPassword())
+                .build()
+                .decryptWalletPassword();
+        Log.i(TAG, "Wallet retrieved");
+        return WalletUtils.loadCredentials(longPassword, walletFile);
+    }
+
+    public static Credentials retrieveCredentials(File walletFile, String longPassword) throws Exception{
+        Log.i(TAG, "Wallet file location: " + walletFile);
+        Credentials credentials = WalletUtils.loadCredentials(longPassword, walletFile);
+        Log.i(TAG, "Wallet retrieved");
+        return credentials;
+    }
+
+    public static String generateWallet(String longPassword, File walletDir) throws Exception {
+        return WalletUtils.generateLightNewWalletFile(longPassword, walletDir);
+    }
+
+    public static File getWalletFile(Context context, String walletName) throws Exception {
+        return new File(getWalletDir(context) + "/" + walletName);
+    }
+
+    public static File getWalletDir(Context context) throws IOException {
+        File walletDir = new File(context.getFilesDir() + WALLET_DIR_RELATIVE_PATH);
+        if (!walletDir.exists()){
+            if ( !walletDir.mkdir() ){
+                throw new IOException();
+            }
+        }
+        return walletDir;
     }
 
     @Generated(hash = 1197745249)

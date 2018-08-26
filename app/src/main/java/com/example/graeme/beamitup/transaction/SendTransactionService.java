@@ -10,7 +10,6 @@ import com.example.graeme.beamitup.wallet.DaoSession;
 import com.example.graeme.beamitup.wallet.Wallet;
 import com.example.graeme.beamitup.wallet.WalletDao;
 import com.example.graeme.beamitup.request.Request;
-import com.example.graeme.beamitup.wallet.WalletHelper;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
@@ -68,7 +67,7 @@ public class SendTransactionService extends IntentService {
     }
 
     private Credentials retrieveWallet(Wallet wallet) throws Exception {
-        File walletFile = WalletHelper.getWalletFile(this, wallet.getWalletName());
-        return WalletHelper.retrieveCredentials(wallet, walletFile);
+        File walletFile = Wallet.getWalletFile(this, wallet.getWalletName());
+        return Wallet.retrieveCredentials(wallet, walletFile);
     }
 }

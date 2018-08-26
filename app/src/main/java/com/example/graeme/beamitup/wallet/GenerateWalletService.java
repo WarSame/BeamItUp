@@ -44,8 +44,8 @@ public class GenerateWalletService extends IntentService {
 
         String longPassword = Encryption.generateLongRandomString();
         try {
-            File walletDir = WalletHelper.getWalletDir(this);
-            String walletName = WalletHelper.generateWallet(longPassword, walletDir);
+            File walletDir = Wallet.getWalletDir(this);
+            String walletName = Wallet.generateWallet(longPassword, walletDir);
             Wallet wallet = handleWalletCreation(walletName, nickname, longPassword);
             onCreateWalletSuccess(wallet);
         } catch (Exception e) {
@@ -59,8 +59,8 @@ public class GenerateWalletService extends IntentService {
     }
 
     private Wallet handleWalletCreation(String walletName, String nickname, String longPassword) throws Exception{
-        File walletFile = WalletHelper.getWalletFile(this, walletName);
-        Credentials credentials = WalletHelper.retrieveCredentials(walletFile, longPassword);
+        File walletFile = Wallet.getWalletFile(this, walletName);
+        Credentials credentials = Wallet.retrieveCredentials(walletFile, longPassword);
 
         Encryptor encryptor = new Encryptor()
                 .encryptWalletPassword(walletName, longPassword);
