@@ -18,7 +18,6 @@ public class Encryptor{
     private final String TAG = "Encryptor";
     private boolean isUserAuthenticationRequired = true;
     private byte[] IV;
-    private String walletName;
     private byte[] encryptedLongPassword;
 
     public Encryptor(){
@@ -96,15 +95,6 @@ public class Encryptor{
 
     public Encryptor setIV(byte[] IV){
         this.IV = IV;
-        return this;
-    }
-
-    public String getWalletName() {
-        return walletName;
-    }
-
-    public Encryptor setWalletName(String walletName) {
-        this.walletName = walletName;
         return this;
     }
 }

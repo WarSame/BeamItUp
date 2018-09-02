@@ -14,6 +14,8 @@ import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 
 import encryption.Decryptor;
+import encryption.Encryption;
+import encryption.Encryptor;
 
 @Entity
 public class Wallet implements Serializable {
@@ -26,58 +28,43 @@ public class Wallet implements Serializable {
     private String walletName;
     private byte[] encryptedLongPassword;
     private byte[] IV;
+    private File walletFile;
 
     @Id(autoincrement = true)
     private Long id;
 
-    @Generated(hash = 1077495790)
-    public Wallet(String nickname, String address, String walletName,
-            byte[] encryptedLongPassword, byte[] IV, Long id) {
-        this.nickname = nickname;
-        this.address = address;
-        this.walletName = walletName;
-        this.encryptedLongPassword = encryptedLongPassword;
-        this.IV = IV;
-        this.id = id;
-    }
-
-    private Wallet(WalletBuilder walletBuilder){
+    private Wallet(WalletBuilder walletBuilder) throws Exception{
         this.nickname = walletBuilder.getNickname();
-        this.address = walletBuilder.getAddress();
-        this.walletName = walletBuilder.getWalletName();
-        this.encryptedLongPassword = walletBuilder.getEncryptedLongPassword();
-        this.IV = walletBuilder.getIV();
+        Context context = walletBuilder.getContext();
+
+        String longPassword = Encryption.generateLongRandomString();
+        this.walletName = WalletUtils.generateLightNewWalletFile(longPassword, getWalletDir(context));
+        Encryptor encryptor = new Encryptor()
+                .encryptWalletPassword(walletName, longPassword);
+        this.IV = encryptor.getIV();
+        this.encryptedLongPassword = encryptor.getEncryptedLongPassword();
+        this.walletFile = getWalletFile(context, walletName);
+
+        this.address = retrieveCredentials().getAddress();
     }
 
-
-    public static Credentials retrieveCredentials(Wallet wallet, File walletFile) throws Exception {
+    public Credentials retrieveCredentials() throws Exception {
         Log.i(TAG, "Wallet file location: " + walletFile);
         String longPassword = new Decryptor.DecryptorBuilder()
-                .setWalletName(wallet.getWalletName())
-                .setIV(wallet.getIV())
-                .setEncryptedLongPassword(wallet.getEncryptedLongPassword())
+                .setWalletName(this.walletName)
+                .setIV(this.IV)
+                .setEncryptedLongPassword(this.encryptedLongPassword)
                 .build()
                 .decryptWalletPassword();
         Log.i(TAG, "Wallet retrieved");
         return WalletUtils.loadCredentials(longPassword, walletFile);
     }
 
-    public static Credentials retrieveCredentials(File walletFile, String longPassword) throws Exception{
-        Log.i(TAG, "Wallet file location: " + walletFile);
-        Credentials credentials = WalletUtils.loadCredentials(longPassword, walletFile);
-        Log.i(TAG, "Wallet retrieved");
-        return credentials;
-    }
-
-    public static String generateWallet(String longPassword, File walletDir) throws Exception {
-        return WalletUtils.generateLightNewWalletFile(longPassword, walletDir);
-    }
-
-    public static File getWalletFile(Context context, String walletName) throws Exception {
+    private File getWalletFile(Context context, String walletName) throws IOException {
         return new File(getWalletDir(context) + "/" + walletName);
     }
 
-    public static File getWalletDir(Context context) throws IOException {
+    private File getWalletDir(Context context) throws IOException {
         File walletDir = new File(context.getFilesDir() + WALLET_DIR_RELATIVE_PATH);
         if (!walletDir.exists()){
             if ( !walletDir.mkdir() ){
@@ -142,14 +129,11 @@ public class Wallet implements Serializable {
 
     public static class WalletBuilder{
         private String nickname;
-        private String address;
-        private String walletName;
-        private byte[] encryptedLongPassword;
-        private byte[] IV;
+        private Context context;
 
         public WalletBuilder(){}
 
-        public Wallet build(){
+        public Wallet build() throws Exception {
             return new Wallet(this);
         }
 
@@ -157,20 +141,8 @@ public class Wallet implements Serializable {
             return nickname;
         }
 
-        String getAddress() {
-            return address;
-        }
-
-        String getWalletName() {
-            return walletName;
-        }
-
-        byte[] getEncryptedLongPassword() {
-            return encryptedLongPassword;
-        }
-
-        byte[] getIV() {
-            return IV;
+        public Context getContext() {
+            return context;
         }
 
         public WalletBuilder nickname(String nickname) {
@@ -178,23 +150,8 @@ public class Wallet implements Serializable {
             return this;
         }
 
-        public WalletBuilder address(String address) {
-            this.address = address;
-            return this;
-        }
-
-        public WalletBuilder walletName(String walletName) {
-            this.walletName = walletName;
-            return this;
-        }
-
-        public WalletBuilder encryptedLongPassword(byte[] encryptedLongPassword) {
-            this.encryptedLongPassword = encryptedLongPassword;
-            return this;
-        }
-
-        public WalletBuilder IV(byte[] IV) {
-            this.IV = IV;
+        public WalletBuilder context(Context context){
+            this.context = context;
             return this;
         }
     }

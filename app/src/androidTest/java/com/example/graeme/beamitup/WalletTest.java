@@ -20,9 +20,6 @@ public class WalletTest {
     private static final String TO_ADDRESS = "0x31B98D14007bDEe637298086988A0bBd31184523";
     private static final String TRANSACTION_VALUE = "0.01";
     private static final String FILL_EMPTY_WALLET_VALUE = "0.5";
-    private static String emptyWalletName;
-    private static String filledWalletName;
-    private static Request request;
     private static final String SECRETS_FILE = "eth.secrets";
 
     private static Context appContext;
@@ -31,13 +28,17 @@ public class WalletTest {
     public static void setUpOneTime() throws Exception{
         appContext = InstrumentationRegistry.getTargetContext();
 
-        File walletDir = Wallet.getWalletDir(appContext);
-        emptyWalletName = Wallet.generateWallet("", walletDir);
-        filledWalletName = Wallet.generateWallet("", walletDir);
-        Log.i(TAG, "walletName: " + emptyWalletName);
-        Log.i(TAG, "other wallet name: " + filledWalletName);
+        Wallet emptyWallet = new Wallet.WalletBuilder()
+                .nickname("my empty wallet")
+                .context(appContext)
+                .build();
 
-        request = new Request(TO_ADDRESS, TRANSACTION_VALUE);
+        Wallet filledWallet = new Wallet.WalletBuilder()
+                .nickname("my filled wallet")
+                .context(appContext)
+                .build();
+
+        Request request = new Request(TO_ADDRESS, TRANSACTION_VALUE);
     }
 
     private static Credentials retrieveMasterCredentials() throws  Exception {
@@ -59,6 +60,7 @@ public class WalletTest {
     public void sendFundsFromNotEmptyWallet_ShouldBeFilledTransactionReceipt() throws Exception {
     }
 
-    private void fillEmptyWallet(Credentials credentials) throws Exception {
+    private void fillWallet(Credentials credentials) throws Exception {
+
     }
 }
