@@ -4,63 +4,52 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.util.Log;
 
-import com.example.graeme.beamitup.request.Request;
 import com.example.graeme.beamitup.wallet.Wallet;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.web3j.crypto.Credentials;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.Scanner;
+import java.util.Arrays;
+
+import static junit.framework.Assert.assertTrue;
 
 public class WalletTest {
     private static final String TAG = "WalletTest";
-    private static final String TO_ADDRESS = "0x31B98D14007bDEe637298086988A0bBd31184523";
-    private static final String TRANSACTION_VALUE = "0.01";
-    private static final String FILL_EMPTY_WALLET_VALUE = "0.5";
-    private static final String SECRETS_FILE = "eth.secrets";
 
     private static Context appContext;
 
     @BeforeClass
     public static void setUpOneTime() throws Exception{
         appContext = InstrumentationRegistry.getTargetContext();
-
-        Wallet emptyWallet = new Wallet.WalletBuilder()
-                .nickname("my empty wallet")
-                .context(appContext)
-                .build();
-
-        Wallet filledWallet = new Wallet.WalletBuilder()
-                .nickname("my filled wallet")
-                .context(appContext)
-                .build();
-
-        Request request = new Request(TO_ADDRESS, TRANSACTION_VALUE);
-    }
-
-    private static Credentials retrieveMasterCredentials() throws  Exception {
-        return Credentials.create(retrieveMasterPrivateKey());
-    }
-
-    private static String retrieveMasterPrivateKey() throws Exception {
-        Context testContext = InstrumentationRegistry.getInstrumentation().getContext();
-        InputStream testInput = testContext.getAssets().open(SECRETS_FILE);
-        Scanner in = new Scanner(testInput);
-        return in.next();
     }
 
     @Test
-    public void sendFundsFromEmptyWallet_ShouldBeNullTransactionReceipt() throws Exception{
+    public void createWallet_ShouldBeWallet() throws Exception{
+        String nickname = "some nickname";
+        Wallet wallet = new Wallet.WalletBuilder()
+                .nickname(nickname)
+                .context(appContext)
+                .isUserAuthenticationRequired(false)
+                .build();
+
+        Log.d(TAG, "Wallet nickname: " + wallet.getNickname());
+        assertTrue(wallet.getNickname().equals(nickname));
+
+        Log.d(TAG, "Wallet address: " + wallet.getAddress());
+        assertTrue(wallet.getAddress() != null);
+
+        Log.d(TAG, "Wallet name: " + wallet.getFileName());
+        assertTrue(wallet.getFileName() != null);
+
+        Log.d(TAG, "Wallet location: " + wallet.getLocation());
+        assertTrue(wallet.getLocation() != null);
+        assertTrue(wallet.getLocation().contains(Wallet.WALLET_DIR_RELATIVE_PATH));
+
+        Log.d(TAG, "Wallet encrypted long password: " + Arrays.toString(wallet.getEncryptedLongPassword()));
+        assertTrue(wallet.getEncryptedLongPassword() != null);
+
+        Log.d(TAG, "Wallet IV: " + Arrays.toString(wallet.getIV()));
+        assertTrue(wallet.getIV() != null);
     }
 
-    @Test
-    public void sendFundsFromNotEmptyWallet_ShouldBeFilledTransactionReceipt() throws Exception {
-    }
-
-    private void fillWallet(Credentials credentials) throws Exception {
-
-    }
 }

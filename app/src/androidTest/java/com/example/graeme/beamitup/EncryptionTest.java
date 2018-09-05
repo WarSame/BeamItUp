@@ -9,11 +9,7 @@ import com.example.graeme.beamitup.wallet.Wallet;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-
 import encryption.Decryptor;
-import encryption.Encryption;
-import encryption.Encryptor;
 
 import static junit.framework.Assert.assertTrue;
 
@@ -28,63 +24,56 @@ public class EncryptionTest {
 
     @Test
     public void encryptWalletPassword_AuthenticationNotRequired_EncryptedLongPasswordIsSet() throws Exception {
-        String longPassword = Encryption.generateLongRandomString();
-        File walletDir = Wallet.getWalletDir(appContext);
-        String walletName = Wallet.generateWallet(longPassword, walletDir);
-        Encryptor encryptor = new Encryptor()
-                .setUserAuthenticationRequired(false)
-                .encryptWalletPassword(walletName, longPassword);
-        assertTrue(encryptor.getEncryptedLongPassword() != null);
+        Wallet wallet = new Wallet.WalletBuilder()
+                .nickname("somewallet")
+                .context(appContext)
+                .isUserAuthenticationRequired(false)
+                .build();
+        assertTrue(wallet.getEncryptedLongPassword() != null);
     }
 
     @Test(expected = UserNotAuthenticatedException.class)
     public void encryptWalletPassword_AuthenticationRequired_UserNotAuthenticatedException() throws Exception {
-        String longPassword = Encryption.generateLongRandomString();
-        File walletDir = Wallet.getWalletDir(appContext);
-        String walletName = Wallet.generateWallet(longPassword, walletDir);
-        Encryptor encryptor = new Encryptor()
-                .setUserAuthenticationRequired(true)
-                .encryptWalletPassword(walletName, longPassword);
-        assertTrue(encryptor.getEncryptedLongPassword() != null);
+        Wallet wallet = new Wallet.WalletBuilder()
+                .nickname("somewallet")
+                .context(appContext)
+                .build();
+        assertTrue(wallet.getEncryptedLongPassword() != null);
     }
 
     @Test
     public void decryptWalletPassword_AuthenticationNotRequired_ReturnsGivenString() throws Exception {
-        String longPassword = Encryption.generateLongRandomString();
-        File walletDir = Wallet.getWalletDir(appContext);
-        String walletName = Wallet.generateWallet(longPassword, walletDir);
-        Encryptor encryptor = new Encryptor()
-                .setUserAuthenticationRequired(false)
-                .encryptWalletPassword(walletName, longPassword);
+        Wallet wallet = new Wallet.WalletBuilder()
+                .nickname("somewallet")
+                .context(appContext)
+                .isUserAuthenticationRequired(false)
+                .build();
 
         String unencryptedLongPassword = new Decryptor.DecryptorBuilder()
-                .setEncryptedLongPassword(encryptor.getEncryptedLongPassword())
-                .setIV(encryptor.getIV())
-                .setWalletName(walletName)
+                .setEncryptedLongPassword(wallet.getEncryptedLongPassword())
+                .setIV(wallet.getIV())
+                .setWalletName(wallet.getFileName())
                 .build()
                 .decryptWalletPassword();
 
-        assertTrue(unencryptedLongPassword.equals(longPassword));
+        assertTrue(unencryptedLongPassword != null);
     }
 
     @Test(expected = UserNotAuthenticatedException.class)
     public void decryptWalletPassword_AuthenticationRequired_UserNotAuthenticatedException() throws Exception {
-        String longPassword = Encryption.generateLongRandomString();
-        File walletDir = Wallet.getWalletDir(appContext);
-        String walletName = Wallet.generateWallet(longPassword, walletDir);
-
-        Encryptor encryptor = new Encryptor()
-                .setUserAuthenticationRequired(true)
-                .encryptWalletPassword(walletName, longPassword);
+        Wallet wallet = new Wallet.WalletBuilder()
+                .nickname("somewallet")
+                .context(appContext)
+                .build();
 
         String unencryptedLongPassword = new Decryptor.DecryptorBuilder()
-                .setEncryptedLongPassword(encryptor.getEncryptedLongPassword())
-                .setIV(encryptor.getIV())
-                .setWalletName(walletName)
+                .setEncryptedLongPassword(wallet.getEncryptedLongPassword())
+                .setIV(wallet.getIV())
+                .setWalletName(wallet.getFileName())
                 .build()
                 .decryptWalletPassword();
 
-        assertTrue(unencryptedLongPassword.equals(longPassword));
+        assertTrue(unencryptedLongPassword != null);
     }
 
 }

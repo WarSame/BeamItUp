@@ -10,14 +10,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.example.graeme.beamitup.BeamItUp;
-import encryption.Encryption;
-import encryption.Encryptor;
-
 import com.example.graeme.beamitup.R;
-
-import org.web3j.crypto.Credentials;
-
-import java.io.File;
 
 public class GenerateWalletService extends IntentService {
     private static final String TAG = "GenerateWalletService";
@@ -42,11 +35,8 @@ public class GenerateWalletService extends IntentService {
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
         notificationManagerCompat.notify(id, builder.build());
 
-        String longPassword = Encryption.generateLongRandomString();
         try {
-            File walletDir = Wallet.getWalletDir(this);
-            String walletName = Wallet.generateWallet(longPassword, walletDir);
-            Wallet wallet = handleWalletCreation(walletName, nickname, longPassword);
+            Wallet wallet = handleWalletCreation(nickname);
             onCreateWalletSuccess(wallet);
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,19 +48,10 @@ public class GenerateWalletService extends IntentService {
         super("GenerateWalletService");
     }
 
-    private Wallet handleWalletCreation(String walletName, String nickname, String longPassword) throws Exception{
-        File walletFile = Wallet.getWalletFile(this, walletName);
-        Credentials credentials = Wallet.retrieveCredentials(walletFile, longPassword);
-
-        Encryptor encryptor = new Encryptor()
-                .encryptWalletPassword(walletName, longPassword);
-
+    private Wallet handleWalletCreation(String nickname) throws Exception{
         Wallet wallet = new Wallet.WalletBuilder()
             .nickname(nickname)
-            .address(credentials.getAddress())
-            .walletName(walletName)
-            .encryptedLongPassword(encryptor.getEncryptedLongPassword())
-            .IV(encryptor.getIV())
+            .context(this)
             .build();
 
         insertWallet(wallet);

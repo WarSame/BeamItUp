@@ -41,7 +41,7 @@ public class SendTransactionService extends IntentService {
 
         TransactionReceipt receipt;
         try {
-            Credentials credentials = retrieveWallet(wallet);
+            Credentials credentials = wallet.retrieveCredentials();
             Log.d(TAG, "Sender address: " + credentials.getAddress());
 
             receipt = org.web3j.tx.Transfer.sendFunds(
@@ -64,10 +64,5 @@ public class SendTransactionService extends IntentService {
         DaoSession daoSession = ((BeamItUp) getApplication()).getDaoSession();
         WalletDao walletDao = daoSession.getWalletDao();
         return walletDao.load(walletID);
-    }
-
-    private Credentials retrieveWallet(Wallet wallet) throws Exception {
-        File walletFile = Wallet.getWalletFile(this, wallet.getWalletName());
-        return Wallet.retrieveCredentials(wallet, walletFile);
     }
 }
