@@ -82,7 +82,6 @@ public class ReceiveRequestActivity extends Activity implements WalletPickerFrag
         @Override
         public void onUserAuthenticated() {
             Intent finishRequestIntent = new Intent(getApplicationContext(), FinishRequestActivity.class);
-            request.setFromID(wallet.getId());
             finishRequestIntent.putExtra("request", request);
 
             enableAcceptRequestButton();

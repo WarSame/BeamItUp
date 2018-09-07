@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import com.example.graeme.beamitup.R;
-import com.example.graeme.beamitup.transaction.SendTransactionService;
+import com.example.graeme.beamitup.transaction.SendTransactionTask;
 
 public class FinishRequestActivity extends Activity {
     private static final String TAG = "FinishRequestActivity";
@@ -24,7 +24,7 @@ public class FinishRequestActivity extends Activity {
     }
 
     private void sendTransaction(Request request){
-        Intent sendTransactionIntent = new Intent(this, SendTransactionService.class);
+        Intent sendTransactionIntent = new Intent(this, SendTransactionTask.class);
         sendTransactionIntent.putExtra("request", request);
         startService(sendTransactionIntent);
     }

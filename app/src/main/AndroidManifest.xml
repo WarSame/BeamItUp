@@ -71,7 +71,6 @@
         </activity>
 
         <service android:name=".wallet.GenerateWalletService" />
-        <service android:name=".transaction.SendTransactionService" />
     </application>
 
 </manifest>
