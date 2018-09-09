@@ -18,17 +18,19 @@ import com.example.graeme.beamitup.wallet.WalletDetailActivity;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.protocol.exceptions.TransactionException;
 import org.web3j.utils.Convert;
+
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 public class SendTransactionService extends Service {
     private static final String TAG = "SendTransactionService";
     private Web3j web3j;
     private final IBinder binder = new SendTransactionBinder();
-
-    public SendTransactionService(){
-    }
 
     @Override
     public void onCreate() {
@@ -48,9 +50,45 @@ public class SendTransactionService extends Service {
         }
     }
 
-    private int id = (int)System.currentTimeMillis();
 
-    public TransactionReceipt sendTransaction(Transaction transaction){
+    public TransactionReceipt sendTransaction(Transaction transaction)
+            throws Exception, InsufficientFundsException
+    {
+        if (!isSufficientFunds(transaction.getFromCredentials().getAddress(), transaction.getAmount())){
+            throw new InsufficientFundsException();
+        }
+
+        int id = (int)System.currentTimeMillis();
+        createNotification(transaction, id);
+
+        Credentials credentials = transaction.getFromCredentials();
+        Log.d(TAG, "Sender address: " + credentials.getAddress());
+
+        TransactionReceipt receipt = org.web3j.tx.Transfer.sendFunds(
+                web3j,
+                credentials,
+                transaction.getToAddress(),
+                new BigDecimal(transaction.getAmount()),
+                Convert.Unit.ETHER
+        ).send();
+
+        handleTransactionSuccess(transaction, id);
+        return receipt;
+    }
+
+    private boolean isSufficientFunds(String fromAddress, String amount) throws IOException {
+        BigInteger balance = web3j
+                .ethGetBalance(fromAddress, DefaultBlockParameterName.LATEST)
+                .send()
+                .getBalance();
+
+        BigDecimal balanceDec = new BigDecimal(balance);
+
+        BigDecimal transactionAmount = new BigDecimal(amount);
+        return balanceDec.compareTo(transactionAmount) >= 0;
+    }
+
+    private void createNotification(Transaction transaction, int id){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "BeamItUp")
                 .setContentTitle("Creating wallet")
                 .setContentText("Sending " + transaction.getAmount()
@@ -60,33 +98,14 @@ public class SendTransactionService extends Service {
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
         notificationManagerCompat.notify(id, builder.build());
-
-        TransactionReceipt receipt = null;
-        try {
-            Credentials credentials = transaction.getFromCredentials();
-            Log.d(TAG, "Sender address: " + credentials.getAddress());
-
-            receipt = org.web3j.tx.Transfer.sendFunds(
-                    web3j,
-                    credentials,
-                    transaction.getToAddress(),
-                    new BigDecimal(transaction.getAmount()),
-                    Convert.Unit.ETHER
-            ).send();
-
-            handleTransactionSuccess(transaction);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return receipt;
     }
 
-    private void handleTransactionSuccess(Transaction transaction){
+    private void handleTransactionSuccess(Transaction transaction, int notificationID){
         Log.d(TAG, "Transaction from: " + transaction.getFromCredentials().getAddress());
         Log.d(TAG, "Transaction to: " + transaction.getToAddress());
 
         Intent viewWalletIntent = new Intent(this, TransactionDetailActivity.class);
-        viewWalletIntent.putExtra("receipt", transaction);
+        viewWalletIntent.putExtra("transaction", transaction);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this)
                 .addNextIntentWithParentStack(viewWalletIntent);
@@ -100,6 +119,12 @@ public class SendTransactionService extends Service {
                 .setContentIntent(viewWalletPendingIntent);
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-        notificationManagerCompat.notify(id, builder.build());
+        notificationManagerCompat.notify(notificationID, builder.build());
+    }
+
+    public class InsufficientFundsException extends Throwable {
+        private static final long serialVersionUID = -7404820607502238067L;
+
+
     }
 }

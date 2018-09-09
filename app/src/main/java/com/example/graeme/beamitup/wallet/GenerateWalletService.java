@@ -2,8 +2,11 @@ package com.example.graeme.beamitup.wallet;
 
 import android.app.IntentService;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.content.Intent;
+import android.os.Binder;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -12,20 +15,24 @@ import android.util.Log;
 import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.R;
 
-public class GenerateWalletService extends IntentService {
+public class GenerateWalletService extends Service {
     private static final String TAG = "GenerateWalletService";
+    private IBinder binder = new GenerateWalletBinder();
 
-    private int id = (int)System.currentTimeMillis();
-
-    @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
-        if (intent == null){
-            Log.e(TAG, "Null intent received");
-            return;
+    public class GenerateWalletBinder extends Binder {
+        public GenerateWalletService getService(){
+            return GenerateWalletService.this;
         }
+    }
 
-        String nickname = intent.getStringExtra("nickname");
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return binder;
+    }
 
+    public Wallet generateWallet(String nickname) throws Exception {
+        int id = (int)System.currentTimeMillis();
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "BeamItUp")
                 .setContentTitle("Creating wallet")
                 .setContentText(nickname)
@@ -35,26 +42,18 @@ public class GenerateWalletService extends IntentService {
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
         notificationManagerCompat.notify(id, builder.build());
 
-        try {
-            Wallet wallet = handleWalletCreation(nickname);
-            onCreateWalletSuccess(wallet);
-        } catch (Exception e) {
-            e.printStackTrace();
-            onCreateWalletFail();
-        }
+        return handleWalletCreation(nickname, id);
     }
 
-    public GenerateWalletService(){
-        super("GenerateWalletService");
-    }
-
-    private Wallet handleWalletCreation(String nickname) throws Exception{
+    private Wallet handleWalletCreation(String nickname, int notificationID) throws Exception{
         Wallet wallet = new Wallet.WalletBuilder()
             .nickname(nickname)
             .context(this)
             .build();
 
         insertWallet(wallet);
+
+        onCreateWalletSuccess(wallet, notificationID);
         return wallet;
     }
 
@@ -66,7 +65,7 @@ public class GenerateWalletService extends IntentService {
         Log.i(TAG, "Inserted new wallet " + wallet.getId());
     }
 
-    private void onCreateWalletSuccess(Wallet wallet){
+    private void onCreateWalletSuccess(Wallet wallet, int notificationID){
         Log.i(TAG, "Wallet created");
         Intent viewWalletIntent = new Intent(this, WalletDetailActivity.class);
         viewWalletIntent.putExtra("wallet", wallet);
@@ -83,11 +82,6 @@ public class GenerateWalletService extends IntentService {
                 .setContentIntent(viewWalletPendingIntent);
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-        notificationManagerCompat.notify(id, builder.build());
+        notificationManagerCompat.notify(notificationID, builder.build());
     }
-
-    private void onCreateWalletFail(){
-        Log.i(TAG, "Wallet creation failed");
-    }
-
 }

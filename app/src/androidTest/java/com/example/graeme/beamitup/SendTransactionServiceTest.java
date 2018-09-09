@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.example.graeme.beamitup.transaction.SendTransactionService;
 import com.example.graeme.beamitup.transaction.SendTransactionService.SendTransactionBinder;
+import com.example.graeme.beamitup.transaction.SendTransactionService.InsufficientFundsException;
 import com.example.graeme.beamitup.transaction.Transaction;
 import com.example.graeme.beamitup.wallet.Wallet;
 
@@ -31,7 +32,7 @@ import java.util.Scanner;
 import static junit.framework.TestCase.assertTrue;
 import static org.web3j.tx.Transfer.sendFunds;
 
-public class TransactionTest {
+public class SendTransactionServiceTest {
     private static final String TAG = "SendTransactionsTaskTest";
     private static Context appContext;
     private static final String TO_ADDRESS = "0x31B98D14007bDEe637298086988A0bBd31184523";
@@ -44,8 +45,6 @@ public class TransactionTest {
         appContext = InstrumentationRegistry.getTargetContext();
 
         web3j = Web3jFactory.build(new HttpService(BeamItUp.INFURA_URL));
-
-
     }
 
     private static Credentials retrieveMasterCredentials() throws  Exception {
@@ -60,8 +59,9 @@ public class TransactionTest {
     }
 
     private SendTransactionService service;
-    @Test
-    public void sendFundsFromEmptyWallet_ShouldBeNullTransactionReceipt() throws Exception{
+    private boolean bound = false;
+    @Test(expected = InsufficientFundsException.class)
+    public void sendFundsFromEmptyWallet_ShouldBeNullTransactionReceipt() throws Exception, InsufficientFundsException {
         Wallet emptyWallet = new Wallet.WalletBuilder()
                 .nickname("my empty wallet")
                 .context(appContext)
@@ -73,7 +73,7 @@ public class TransactionTest {
     }
 
     @Test
-    public void sendFundsFromNotEmptyWallet_ShouldBeFilledTransactionReceipt() throws Exception {
+    public void sendFundsFromNotEmptyWallet_ShouldBeFilledTransactionReceipt() throws Exception, InsufficientFundsException {
         Wallet filledWallet = new Wallet.WalletBuilder()
                 .nickname("my filled wallet")
                 .context(appContext)
@@ -94,21 +94,24 @@ public class TransactionTest {
         assertTrue(receipt != null);
     }
 
-    private TransactionReceipt sendTestTransfer(Wallet wallet) throws Exception{
+    private TransactionReceipt sendTestTransfer(Wallet wallet) throws Exception, InsufficientFundsException{
         Intent intent = new Intent(appContext, SendTransactionService.class);
         ServiceConnection connection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
                 SendTransactionBinder sendTransactionBinder = (SendTransactionBinder) iBinder;
                 service = sendTransactionBinder.getService();
+                bound = true;
             }
 
             @Override
             public void onServiceDisconnected(ComponentName componentName) {
-
+                bound = false;
             }
         };
-        appContext.bindService(intent, connection, Context.BIND_AUTO_CREATE);
+        if (!bound) {
+            appContext.bindService(intent, connection, Context.BIND_AUTO_CREATE);
+        }
         Credentials walletCredentials = wallet.retrieveCredentials();
         Transaction transaction = new Transaction(TO_ADDRESS, TRANSACTION_VALUE, walletCredentials);
         return service.sendTransaction(transaction);
