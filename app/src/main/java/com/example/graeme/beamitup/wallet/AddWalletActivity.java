@@ -2,9 +2,12 @@ package com.example.graeme.beamitup.wallet;
 
 import android.app.Activity;
 import android.app.KeyguardManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +19,8 @@ import com.example.graeme.beamitup.R;
 
 public class AddWalletActivity extends Activity {
     private static final String TAG = "AddWalletActivity";
+    private boolean bound = false;
+    private GenerateWalletService service = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,35 +43,59 @@ public class AddWalletActivity extends Activity {
         btn_add_wallet.setOnClickListener(
                 (View v) -> authenticatorFragment.authenticateMobileUser()
         );
+
+        Log.i(TAG, "Binding service");
+        Intent generateWalletIntent = new Intent(this, GenerateWalletService.class);
+        this.bindService(generateWalletIntent, connection, BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+
+        Log.i(TAG, "Unbinding service");
+        unbindService(connection);
+        bound = false;
     }
 
     AuthenticatorFragment.OnUserAuthenticatedListener onUserAuthenticatedListener = new AuthenticatorFragment.OnUserAuthenticatedListener() {
         @Override
         public void onUserAuthenticated() {
+            Log.i(TAG, "onUserAuthenticated");
             EditText et_wallet_nickname = findViewById(R.id.et_wallet_nickname);
             String nickname = et_wallet_nickname.getText().toString();
 
-            generateWallet(nickname);
+            try {
+                if (bound) {
+                    Toast.makeText(getApplicationContext(), "Creating wallet", Toast.LENGTH_LONG).show();
+                    Log.i(TAG, "Creating wallet");
+                    service.generateWallet(nickname);
 
-            Toast.makeText(getApplicationContext(), "Creating wallet", Toast.LENGTH_LONG).show();
-            Log.i(TAG, "Creating wallet");
-
-            Intent walletListIntent = new Intent(getApplicationContext(), WalletListActivity.class);
-            startActivity(walletListIntent);
+                    Intent walletListIntent = new Intent(getApplicationContext(), WalletListActivity.class);
+                    startActivity(walletListIntent);
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
         @Override
         public void onUserNotAuthenticated() {
+            Log.i(TAG, "onUserNotAuthenticated");
         }
     };
 
-    private void generateWallet(String nickname){
-        try {
-            Intent generateWalletIntent = new Intent(this, GenerateWalletService.class)
-                .putExtra("nickname", nickname);
-            startService(generateWalletIntent);
-        } catch (Exception e) {
-            e.printStackTrace();
+    ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            GenerateWalletService.GenerateWalletBinder generateWalletBinder = (GenerateWalletService.GenerateWalletBinder) iBinder;
+            service = generateWalletBinder.getService();
+            bound = true;
         }
-    }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            bound = false;
+        }
+    };
 }
