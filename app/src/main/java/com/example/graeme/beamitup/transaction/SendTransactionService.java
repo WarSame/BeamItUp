@@ -72,7 +72,7 @@ public class SendTransactionService extends Service {
                 Convert.Unit.ETHER
         ).send();
 
-        handleTransactionSuccess(transaction, id);
+        handleTransactionSuccess(receipt, id);
         return receipt;
     }
 
@@ -100,12 +100,12 @@ public class SendTransactionService extends Service {
         notificationManagerCompat.notify(id, builder.build());
     }
 
-    private void handleTransactionSuccess(Transaction transaction, int notificationID){
-        Log.d(TAG, "Transaction from: " + transaction.getFromCredentials().getAddress());
-        Log.d(TAG, "Transaction to: " + transaction.getToAddress());
+    private void handleTransactionSuccess(TransactionReceipt receipt, int notificationID){
+        Log.d(TAG, "Transaction from: " + receipt.getFrom());
+        Log.d(TAG, "Transaction to: " + receipt.getTo());
 
         Intent viewWalletIntent = new Intent(this, TransactionDetailActivity.class);
-        viewWalletIntent.putExtra("transaction", transaction);
+        viewWalletIntent.putExtra("receipt", new SerializableTransactionReceipt(receipt));
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this)
                 .addNextIntentWithParentStack(viewWalletIntent);
@@ -113,8 +113,8 @@ public class SendTransactionService extends Service {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "BeamItUp")
                 .setContentTitle("Transaction sent")
-                .setContentText("Sent " + transaction.getAmount()
-                + " to " + transaction.getToAddress())
+                .setContentText("Sent transaction from " + receipt.getFrom()
+                + " to " + receipt.getTo())
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(viewWalletPendingIntent);
 
