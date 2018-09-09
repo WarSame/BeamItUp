@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.rule.ServiceTestRule;
 import android.util.Log;
 
 import com.example.graeme.beamitup.wallet.GenerateWalletService;
@@ -13,6 +14,7 @@ import com.example.graeme.beamitup.wallet.GenerateWalletService.GenerateWalletBi
 import com.example.graeme.beamitup.wallet.Wallet;
 
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertTrue;
@@ -20,6 +22,8 @@ import static junit.framework.Assert.assertTrue;
 public class GenerateWalletServiceTest {
     private static final String TAG = "GenerateWalletServiceTest";
     private static Context appContext;
+    @Rule
+    public final ServiceTestRule serviceTestRule = new ServiceTestRule();
 
     @BeforeClass
     public static void setupOneTime(){
@@ -46,10 +50,11 @@ public class GenerateWalletServiceTest {
             }
         };
         if (!bound) {
-            appContext.bindService(intent, connection, Context.BIND_AUTO_CREATE);
+            serviceTestRule.bindService(intent, connection, Context.BIND_AUTO_CREATE);
         }
         Log.d(TAG, service.toString());
+        service.setIsUserAuthenticationRequired(false);
         Wallet wallet = service.generateWallet("somenickname");
-        assertTrue(wallet == null);
+        assertTrue(wallet != null);
     }
 }

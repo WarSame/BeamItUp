@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.rule.ServiceTestRule;
 import android.util.Log;
 
 import com.example.graeme.beamitup.transaction.SendTransactionService;
@@ -15,6 +16,7 @@ import com.example.graeme.beamitup.transaction.Transaction;
 import com.example.graeme.beamitup.wallet.Wallet;
 
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
@@ -39,9 +41,11 @@ public class SendTransactionServiceTest {
     private static final String TRANSACTION_VALUE = "0.01";
     private static final String SECRETS_FILE = "eth.secrets";
     private static Web3j web3j;
+    @Rule
+    public final ServiceTestRule serviceTestRule = new ServiceTestRule();
 
     @BeforeClass
-    public static void setUpOneTime() throws Exception{
+    public static void setUpOneTime() {
         appContext = InstrumentationRegistry.getTargetContext();
 
         web3j = Web3jFactory.build(new HttpService(BeamItUp.INFURA_URL));
@@ -96,6 +100,8 @@ public class SendTransactionServiceTest {
 
     private TransactionReceipt sendTestTransfer(Wallet wallet) throws Exception, InsufficientFundsException{
         Intent intent = new Intent(appContext, SendTransactionService.class);
+        Credentials walletCredentials = wallet.retrieveCredentials();
+        Transaction transaction = new Transaction(TO_ADDRESS, TRANSACTION_VALUE, walletCredentials);
         ServiceConnection connection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -110,10 +116,8 @@ public class SendTransactionServiceTest {
             }
         };
         if (!bound) {
-            appContext.bindService(intent, connection, Context.BIND_AUTO_CREATE);
+            serviceTestRule.bindService(intent, connection, Context.BIND_AUTO_CREATE);
         }
-        Credentials walletCredentials = wallet.retrieveCredentials();
-        Transaction transaction = new Transaction(TO_ADDRESS, TRANSACTION_VALUE, walletCredentials);
         return service.sendTransaction(transaction);
     }
 

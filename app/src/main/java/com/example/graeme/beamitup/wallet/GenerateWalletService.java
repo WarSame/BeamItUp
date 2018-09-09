@@ -18,6 +18,7 @@ import com.example.graeme.beamitup.R;
 public class GenerateWalletService extends Service {
     private static final String TAG = "GenerateWalletService";
     private IBinder binder = new GenerateWalletBinder();
+    private boolean isUserAuthenticationRequired = true;
 
     public class GenerateWalletBinder extends Binder {
         public GenerateWalletService getService(){
@@ -29,6 +30,10 @@ public class GenerateWalletService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return binder;
+    }
+
+    public void setIsUserAuthenticationRequired(boolean isUserAuthenticationRequired){
+        this.isUserAuthenticationRequired = isUserAuthenticationRequired;
     }
 
     public Wallet generateWallet(String nickname) throws Exception {
@@ -49,6 +54,7 @@ public class GenerateWalletService extends Service {
         Wallet wallet = new Wallet.WalletBuilder()
             .nickname(nickname)
             .context(this)
+            .isUserAuthenticationRequired(isUserAuthenticationRequired)
             .build();
 
         insertWallet(wallet);
