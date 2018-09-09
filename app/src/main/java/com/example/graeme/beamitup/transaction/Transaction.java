@@ -43,7 +43,6 @@ public class Transaction implements Serializable {
 
     public String toString(){
         return "Amount: "+ this.amount
-                + " fromAddress: " + this.fromCredentials.getAddress()
                 + " toAddress: " + this.toAddress;
     }
 }
