@@ -25,14 +25,8 @@ public class BeamItUp extends Application {
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "wallet-db", null);
         Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
-        web3j = buildWeb3j();
+        web3j = Web3jFactory.build(new HttpService(INFURA_URL));
         createNotificationChannel();
-    }
-
-    private Web3j buildWeb3j(){
-        return Web3jFactory.build(
-                new HttpService(INFURA_URL)
-        );
     }
 
     public Web3j getWeb3j() {
