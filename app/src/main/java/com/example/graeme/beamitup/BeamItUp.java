@@ -16,7 +16,7 @@ import org.web3j.protocol.http.HttpService;
 public class BeamItUp extends Application {
 
     private DaoSession daoSession;
-    static private final String INFURA_URL = "https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9";//TODO switch to websockets
+    static public final String INFURA_URL = "https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9";//TODO switch to websockets
     private Web3j web3j;
 
     @Override
@@ -25,14 +25,8 @@ public class BeamItUp extends Application {
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "wallet-db", null);
         Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
-        web3j = buildWeb3j();
+        web3j = Web3jFactory.build(new HttpService(INFURA_URL));
         createNotificationChannel();
-    }
-
-    private Web3j buildWeb3j(){
-        return Web3jFactory.build(
-                new HttpService(INFURA_URL)
-        );
     }
 
     public Web3j getWeb3j() {

@@ -1,18 +1,25 @@
 package com.example.graeme.beamitup.transaction;
 
+import org.web3j.crypto.Credentials;
+
 import java.io.Serializable;
 
 public class Transaction implements Serializable {
     public static final String TAG = "Transaction";
     private static final long serialVersionUID = 9124947053743920362L;
     private String amount;
-    private long fromID;//Requestee
-    private String toAddress;//Requester
+    private String toAddress;
+    private Credentials fromCredentials;
 
-    protected Transaction(String toAddress, String amount){
+    public Transaction(String toAddress, String amount){
         this.amount = amount;
-        this.fromID = -1;
         this.toAddress = toAddress;
+    }
+
+    public Transaction(String toAddress, String amount, Credentials fromCredentials){
+        this.toAddress = toAddress;
+        this.amount = amount;
+        this.fromCredentials = fromCredentials;
     }
 
     public Transaction() {
@@ -22,29 +29,20 @@ public class Transaction implements Serializable {
         return toAddress;
     }
 
-    public void setToAddress(String toAddress) {
-        this.toAddress = toAddress;
-    }
-
-    public long getFromID() {
-        return fromID;
-    }
-
-    public void setFromID(long fromID) {
-        this.fromID = fromID;
-    }
-
     public String getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
-        this.amount = amount;
+    Credentials getFromCredentials(){
+        return this.fromCredentials;
+    }
+
+    void setFromCredentials(Credentials fromCredentials){
+        this.fromCredentials = fromCredentials;
     }
 
     public String toString(){
         return "Amount: "+ this.amount
-                + " fromAddress: " + this.fromID
                 + " toAddress: " + this.toAddress;
     }
 }

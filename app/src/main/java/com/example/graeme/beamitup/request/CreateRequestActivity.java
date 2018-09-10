@@ -47,9 +47,11 @@ public class CreateRequestActivity extends Activity implements WalletPickerFragm
         Web3j web3j = ((BeamItUp)getApplication()).getWeb3j();
         web3j.ethGasPrice().observable()
                 .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.from( runnable -> new Handler( Looper.getMainLooper() ).post(runnable) ))
-                .subscribe(price -> setGasPrice(price.getGasPrice().multiply(GAS_LIMIT).toString()),
-                Throwable::printStackTrace);
+                .observeOn(Schedulers.from( runnable -> new Handler( Looper.getMainLooper() ).post(runnable) ))//Observe on main thread
+                .subscribe(
+                    price -> setGasPrice(price.getGasPrice().multiply(GAS_LIMIT).toString()),
+                    Throwable::printStackTrace
+                );
     }
 
     private void setGasPrice(String gasPrice){
