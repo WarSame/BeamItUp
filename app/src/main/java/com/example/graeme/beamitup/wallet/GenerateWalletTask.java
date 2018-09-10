@@ -91,8 +91,10 @@ public class GenerateWalletTask extends AsyncTask<String, Void, Wallet> {
         PendingIntent viewWalletPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder
-                .setContentText("Wallet created for " + wallet.getNickname())
-                .setContentIntent(viewWalletPendingIntent);
+                .setContentTitle("Wallet created for ")
+                .setContentText(wallet.getNickname())
+                .setContentIntent(viewWalletPendingIntent)
+                .setProgress(0, 0, false);
         notificationManagerCompat.notify(notificationID, builder.build());
     }
 }

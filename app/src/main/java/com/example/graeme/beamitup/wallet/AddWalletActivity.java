@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.graeme.beamitup.AuthenticatorFragment;
+import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
 
 public class AddWalletActivity extends Activity {
@@ -71,8 +72,8 @@ public class AddWalletActivity extends Activity {
                     Log.i(TAG, "Creating wallet");
                     service.generateWallet(nickname, (wallet)->{});
 
-                    Intent walletListIntent = new Intent(getApplicationContext(), WalletListActivity.class);
-                    startActivity(walletListIntent);
+                    Intent landingPageIntent = new Intent(getApplicationContext(), LandingPageActivity.class);
+                    startActivity(landingPageIntent);
                 }
             } catch (Exception e){
                 e.printStackTrace();
