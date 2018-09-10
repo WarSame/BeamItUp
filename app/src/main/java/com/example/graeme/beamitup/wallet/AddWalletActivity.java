@@ -69,7 +69,7 @@ public class AddWalletActivity extends Activity {
                 if (bound) {
                     Toast.makeText(getApplicationContext(), "Creating wallet", Toast.LENGTH_LONG).show();
                     Log.i(TAG, "Creating wallet");
-                    service.generateWallet(nickname);
+                    service.generateWallet(nickname, (wallet)->{});
 
                     Intent walletListIntent = new Intent(getApplicationContext(), WalletListActivity.class);
                     startActivity(walletListIntent);

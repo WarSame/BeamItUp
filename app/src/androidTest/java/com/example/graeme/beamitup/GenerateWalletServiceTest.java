@@ -17,6 +17,8 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.concurrent.CountDownLatch;
+
 import static junit.framework.Assert.assertTrue;
 
 public class GenerateWalletServiceTest {
@@ -54,7 +56,12 @@ public class GenerateWalletServiceTest {
         }
         Log.d(TAG, service.toString());
         service.setIsUserAuthenticationRequired(false);
-        Wallet wallet = service.generateWallet("somenickname");
-        assertTrue(wallet != null);
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        service.generateWallet("somenickname", (wallet)-> {
+            Log.d(TAG, "Post generate wallet");
+            assertTrue(wallet != null);
+            countDownLatch.countDown();
+        });
+        countDownLatch.await();
     }
 }
