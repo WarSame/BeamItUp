@@ -30,6 +30,7 @@ import org.web3j.utils.Convert;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Scanner;
+import java.util.concurrent.CountDownLatch;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.web3j.tx.Transfer.sendFunds;
@@ -64,43 +65,16 @@ public class SendTransactionServiceTest {
 
     private SendTransactionService service;
     private boolean bound = false;
-    @Test(expected = InsufficientFundsException.class)
-    public void sendFundsFromEmptyWallet_ShouldBeNullTransactionReceipt() throws Exception, InsufficientFundsException {
+    @Test
+    public void sendFundsFromEmptyWallet_ShouldBeNullTransactionReceipt() throws Exception {
         Wallet emptyWallet = new Wallet.WalletBuilder()
                 .nickname("my empty wallet")
                 .context(appContext)
                 .isUserAuthenticationRequired(false)
                 .build();
 
-        TransactionReceipt receipt = sendTestTransfer(emptyWallet);
-        assertTrue(receipt == null);
-    }
-
-    @Test
-    public void sendFundsFromNotEmptyWallet_ShouldBeFilledTransactionReceipt() throws Exception, InsufficientFundsException {
-        Wallet filledWallet = new Wallet.WalletBuilder()
-                .nickname("my filled wallet")
-                .context(appContext)
-                .isUserAuthenticationRequired(false)
-                .build();
-
-        EthGetBalance ethGetBalance = web3j.ethGetBalance(
-                filledWallet.getAddress()
-                , DefaultBlockParameterName.LATEST
-        )
-                .sendAsync().get();
-
-        Log.d(TAG, "Funds in wallet " + ethGetBalance.getBalance() );
-
-        fillWallet(filledWallet.getAddress());
-
-        TransactionReceipt receipt = sendTestTransfer(filledWallet);
-        assertTrue(receipt != null);
-    }
-
-    private TransactionReceipt sendTestTransfer(Wallet wallet) throws Exception, InsufficientFundsException{
         Intent intent = new Intent(appContext, SendTransactionService.class);
-        Credentials walletCredentials = wallet.retrieveCredentials();
+        Credentials walletCredentials = emptyWallet.retrieveCredentials();
         Transaction transaction = new Transaction(TO_ADDRESS, TRANSACTION_VALUE, walletCredentials);
         ServiceConnection connection = new ServiceConnection() {
             @Override
@@ -118,7 +92,57 @@ public class SendTransactionServiceTest {
         if (!bound) {
             serviceTestRule.bindService(intent, connection, Context.BIND_AUTO_CREATE);
         }
-        return service.sendTransaction(transaction);
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        service.sendTransaction(transaction, (receipt)->{
+            assertTrue(receipt == null);
+            countDownLatch.countDown();
+        });
+        countDownLatch.await();
+    }
+
+    @Test
+    public void sendFundsFromNotEmptyWallet_ShouldBeFilledTransactionReceipt() throws Exception {
+        Wallet filledWallet = new Wallet.WalletBuilder()
+                .nickname("my filled wallet")
+                .context(appContext)
+                .isUserAuthenticationRequired(false)
+                .build();
+
+        EthGetBalance ethGetBalance = web3j.ethGetBalance(
+                filledWallet.getAddress()
+                , DefaultBlockParameterName.LATEST
+        )
+                .sendAsync().get();
+
+        Log.d(TAG, "Funds in wallet " + ethGetBalance.getBalance() );
+
+        fillWallet(filledWallet.getAddress());
+
+        Intent intent = new Intent(appContext, SendTransactionService.class);
+        Credentials walletCredentials = filledWallet.retrieveCredentials();
+        Transaction transaction = new Transaction(TO_ADDRESS, TRANSACTION_VALUE, walletCredentials);
+        ServiceConnection connection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                SendTransactionBinder sendTransactionBinder = (SendTransactionBinder) iBinder;
+                service = sendTransactionBinder.getService();
+                bound = true;
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+                bound = false;
+            }
+        };
+        if (!bound) {
+            serviceTestRule.bindService(intent, connection, Context.BIND_AUTO_CREATE);
+        }
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        service.sendTransaction(transaction, (receipt)->{
+            assertTrue(receipt != null);
+            countDownLatch.countDown();
+        });
+        countDownLatch.await();
     }
 
     private static void fillWallet(String toAddress) throws Exception {

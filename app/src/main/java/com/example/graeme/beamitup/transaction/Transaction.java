@@ -37,7 +37,7 @@ public class Transaction implements Serializable {
         return this.fromCredentials;
     }
 
-    void setFromCredentials(Credentials fromCredentials){
+    public void setFromCredentials(Credentials fromCredentials){
         this.fromCredentials = fromCredentials;
     }
 

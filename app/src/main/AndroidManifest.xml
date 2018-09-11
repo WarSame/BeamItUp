@@ -57,11 +57,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".request.FinishRequestActivity"
-            android:label="@string/title_activity_finish_request"
-            android:parentActivityName=".LandingPageActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".wallet.WalletListActivity"
             android:label="@string/title_activity_wallet"
             android:parentActivityName=".LandingPageActivity" />

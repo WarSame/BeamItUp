@@ -38,6 +38,10 @@ public class SendTransactionService extends Service {
         web3j = ((BeamItUp)getApplication()).getWeb3j();
     }
 
+    public interface OnSendTransaction{
+        void onSendTransaction(TransactionReceipt receipt);
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -51,80 +55,14 @@ public class SendTransactionService extends Service {
     }
 
 
-    public TransactionReceipt sendTransaction(Transaction transaction)
-            throws Exception, InsufficientFundsException
+    public void sendTransaction(Transaction transaction, OnSendTransaction onSendTransaction)
     {
-        if (!isSufficientFunds(transaction.getFromCredentials().getAddress(), transaction.getAmount())){
-            throw new InsufficientFundsException();
-        }
-
-        int id = (int)System.currentTimeMillis();
-        createNotification(transaction, id);
-
-        Credentials credentials = transaction.getFromCredentials();
-        Log.d(TAG, "Sender address: " + credentials.getAddress());
-
-        TransactionReceipt receipt = org.web3j.tx.Transfer.sendFunds(
-                web3j,
-                credentials,
-                transaction.getToAddress(),
-                new BigDecimal(transaction.getAmount()),
-                Convert.Unit.ETHER
-        ).send();
-
-        handleTransactionSuccess(receipt, id);
-        return receipt;
+        Log.i(TAG, "Sending transaction");
+        new SendTransactionTask(getApplicationContext(), onSendTransaction).execute(transaction);
     }
 
-    private boolean isSufficientFunds(String fromAddress, String amount) throws IOException {
-        BigInteger balance = web3j
-                .ethGetBalance(fromAddress, DefaultBlockParameterName.LATEST)
-                .send()
-                .getBalance();
-
-        BigDecimal balanceDec = new BigDecimal(balance);
-
-        BigDecimal transactionAmount = new BigDecimal(amount);
-        return balanceDec.compareTo(transactionAmount) >= 0;
-    }
-
-    private void createNotification(Transaction transaction, int id){
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "BeamItUp")
-                .setContentTitle("Creating wallet")
-                .setContentText("Sending " + transaction.getAmount()
-                        + " to " + transaction.getToAddress())
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setProgress(0, 0, true);
-
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-        notificationManagerCompat.notify(id, builder.build());
-    }
-
-    private void handleTransactionSuccess(TransactionReceipt receipt, int notificationID){
-        Log.d(TAG, "Transaction from: " + receipt.getFrom());
-        Log.d(TAG, "Transaction to: " + receipt.getTo());
-
-        Intent viewWalletIntent = new Intent(this, TransactionDetailActivity.class);
-        viewWalletIntent.putExtra("receipt", new SerializableTransactionReceipt(receipt));
-
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this)
-                .addNextIntentWithParentStack(viewWalletIntent);
-        PendingIntent viewWalletPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "BeamItUp")
-                .setContentTitle("Transaction sent")
-                .setContentText("Sent transaction from " + receipt.getFrom()
-                + " to " + receipt.getTo())
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(viewWalletPendingIntent);
-
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-        notificationManagerCompat.notify(notificationID, builder.build());
-    }
 
     public class InsufficientFundsException extends Throwable {
         private static final long serialVersionUID = -7404820607502238067L;
-
-
     }
 }
