@@ -39,7 +39,7 @@ public class GenerateWalletTask extends AsyncTask<String, Void, Wallet> {
         builder = new NotificationCompat.Builder(weakContext.get(), "BeamItUp")
                 .setContentTitle("Creating wallet")
                 .setContentText(nickname)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_beamitup)
                 .setProgress(0, 0, true);
 
         notificationManagerCompat = NotificationManagerCompat.from(weakContext.get());

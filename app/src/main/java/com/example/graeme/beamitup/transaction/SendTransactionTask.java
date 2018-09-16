@@ -43,7 +43,7 @@ public class SendTransactionTask extends AsyncTask<Transaction, Void, Transactio
                 weakContext.get(),
                 "BeamItUp"
         );
-        this.builder.setSmallIcon(R.mipmap.ic_launcher);
+        this.builder.setSmallIcon(R.drawable.ic_beamitup);
         this.notificationManagerCompat = NotificationManagerCompat.from(weakContext.get());
         this.notificationID = (int)System.currentTimeMillis();
     }
