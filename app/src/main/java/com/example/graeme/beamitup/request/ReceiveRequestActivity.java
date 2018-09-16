@@ -105,7 +105,15 @@ public class ReceiveRequestActivity extends Activity implements WalletPickerFrag
         public void onUserAuthenticated() {
             Log.d(TAG, "Sending transaction");
             Transaction transaction = new Transaction(wallet, request);
-            service.sendTransaction(transaction, (receipt)->Log.i(TAG,"This"));
+            service.sendTransaction(transaction,
+                    (receipt)->
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    "Sending transaction",
+                                    Toast.LENGTH_LONG
+                            )
+                            .show()
+            );
             Intent landingPageIntent = new Intent(getApplicationContext(), LandingPageActivity.class);
 
             enableAcceptRequestButton();

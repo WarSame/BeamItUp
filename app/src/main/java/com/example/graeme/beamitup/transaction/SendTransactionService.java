@@ -38,6 +38,7 @@ public class SendTransactionService extends Service {
     public void sendTransaction(Transaction transaction, OnSendTransaction onSendTransaction)
     {
         Log.i(TAG, "Sending transaction from " + transaction.getSenderWallet().getNickname());
+        Log.i(TAG, "Sending transaction from " + transaction.getSenderWallet().getAddress());
         new SendTransactionTask(getApplicationContext(), onSendTransaction).execute(transaction);
     }
 }

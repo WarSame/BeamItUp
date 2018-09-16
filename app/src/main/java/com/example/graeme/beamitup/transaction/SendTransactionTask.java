@@ -31,11 +31,21 @@ public class SendTransactionTask extends AsyncTask<Transaction, Void, Transactio
     private OnSendTransaction onSendTransaction;
     private static final String TAG = "SendTransactionTask";
     private Web3j web3j;
+    private NotificationCompat.Builder builder;
+    private NotificationManagerCompat notificationManagerCompat;
+    private int notificationID;
 
     SendTransactionTask(Context context, OnSendTransaction onSendTransaction){
         this.weakContext = new WeakReference<>(context);
         this.onSendTransaction = onSendTransaction;
         this.web3j = ((BeamItUp)weakContext.get().getApplicationContext()).getWeb3j();
+        this.builder = new NotificationCompat.Builder(
+                weakContext.get(),
+                "BeamItUp"
+        );
+        this.builder.setSmallIcon(R.mipmap.ic_launcher);
+        this.notificationManagerCompat = NotificationManagerCompat.from(weakContext.get());
+        this.notificationID = (int)System.currentTimeMillis();
     }
 
     @Override
@@ -43,15 +53,20 @@ public class SendTransactionTask extends AsyncTask<Transaction, Void, Transactio
         Transaction transaction = transactions[0];
         Wallet senderWallet = transaction.getSenderWallet();
         Request request = transaction.getRequest();
+
+        createNotification(transaction);
+
         Credentials credentials = null;
         try {
-            if (!isSufficientFunds(senderWallet.getAddress(), request.getAmount())){
-                Log.i(TAG, "Insufficient funds");
-            }
             credentials = senderWallet.retrieveCredentials();
+            if (!isSufficientFunds(credentials.getAddress(), request.getAmount())){
+                handleInsufficientFunds(transaction);
+                return null;
+            }
         } catch (IOException e) {
             e.printStackTrace();
             Log.e(TAG, "Insufficient funds");
+
             return null;
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,9 +76,6 @@ public class SendTransactionTask extends AsyncTask<Transaction, Void, Transactio
             Log.i(TAG, "Credentials are null");
             return null;
         }
-
-        int id = (int)System.currentTimeMillis();
-        createNotification(transaction, id);
 
         Log.d(TAG, "Sender address: " + credentials.getAddress());
 
@@ -79,10 +91,29 @@ public class SendTransactionTask extends AsyncTask<Transaction, Void, Transactio
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(TAG, "Failed to send transaction");
+            handleTransactionFailure(transaction);
             return null;
         }
-        handleTransactionSuccess(receipt, id);
+        handleTransactionSuccess(receipt);
         return receipt;
+    }
+
+    private void handleInsufficientFunds(Transaction transaction) {
+        Log.e(TAG, "Insufficient funds in account " + transaction.getSenderWallet().getNickname());
+        builder.setContentTitle("Insufficient funds")
+                .setContentText("Wallet " + transaction.getSenderWallet().getNickname()
+                + " does not have " + transaction.getRequest().getAmount() + " ETH to send")
+                .setProgress(0, 0, false);
+        notificationManagerCompat.notify(notificationID, builder.build());
+    }
+
+    private void handleTransactionFailure(Transaction transaction) {
+        builder.setContentTitle("Transaction failure")
+                .setContentText("From " + transaction.getSenderWallet().getNickname()
+                 + " to " + transaction.getRequest().getToAddress())
+                .setProgress(0, 0, false);
+
+        notificationManagerCompat.notify(notificationID, builder.build());
     }
 
     @Override
@@ -91,30 +122,43 @@ public class SendTransactionTask extends AsyncTask<Transaction, Void, Transactio
     }
 
     private boolean isSufficientFunds(String fromAddress, String amount) throws IOException {
+        Log.i(TAG, "Checking if account " + fromAddress + " has " + amount + " ETH");
         BigInteger balance = web3j
                 .ethGetBalance(fromAddress, DefaultBlockParameterName.LATEST)
                 .send()
                 .getBalance();
 
-        BigDecimal balanceDec = new BigDecimal(balance);
+        Log.i(TAG, "BigInt balance = " + balance);
+
+        BigDecimal balanceEth = Convert.fromWei(balance.toString(), Convert.Unit.ETHER);
+
+        Log.i(TAG, "BigDec balanceEth = " + balanceEth);
 
         BigDecimal transactionAmount = new BigDecimal(amount);
-        return balanceDec.compareTo(transactionAmount) >= 0;
+
+        Log.i(TAG, "transactionAmount = " + transactionAmount);
+
+        int comparator = balanceEth.compareTo(transactionAmount);
+
+        Log.i(TAG, "comparator = " + comparator);
+
+        boolean sufficientBalance = comparator >=0;
+
+        Log.i(TAG, "sufficientBalance = " + sufficientBalance);
+
+        return sufficientBalance;
     }
 
-    private void createNotification(Transaction transaction, int id){
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(weakContext.get(), "BeamItUp")
-                .setContentTitle("Sending transaction")
+    private void createNotification(Transaction transaction){
+        builder.setContentTitle("Sending transaction")
                 .setContentText(transaction.getRequest().getAmount()
                         + " ETH to " + transaction.getRequest().getToAddress())
-                .setSmallIcon(R.mipmap.ic_launcher)
                 .setProgress(0, 0, true);
 
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(weakContext.get());
-        notificationManagerCompat.notify(id, builder.build());
+        notificationManagerCompat.notify(notificationID, builder.build());
     }
 
-    private void handleTransactionSuccess(TransactionReceipt receipt, int notificationID){
+    private void handleTransactionSuccess(TransactionReceipt receipt){
         Log.d(TAG, "Transaction from: " + receipt.getFrom());
         Log.d(TAG, "Transaction to: " + receipt.getTo());
 
@@ -125,14 +169,12 @@ public class SendTransactionTask extends AsyncTask<Transaction, Void, Transactio
                 .addNextIntentWithParentStack(viewWalletIntent);
         PendingIntent viewWalletPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(weakContext.get(), "BeamItUp")
-                .setContentTitle("Transaction sent")
+        builder.setContentTitle("Transaction success")
                 .setContentText("Sent transaction from " + receipt.getFrom()
                         + " to " + receipt.getTo())
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(viewWalletPendingIntent);
+                .setContentIntent(viewWalletPendingIntent)
+                .setProgress(0, 0, false);
 
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(weakContext.get());
         notificationManagerCompat.notify(notificationID, builder.build());
     }
 }
