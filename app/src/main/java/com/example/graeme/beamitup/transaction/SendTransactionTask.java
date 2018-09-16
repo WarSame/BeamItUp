@@ -8,11 +8,12 @@ import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.R;
+import com.example.graeme.beamitup.request.Request;
 import com.example.graeme.beamitup.transaction.SendTransactionService.OnSendTransaction;
+import com.example.graeme.beamitup.wallet.Wallet;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
@@ -40,20 +41,30 @@ public class SendTransactionTask extends AsyncTask<Transaction, Void, Transactio
     @Override
     protected TransactionReceipt doInBackground(Transaction... transactions) {
         Transaction transaction = transactions[0];
+        Wallet senderWallet = transaction.getSenderWallet();
+        Request request = transaction.getRequest();
+        Credentials credentials = null;
         try {
-            if (!isSufficientFunds(transaction.getFromCredentials().getAddress(), transaction.getAmount())){
+            if (!isSufficientFunds(senderWallet.getAddress(), request.getAmount())){
                 Log.i(TAG, "Insufficient funds");
             }
+            credentials = senderWallet.retrieveCredentials();
         } catch (IOException e) {
             e.printStackTrace();
             Log.e(TAG, "Insufficient funds");
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (credentials == null){
+            Log.i(TAG, "Credentials are null");
             return null;
         }
 
         int id = (int)System.currentTimeMillis();
         createNotification(transaction, id);
 
-        Credentials credentials = transaction.getFromCredentials();
         Log.d(TAG, "Sender address: " + credentials.getAddress());
 
         TransactionReceipt receipt;
@@ -61,8 +72,8 @@ public class SendTransactionTask extends AsyncTask<Transaction, Void, Transactio
             receipt = org.web3j.tx.Transfer.sendFunds(
                     web3j,
                     credentials,
-                    transaction.getToAddress(),
-                    new BigDecimal(transaction.getAmount()),
+                    request.getToAddress(),
+                    new BigDecimal(request.getAmount()),
                     Convert.Unit.ETHER
             ).send();
         } catch (Exception e) {
@@ -93,9 +104,9 @@ public class SendTransactionTask extends AsyncTask<Transaction, Void, Transactio
 
     private void createNotification(Transaction transaction, int id){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(weakContext.get(), "BeamItUp")
-                .setContentTitle("Creating wallet")
-                .setContentText("Sending " + transaction.getAmount()
-                        + " to " + transaction.getToAddress())
+                .setContentTitle("Sending transaction")
+                .setContentText(transaction.getRequest().getAmount()
+                        + " ETH to " + transaction.getRequest().getToAddress())
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setProgress(0, 0, true);
 

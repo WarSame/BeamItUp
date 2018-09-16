@@ -19,7 +19,7 @@ public class WalletTest {
     private static Context appContext;
 
     @BeforeClass
-    public static void setUpOneTime() throws Exception{
+    public static void setUpOneTime(){
         appContext = InstrumentationRegistry.getTargetContext();
     }
 

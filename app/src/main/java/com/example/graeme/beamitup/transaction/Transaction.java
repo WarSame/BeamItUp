@@ -1,48 +1,26 @@
 package com.example.graeme.beamitup.transaction;
 
-import org.web3j.crypto.Credentials;
+import com.example.graeme.beamitup.request.Request;
+import com.example.graeme.beamitup.wallet.Wallet;
 
 import java.io.Serializable;
 
-public class Transaction implements Serializable {
+public class Transaction {
     public static final String TAG = "Transaction";
     private static final long serialVersionUID = 9124947053743920362L;
-    private String amount;
-    private String toAddress;
-    private Credentials fromCredentials;
+    private Wallet senderWallet;
+    private Request request;
 
-    public Transaction(String toAddress, String amount){
-        this.amount = amount;
-        this.toAddress = toAddress;
+    public Transaction(Wallet senderWallet, Request request){
+        this.senderWallet = senderWallet;
+        this.request = request;
     }
 
-    public Transaction(String toAddress, String amount, Credentials fromCredentials){
-        this.toAddress = toAddress;
-        this.amount = amount;
-        this.fromCredentials = fromCredentials;
+    public Wallet getSenderWallet() {
+        return senderWallet;
     }
 
-    public Transaction() {
-    }
-
-    public String getToAddress() {
-        return toAddress;
-    }
-
-    public String getAmount() {
-        return amount;
-    }
-
-    Credentials getFromCredentials(){
-        return this.fromCredentials;
-    }
-
-    public void setFromCredentials(Credentials fromCredentials){
-        this.fromCredentials = fromCredentials;
-    }
-
-    public String toString(){
-        return "Amount: "+ this.amount
-                + " toAddress: " + this.toAddress;
+    public Request getRequest() {
+        return request;
     }
 }

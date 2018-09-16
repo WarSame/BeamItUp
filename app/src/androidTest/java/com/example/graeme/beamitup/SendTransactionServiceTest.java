@@ -6,6 +6,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ServiceTestRule;
 import android.util.Log;
 
+import com.example.graeme.beamitup.request.Request;
 import com.example.graeme.beamitup.transaction.SendTransactionService;
 import com.example.graeme.beamitup.transaction.Transaction;
 import com.example.graeme.beamitup.wallet.Wallet;
@@ -75,8 +76,8 @@ public class SendTransactionServiceTest {
                 .isUserAuthenticationRequired(false)
                 .build();
 
-        Credentials walletCredentials = emptyWallet.retrieveCredentials();
-        Transaction transaction = new Transaction(TO_ADDRESS, TRANSACTION_VALUE, walletCredentials);
+        Request request = new Request(TO_ADDRESS, TRANSACTION_VALUE);
+        Transaction transaction = new Transaction(emptyWallet, request);
 
         CountDownLatch countDownLatch = new CountDownLatch(1);
         Log.i(TAG, "Transaction = " + transaction);
@@ -112,8 +113,8 @@ public class SendTransactionServiceTest {
 
         fillWallet(filledWallet.getAddress());
 
-        Credentials walletCredentials = filledWallet.retrieveCredentials();
-        Transaction transaction = new Transaction(TO_ADDRESS, TRANSACTION_VALUE, walletCredentials);
+        Request request = new Request(TO_ADDRESS, TRANSACTION_VALUE);
+        Transaction transaction = new Transaction(filledWallet, request);
 
         Log.i(TAG, "Transaction = " + transaction);
         Log.i(TAG, "Service = " + service);

@@ -19,6 +19,8 @@ import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.transaction.SendTransactionService;
 import com.example.graeme.beamitup.transaction.SendTransactionService.SendTransactionBinder;
+import com.example.graeme.beamitup.transaction.Transaction;
+import com.example.graeme.beamitup.wallet.GenerateWalletService;
 import com.example.graeme.beamitup.wallet.Wallet;
 import com.example.graeme.beamitup.wallet.WalletPickerFragment;
 
@@ -29,12 +31,25 @@ public class ReceiveRequestActivity extends Activity implements WalletPickerFrag
     private Wallet wallet;
     private Request request;
     private SendTransactionService service;
+    private boolean bound = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.i(TAG, "Binding service");
+        Intent generateWalletIntent = new Intent(this, SendTransactionService.class);
+        this.bindService(generateWalletIntent, connection, BIND_AUTO_CREATE);
         handleRequest();
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+
+        Log.i(TAG, "Unbinding service");
+        unbindService(connection);
+        bound = false;
     }
 
     private void handleRequest() {
@@ -88,14 +103,9 @@ public class ReceiveRequestActivity extends Activity implements WalletPickerFrag
     OnUserAuthenticatedListener onUserAuthenticatedListener = new OnUserAuthenticatedListener() {
         @Override
         public void onUserAuthenticated() {
-            try {
-                request.setFromCredentials(wallet.retrieveCredentials());
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "Error sending transaction", Toast.LENGTH_LONG).show();
-                return;
-            }
-            sendTransaction();
+            Log.d(TAG, "Sending transaction");
+            Transaction transaction = new Transaction(wallet, request);
+            service.sendTransaction(transaction, (receipt)->Log.i(TAG,"This"));
             Intent landingPageIntent = new Intent(getApplicationContext(), LandingPageActivity.class);
 
             enableAcceptRequestButton();
@@ -108,29 +118,19 @@ public class ReceiveRequestActivity extends Activity implements WalletPickerFrag
         }
     };
 
-    private void sendTransaction(){
-        Intent sendTransactionIntent = new Intent(this, SendTransactionService.class);
-        ServiceConnection connection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                SendTransactionBinder sendTransactionBinder = (SendTransactionBinder) iBinder;
-                service = sendTransactionBinder.getService();
-                try {
-                    Log.d(TAG, "Sending transaction");
-                    service.sendTransaction(request, (receipt)->{
-                    });
-                } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), "Sending the transaction", Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
-                }
-            }
+    ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            SendTransactionBinder generateWalletBinder = (SendTransactionBinder) iBinder;
+            service = generateWalletBinder.getService();
+            bound = true;
+        }
 
-            @Override
-            public void onServiceDisconnected(ComponentName componentName) {
-            }
-        };
-        this.bindService(sendTransactionIntent, connection, BIND_AUTO_CREATE);
-    }
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            bound = false;
+        }
+    };
 
     private void enableAcceptRequestButton(){
         Button btnAcceptRequest = findViewById(R.id.btn_accept_request);
