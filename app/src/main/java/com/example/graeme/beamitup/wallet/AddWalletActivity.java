@@ -63,18 +63,22 @@ public class AddWalletActivity extends Activity {
         @Override
         public void onUserAuthenticated() {
             Log.i(TAG, "onUserAuthenticated");
+
+            if (!bound){
+                Log.e(TAG, "Failed to bind service");
+                return;
+            }
+
             EditText et_wallet_nickname = findViewById(R.id.et_wallet_nickname);
             String nickname = et_wallet_nickname.getText().toString();
 
             try {
-                if (bound) {
-                    Toast.makeText(getApplicationContext(), "Creating wallet", Toast.LENGTH_LONG).show();
-                    Log.i(TAG, "Creating wallet");
-                    service.generateWallet(nickname, (wallet)->{});
+                Toast.makeText(getApplicationContext(), "Creating wallet", Toast.LENGTH_LONG).show();
+                Log.i(TAG, "Creating wallet");
+                service.generateWallet(nickname, (wallet)->{});
 
-                    Intent landingPageIntent = new Intent(getApplicationContext(), LandingPageActivity.class);
-                    startActivity(landingPageIntent);
-                }
+                Intent landingPageIntent = new Intent(getApplicationContext(), LandingPageActivity.class);
+                startActivity(landingPageIntent);
             } catch (Exception e){
                 e.printStackTrace();
             }

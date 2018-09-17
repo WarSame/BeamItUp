@@ -23,32 +23,39 @@ public class GenerateWalletTask extends AsyncTask<String, Void, Wallet> {
     private NotificationCompat.Builder builder;
     private NotificationManagerCompat notificationManagerCompat;
     private OnGenerateWallet onGenerateWallet;
+    private int notificationID;
 
     GenerateWalletTask(Context context, boolean isUserAuthenticationRequired, OnGenerateWallet onGenerateWallet){
         this.weakContext = new WeakReference<>(context);
         this.isUserAuthenticationRequired = isUserAuthenticationRequired;
         this.onGenerateWallet = onGenerateWallet;
+        this.notificationManagerCompat = NotificationManagerCompat.from(weakContext.get());
+        this.notificationID = (int)System.currentTimeMillis();
     }
 
     @Override
     protected Wallet doInBackground(String... nicknames) {
-        int id = (int)System.currentTimeMillis();
-
         String nickname = nicknames[0];
         Log.d(TAG, "Generating wallet for " + nickname);
         builder = new NotificationCompat.Builder(weakContext.get(), "BeamItUp")
                 .setContentTitle("Creating wallet")
                 .setContentText(nickname)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setProgress(0, 0, true);
+                .setSmallIcon(R.drawable.ic_beamitup)
+                .setProgress(0, 0, true)
+                .setVibrate(BeamItUp.START_VIBRATE_PATTERN);
 
-        notificationManagerCompat = NotificationManagerCompat.from(weakContext.get());
-        notificationManagerCompat.notify(id, builder.build());
+        notificationManagerCompat.notify(notificationID, builder.build());
 
         Wallet wallet = null;
         try {
-            wallet = handleWalletCreation(nickname, id);
+            wallet = handleWalletCreation(nickname);
         } catch (Exception e){
+            builder
+                    .setContentTitle("Wallet creation failed")
+                    .setProgress(0,0, false)
+                    .setVibrate(BeamItUp.FAILURE_VIBRATE_PATTERN);
+
+            notificationManagerCompat.notify(notificationID, builder.build());
             e.printStackTrace();
         }
         return wallet;
@@ -59,7 +66,7 @@ public class GenerateWalletTask extends AsyncTask<String, Void, Wallet> {
         onGenerateWallet.onGenerateWallet(wallet);
     }
 
-    private Wallet handleWalletCreation(String nickname, int notificationID) throws Exception{
+    private Wallet handleWalletCreation(String nickname) throws Exception{
         Wallet wallet = new Wallet.WalletBuilder()
                 .nickname(nickname)
                 .context(weakContext.get())
@@ -68,7 +75,7 @@ public class GenerateWalletTask extends AsyncTask<String, Void, Wallet> {
 
         insertWallet(wallet);
 
-        onCreateWalletSuccess(wallet, notificationID);
+        onCreateWalletSuccess(wallet);
         return wallet;
     }
 
@@ -80,8 +87,8 @@ public class GenerateWalletTask extends AsyncTask<String, Void, Wallet> {
         Log.i(TAG, "Inserted new wallet " + wallet.getId());
     }
 
-    private void onCreateWalletSuccess(Wallet wallet, int notificationID){
-        Log.i(TAG, "Wallet created");
+    private void onCreateWalletSuccess(Wallet wallet){
+        Log.i(TAG, "Wallet created " + wallet.getNickname());
         Intent viewWalletIntent = new Intent(weakContext.get(), WalletDetailActivity.class);
         viewWalletIntent.putExtra("wallet", wallet);
 
@@ -94,7 +101,9 @@ public class GenerateWalletTask extends AsyncTask<String, Void, Wallet> {
                 .setContentTitle("Wallet created for ")
                 .setContentText(wallet.getNickname())
                 .setContentIntent(viewWalletPendingIntent)
-                .setProgress(0, 0, false);
+                .setProgress(0, 0, false)
+                .setVibrate(BeamItUp.SUCCESS_VIBRATE_PATTERN);
+
         notificationManagerCompat.notify(notificationID, builder.build());
     }
 }

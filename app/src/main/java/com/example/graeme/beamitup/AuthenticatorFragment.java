@@ -29,9 +29,6 @@ public class AuthenticatorFragment extends Fragment {
     }
 
     AuthenticatorFragment setKGM(KeyguardManager kgm) {
-        if (this.kgm == null){
-            Log.e(TAG, "kgm is null");
-        }
         this.kgm = kgm;
         return this;
     }

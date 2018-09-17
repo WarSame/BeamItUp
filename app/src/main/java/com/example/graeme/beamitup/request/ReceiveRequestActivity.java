@@ -2,9 +2,13 @@ package com.example.graeme.beamitup.request;
 
 import android.app.Activity;
 import android.app.KeyguardManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,6 +17,10 @@ import com.example.graeme.beamitup.AuthenticatorFragment;
 import com.example.graeme.beamitup.AuthenticatorFragment.OnUserAuthenticatedListener;
 import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
+import com.example.graeme.beamitup.transaction.SendTransactionService;
+import com.example.graeme.beamitup.transaction.SendTransactionService.SendTransactionBinder;
+import com.example.graeme.beamitup.transaction.Transaction;
+import com.example.graeme.beamitup.wallet.GenerateWalletService;
 import com.example.graeme.beamitup.wallet.Wallet;
 import com.example.graeme.beamitup.wallet.WalletPickerFragment;
 
@@ -20,14 +28,28 @@ import static com.example.graeme.beamitup.ndef.NdefMessaging.handlePushMessage;
 
 public class ReceiveRequestActivity extends Activity implements WalletPickerFragment.onWalletSelectedListener{
     private static final String TAG = "ReceiveRequestActivity";
-    Wallet wallet;
-    Request request;
+    private Wallet wallet;
+    private Request request;
+    private SendTransactionService service;
+    private boolean bound = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.i(TAG, "Binding service");
+        Intent generateWalletIntent = new Intent(this, SendTransactionService.class);
+        this.bindService(generateWalletIntent, connection, BIND_AUTO_CREATE);
         handleRequest();
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+
+        Log.i(TAG, "Unbinding service");
+        unbindService(connection);
+        bound = false;
     }
 
     private void handleRequest() {
@@ -81,16 +103,33 @@ public class ReceiveRequestActivity extends Activity implements WalletPickerFrag
     OnUserAuthenticatedListener onUserAuthenticatedListener = new OnUserAuthenticatedListener() {
         @Override
         public void onUserAuthenticated() {
-            Intent finishRequestIntent = new Intent(getApplicationContext(), FinishRequestActivity.class);
-            finishRequestIntent.putExtra("request", request);
+            Log.d(TAG, "Sending transaction");
+            Toast.makeText(getApplicationContext(), "Sending transaction", Toast.LENGTH_LONG).show();
+            Transaction transaction = new Transaction(wallet, request);
+            service.sendTransaction(transaction, (receipt)->{});
+            Intent landingPageIntent = new Intent(getApplicationContext(), LandingPageActivity.class);
 
             enableAcceptRequestButton();
-            startActivity(finishRequestIntent);
+            startActivity(landingPageIntent);
         }
 
         @Override
         public void onUserNotAuthenticated() {
             enableAcceptRequestButton();
+        }
+    };
+
+    ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            SendTransactionBinder generateWalletBinder = (SendTransactionBinder) iBinder;
+            service = generateWalletBinder.getService();
+            bound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            bound = false;
         }
     };
 
