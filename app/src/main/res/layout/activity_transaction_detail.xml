@@ -3,100 +3,96 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
     tools:context=".transaction.TransactionDetailActivity">
 
-    <ProgressBar
-        android:id="@+id/pb_send_transfer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_sender_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="2"
         android:layout_margin="16dp"
-        >
+        app:layout_constraintTop_toTopOf="parent">
+
         <TextView
+            android:id="@+id/tv_sender_address_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/sender_address_label"
-            android:layout_weight="1"
-            />
+            app:layout_constraintEnd_toStartOf="@+id/tv_sender_address_value"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:id="@+id/tv_sender_address_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/sender_address_value"
-            android:layout_weight="1"
-            />
-    </LinearLayout>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/tv_sender_address_label" />
+    </android.support.constraint.ConstraintLayout>
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_receiver_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="2"
         android:layout_margin="16dp"
-        >
+        android:weightSum="2"
+        app:layout_constraintTop_toBottomOf="@+id/cl_sender_address">
+
         <TextView
+            android:id="@+id/tv_receiver_address_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/receiver_address_label"
-            android:layout_weight="1"
-            />
+            app:layout_constraintEnd_toStartOf="@+id/tv_receiver_address_value"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:id="@+id/tv_receiver_address_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/receiver_address_value"
-            android:layout_weight="1"
-            />
-    </LinearLayout>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tv_receiver_address_label" />
+    </android.support.constraint.ConstraintLayout>
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_amount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="2"
         android:layout_margin="16dp"
-        >
+        android:weightSum="2"
+        app:layout_constraintTop_toBottomOf="@+id/cl_receiver_address">
+
         <TextView
+            android:id="@+id/tv_amount_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/amount_label"
-            android:layout_weight="1"
-            />
+            app:layout_constraintEnd_toStartOf="@+id/tv_amount_value"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:id="@+id/tv_amount_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/amount_value"
-            android:layout_weight="1"
-            />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="2"
-        android:layout_margin="16dp"
-        android:id="@+id/ll_gas_used"
-        >
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_gas_used_label"
-            android:text="@string/gas_used_label"
-            android:layout_weight="1"
-            />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_gas_used_value"
-            android:text="@string/gas_used_value"
-            android:layout_weight="1"
-            />
-    </LinearLayout>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tv_amount_label" />
+    </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

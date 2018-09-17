@@ -26,7 +26,7 @@ import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-public class SendTransactionTask extends AsyncTask<Transaction, Void, TransactionReceipt> {
+public class SendTransactionTask extends AsyncTask<Transaction, Void, Transaction> {
     private WeakReference<Context> weakContext;
     private OnSendTransaction onSendTransaction;
     private static final String TAG = "SendTransactionTask";
@@ -49,7 +49,7 @@ public class SendTransactionTask extends AsyncTask<Transaction, Void, Transactio
     }
 
     @Override
-    protected TransactionReceipt doInBackground(Transaction... transactions) {
+    protected Transaction doInBackground(Transaction... transactions) {
         Transaction transaction = transactions[0];
         Wallet senderWallet = transaction.getSenderWallet();
         Request request = transaction.getRequest();
@@ -79,9 +79,8 @@ public class SendTransactionTask extends AsyncTask<Transaction, Void, Transactio
 
         Log.d(TAG, "Sender address: " + credentials.getAddress());
 
-        TransactionReceipt receipt;
         try {
-            receipt = org.web3j.tx.Transfer.sendFunds(
+            org.web3j.tx.Transfer.sendFunds(
                     web3j,
                     credentials,
                     request.getToAddress(),
@@ -94,8 +93,8 @@ public class SendTransactionTask extends AsyncTask<Transaction, Void, Transactio
             handleTransactionFailure(transaction);
             return null;
         }
-        handleTransactionSuccess(receipt);
-        return receipt;
+        handleTransactionSuccess(transaction);
+        return transaction;
     }
 
     private void handleInsufficientFunds(Transaction transaction) {
@@ -117,8 +116,8 @@ public class SendTransactionTask extends AsyncTask<Transaction, Void, Transactio
     }
 
     @Override
-    protected void onPostExecute(TransactionReceipt receipt){
-        onSendTransaction.onSendTransaction(receipt);
+    protected void onPostExecute(Transaction transaction){
+        onSendTransaction.onSendTransaction(transaction);
     }
 
     private boolean isSufficientFunds(String fromAddress, String amount) throws IOException {
@@ -158,20 +157,20 @@ public class SendTransactionTask extends AsyncTask<Transaction, Void, Transactio
         notificationManagerCompat.notify(notificationID, builder.build());
     }
 
-    private void handleTransactionSuccess(TransactionReceipt receipt){
-        Log.d(TAG, "Transaction from: " + receipt.getFrom());
-        Log.d(TAG, "Transaction to: " + receipt.getTo());
+    private void handleTransactionSuccess(Transaction transaction){
+        Log.d(TAG, "Transaction from: " + transaction.getSenderWallet().getAddress());
+        Log.d(TAG, "Transaction to: " + transaction.getRequest().getToAddress());
 
         Intent viewWalletIntent = new Intent(weakContext.get(), TransactionDetailActivity.class);
-        viewWalletIntent.putExtra("receipt", new SerializableTransactionReceipt(receipt));
+        viewWalletIntent.putExtra("transaction", transaction);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(weakContext.get())
                 .addNextIntentWithParentStack(viewWalletIntent);
         PendingIntent viewWalletPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder.setContentTitle("Transaction success")
-                .setContentText("Sent transaction from " + receipt.getFrom()
-                        + " to " + receipt.getTo())
+                .setContentText("Sent transaction from " + transaction.getSenderWallet().getAddress()
+                        + " to " + transaction.getRequest().getToAddress())
                 .setContentIntent(viewWalletPendingIntent)
                 .setProgress(0, 0, false);
 

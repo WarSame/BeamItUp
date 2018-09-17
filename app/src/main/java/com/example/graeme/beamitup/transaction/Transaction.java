@@ -5,7 +5,7 @@ import com.example.graeme.beamitup.wallet.Wallet;
 
 import java.io.Serializable;
 
-public class Transaction {
+public class Transaction implements Serializable {
     public static final String TAG = "Transaction";
     private static final long serialVersionUID = 9124947053743920362L;
     private Wallet senderWallet;

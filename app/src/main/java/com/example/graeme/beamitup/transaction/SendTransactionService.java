@@ -19,7 +19,7 @@ public class SendTransactionService extends Service {
     }
 
     public interface OnSendTransaction{
-        void onSendTransaction(TransactionReceipt receipt);
+        void onSendTransaction(Transaction transaction);
     }
 
     @Nullable
