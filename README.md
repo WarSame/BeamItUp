@@ -19,9 +19,3 @@ Completed:
 * Abstraction of components
 * Separation into MVP
 * Testing
-
-Wishlist:
-* Transfers in CAD
-* Implement light client to avoid Infura dependency (contingent on Ethereum light clients)
-* Send push notifications when receiving transfer over the Ethereum network
-* Lower transfer costs after PoS implemented
