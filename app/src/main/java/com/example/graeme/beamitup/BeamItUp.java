@@ -19,6 +19,10 @@ public class BeamItUp extends Application {
     static public final String INFURA_URL = "https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9";//TODO switch to websockets
     private Web3j web3j;
 
+    public static final long[] SUCCESS_VIBRATE_PATTERN = new long[]{0, 200, 100, 200};
+    public static final long[] FAILURE_VIBRATE_PATTERN = new long[]{0, 50, 25, 50};
+    public static final long[] START_VIBRATE_PATTERN = new long[]{0, 100};
+
     @Override
     public void onCreate(){
         super.onCreate();

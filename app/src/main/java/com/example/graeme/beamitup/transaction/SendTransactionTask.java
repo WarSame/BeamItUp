@@ -18,7 +18,6 @@ import com.example.graeme.beamitup.wallet.Wallet;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.utils.Convert;
 
 import java.io.IOException;
@@ -102,7 +101,9 @@ public class SendTransactionTask extends AsyncTask<Transaction, Void, Transactio
         builder.setContentTitle("Insufficient funds")
                 .setContentText("Wallet " + transaction.getSenderWallet().getNickname()
                 + " does not have " + transaction.getRequest().getAmount() + " ETH to send")
-                .setProgress(0, 0, false);
+                .setProgress(0, 0, false)
+                .setVibrate(BeamItUp.FAILURE_VIBRATE_PATTERN);
+
         notificationManagerCompat.notify(notificationID, builder.build());
     }
 
@@ -110,7 +111,8 @@ public class SendTransactionTask extends AsyncTask<Transaction, Void, Transactio
         builder.setContentTitle("Transaction failure")
                 .setContentText("From " + transaction.getSenderWallet().getNickname()
                  + " to " + transaction.getRequest().getToAddress())
-                .setProgress(0, 0, false);
+                .setProgress(0, 0, false)
+                .setVibrate(BeamItUp.FAILURE_VIBRATE_PATTERN);
 
         notificationManagerCompat.notify(notificationID, builder.build());
     }
@@ -152,7 +154,8 @@ public class SendTransactionTask extends AsyncTask<Transaction, Void, Transactio
         builder.setContentTitle("Sending transaction")
                 .setContentText(transaction.getRequest().getAmount()
                         + " ETH to " + transaction.getRequest().getToAddress())
-                .setProgress(0, 0, true);
+                .setProgress(0, 0, true)
+                .setVibrate(BeamItUp.START_VIBRATE_PATTERN);
 
         notificationManagerCompat.notify(notificationID, builder.build());
     }
@@ -172,7 +175,8 @@ public class SendTransactionTask extends AsyncTask<Transaction, Void, Transactio
                 .setContentText("Sent transaction from " + transaction.getSenderWallet().getAddress()
                         + " to " + transaction.getRequest().getToAddress())
                 .setContentIntent(viewWalletPendingIntent)
-                .setProgress(0, 0, false);
+                .setProgress(0, 0, false)
+                .setVibrate(BeamItUp.SUCCESS_VIBRATE_PATTERN);
 
         notificationManagerCompat.notify(notificationID, builder.build());
     }
