@@ -1,29 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.graeme.beamitup.LandingPageActivity"
-    android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:layout_margin="16dp"
-    >
+    android:orientation="vertical">
 
-    <Button
-        android:layout_width="wrap_content"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_landing_operations"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/btn_create_request"
-        android:id="@+id/btn_create_request"
-        android:layout_margin="16dp"
-        android:layout_alignParentTop="true"/>
+        app:layout_constraintTop_toTopOf="parent">
 
-    <Button
-        android:id="@+id/btn_wallet_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_wallet_list"
-        android:layout_margin="16dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_below="@+id/btn_create_request"/>
+        <Button
+            android:id="@+id/btn_create_request"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_create_request"
+            app:layout_constraintEnd_toStartOf="@+id/btn_add_wallet"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/btn_add_wallet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_add_wallet"
+            app:layout_constraintEnd_toStartOf="@+id/btn_create_request"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/btn_create_request" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <fragment
+        android:id="@+id/frag_wallet_picker"
+        android:name="com.example.graeme.beamitup.wallet.WalletPickerFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/cl_landing_operations"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout="@layout/frag_list_item_wallet" />
+
+
+</android.support.constraint.ConstraintLayout>
