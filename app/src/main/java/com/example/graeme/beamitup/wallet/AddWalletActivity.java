@@ -1,6 +1,7 @@
 package com.example.graeme.beamitup.wallet;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.KeyguardManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -41,8 +42,19 @@ public class AddWalletActivity extends Activity {
                 .add(authenticatorFragment, "AuthenticatorFragment")
                 .commit();
 
+        AlertDialog.Builder walletAlert = new AlertDialog.Builder(AddWalletActivity.this)
+                .setTitle("Wallet warning")
+                .setMessage("Wallets disappear if you change your phone's lock. Please export and back up your private key.")
+                .setPositiveButton(
+                        "Acknowledged",
+                        (dialog, which)-> {
+                            Log.i(TAG, "User acknowledged wallet disappearance.");
+                            authenticatorFragment.authenticateMobileUser();
+                        }
+                );
+
         btn_add_wallet.setOnClickListener(
-                (View v) -> authenticatorFragment.authenticateMobileUser()
+                (View v) -> walletAlert.show()
         );
 
         Log.i(TAG, "Binding service");
