@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.example.graeme.beamitup.CopyableAddressFragment;
 import com.example.graeme.beamitup.BeamItUp;
+import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.qr.CopyableQRImageFragment;
 
@@ -52,7 +53,7 @@ public class WalletDetailActivity extends Activity {
         walletDao.update(wallet);
         Toast.makeText(this, "Wallet saved", Toast.LENGTH_LONG).show();
 
-        Intent walletListIntent = new Intent(this, WalletListActivity.class);
+        Intent walletListIntent = new Intent(this, LandingPageActivity.class);
         startActivity(walletListIntent);
     }
 

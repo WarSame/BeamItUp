@@ -1,64 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.graeme.beamitup.request.CreateRequestActivity"
-    android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:layout_margin="16dp">
+    android:orientation="vertical"
+    app:layout_constraintVertical_chainStyle="packed"
+    tools:context="com.example.graeme.beamitup.request.CreateRequestActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_amount_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/amount_label"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/et_amount_value"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/et_amount_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/amount_value"
+            android:inputType="numberDecimal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tv_amount_label" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_gas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/cl_amount">
+
+        <TextView
+            android:id="@+id/tv_gas_cost_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_gas_cost_label"
+            app:layout_constraintEnd_toStartOf="@+id/tv_gas_cost_value"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_gas_cost_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_gas_cost_value"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tv_gas_cost_label" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <Button
+        android:id="@+id/btn_create_request"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/btn_create_request"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cl_gas" />
 
     <fragment
         android:id="@+id/frag_wallet_picker"
         android:name="com.example.graeme.beamitup.wallet.WalletPickerFragment"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_margin="16dp"
-        android:weightSum="2">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/amount_label"
-            android:layout_weight="1"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_create_request"
+        tools:layout="@layout/frag_list_item_wallet" />
 
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/amount_value"
-            android:inputType="numberDecimal"
-            android:layout_weight="1"
-            android:id="@+id/et_amount_value"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:weightSum="2">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/tv_gas_cost_label"
-            android:layout_weight="1"/>
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/tv_gas_cost_value"
-            android:layout_weight="1"
-            android:id="@+id/tv_gas_cost_value"/>
-    </LinearLayout>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_create_request"
-        android:text="@string/btn_create_request" />
-
-
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

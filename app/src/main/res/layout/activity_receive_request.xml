@@ -1,76 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layout_margin="16dp"
+    android:orientation="vertical"
     tools:context="com.example.graeme.beamitup.request.ReceiveRequestActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/cl_to_address"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_amount_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/amount_label"
+            app:layout_constraintEnd_toStartOf="@+id/tv_amount_value"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_amount_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/amount_value"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tv_amount_label" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_to_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/cl_accept_decline"
+        app:layout_constraintTop_toBottomOf="@+id/cl_amount">
+
+        <TextView
+            android:id="@+id/tv_to_address_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/to_address_label"
+            app:layout_constraintEnd_toStartOf="@+id/tv_to_address_value"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_to_address_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/to_address_value"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tv_to_address_label" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_accept_decline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/frag_wallet_picker"
+        app:layout_constraintTop_toBottomOf="@+id/cl_to_address">
+
+        <Button
+            android:id="@+id/btn_decline_request"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_decline_request"
+            app:layout_constraintEnd_toStartOf="@+id/btn_accept_request"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/btn_accept_request"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_accept_request"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/btn_decline_request" />
+    </android.support.constraint.ConstraintLayout>
 
     <fragment
         android:id="@+id/frag_wallet_picker"
         android:name="com.example.graeme.beamitup.wallet.WalletPickerFragment"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="0dp"
         android:layout_margin="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cl_accept_decline"
         tools:layout="@layout/frag_list_item_wallet" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="2">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/amount_label"
-            android:layout_weight="1"
-            android:layout_margin="16dp"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/amount_value"
-            android:id="@+id/tv_amount_value"
-            android:layout_weight="1"
-            android:layout_margin="16dp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="2">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/to_address_label"
-            android:layout_weight="1"
-            android:layout_margin="16dp"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/to_address_value"
-            android:id="@+id/tv_to_address_value"
-            android:layout_weight="1"
-            android:layout_margin="16dp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="2" >
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_decline_request"
-            android:text="@string/btn_decline_request"
-            android:layout_margin="16dp"
-            android:layout_weight="1"/>
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_accept_request"
-            android:text="@string/btn_accept_request"
-            android:layout_margin="16dp"
-            android:layout_weight="1"/>
-    </LinearLayout>
-
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

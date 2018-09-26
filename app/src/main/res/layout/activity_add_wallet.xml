@@ -1,27 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
-    android:layout_margin="16dp"
     android:orientation="vertical"
     tools:context="com.example.graeme.beamitup.wallet.AddWalletActivity">
 
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:inputType="text"
         android:id="@+id/et_wallet_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:hint="@string/et_wallet_nickname"
-        android:layout_margin="16dp"/>
+        android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/btn_add_wallet"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:text="@string/btn_add_wallet"
         android:id="@+id/btn_add_wallet"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="16dp"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/btn_add_wallet"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_wallet_nickname" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

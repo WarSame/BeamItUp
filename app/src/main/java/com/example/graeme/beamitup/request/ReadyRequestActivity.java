@@ -24,10 +24,10 @@ public class ReadyRequestActivity extends Activity {
     }
 
     private void fillViewValues(Request request) {
-        TextView tvToAddress = findViewById(R.id.tv_to_address_value);
+        TextView tvReceiverAddress = findViewById(R.id.tv_receiver_address_value);
         TextView tvAmount = findViewById(R.id.tv_amount_value);
 
-        tvToAddress.setText(request.getToAddress());
+        tvReceiverAddress.setText(request.getToAddress());
         tvAmount.setText(request.getAmount());
     }
 
