@@ -34,6 +34,7 @@
     <string name="tv_wallet_nickname">Wallet Nickname</string>
     <string name="tv_gas_cost_label">Gas cost:</string>
     <string name="tv_wallet_wallet_name">Wallet name</string>
+    <string name="tv_request_ready">Request Ready!</string>
 
     <!-- Buttons -->
     <string name="btn_add_wallet">Add Wallet</string>

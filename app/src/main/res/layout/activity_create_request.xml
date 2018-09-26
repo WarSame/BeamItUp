@@ -5,15 +5,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.graeme.beamitup.request.CreateRequestActivity"
     android:orientation="vertical"
-    android:gravity="center_horizontal"
-    android:layout_margin="16dp">
-
-    <fragment
-        android:id="@+id/frag_wallet_picker"
-        android:name="com.example.graeme.beamitup.wallet.WalletPickerFragment"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        />
+    android:gravity="center_horizontal">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -52,6 +44,7 @@
             android:text="@string/tv_gas_cost_value"
             android:layout_weight="1"
             android:id="@+id/tv_gas_cost_value"/>
+
     </LinearLayout>
 
     <Button
@@ -59,6 +52,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/btn_create_request"
         android:text="@string/btn_create_request" />
+
+    <fragment
+        android:id="@+id/frag_wallet_picker"
+        android:name="com.example.graeme.beamitup.wallet.WalletPickerFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:layout="@layout/frag_list_item_wallet" />
 
 
 </LinearLayout>
