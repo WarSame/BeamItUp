@@ -1,4 +1,4 @@
-package encryption;
+package com.example.graeme.beamitup.encryption;
 
 import android.security.keystore.KeyProperties;
 
