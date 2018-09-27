@@ -64,15 +64,34 @@
         tools:layout="@layout/frag_copyable_address"
         />
 
-    <Button
-        app:layout_constraintTop_toBottomOf="@+id/frag_copyable_text_display"
-        android:layout_width="wrap_content"
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="@string/btn_save_wallet"
-        android:layout_margin="16dp"
-        android:layout_gravity="center"
-        android:id="@+id/btn_save_wallet"/>
+        app:layout_constraintTop_toBottomOf="@+id/frag_copyable_text_display">
+
+        <Button
+            android:id="@+id/btn_save_wallet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/btn_save_wallet"
+            app:layout_constraintEnd_toStartOf="@+id/btn_export_wallet"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/btn_export_wallet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/btn_export_wallet"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/btn_save_wallet" />
+
+    </android.support.constraint.ConstraintLayout>
+
 
 </android.support.constraint.ConstraintLayout>

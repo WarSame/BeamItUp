@@ -45,6 +45,7 @@
     <string name="btn_decline_request">Decline Request</string>
     <string name="btn_create_request">Create Request</string>
     <string name="btn_save_wallet">Save Wallet</string>
+    <string name="btn_export_wallet">Export Wallet</string>
 
     <!-- Hints -->
     <string name="hint_email">Email</string>
