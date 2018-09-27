@@ -13,9 +13,9 @@ import java.io.Serializable;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 
-import encryption.Decryptor;
-import encryption.Encryption;
-import encryption.Encryptor;
+import com.example.graeme.beamitup.encryption.Decryptor;
+import com.example.graeme.beamitup.encryption.Encryption;
+import com.example.graeme.beamitup.encryption.Encryptor;
 import org.greenrobot.greendao.annotation.Generated;
 
 @Entity

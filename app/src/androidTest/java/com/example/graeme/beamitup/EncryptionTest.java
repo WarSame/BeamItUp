@@ -9,7 +9,7 @@ import com.example.graeme.beamitup.wallet.Wallet;
 import org.junit.Before;
 import org.junit.Test;
 
-import encryption.Decryptor;
+import com.example.graeme.beamitup.encryption.Decryptor;
 
 import static junit.framework.Assert.assertTrue;
 
