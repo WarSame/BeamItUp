@@ -71,6 +71,7 @@ public class WalletDetailActivity extends Activity {
         public void onUserAuthenticated() {
             Log.i(TAG, "onUserAuthenticated");
             try {
+                Log.i(TAG, "Copying secret key to clipboard");
                 String privateKey = wallet.retrieveCredentials().getEcKeyPair().getPrivateKey().toString();
                 ClipboardManager clipboard = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
                 copy(clipboard, "Private key of " + wallet.getNickname(), privateKey);
