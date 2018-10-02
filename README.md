@@ -16,14 +16,6 @@ Completed:
 * Switch to a request-based flow
 * Make handling ethereum credentials easier with wallet files
 * Allow users to modify ethereum accounts more
-
-TO DO:
 * Abstraction of components
 * Separation into MVP
 * Testing
-
-Wishlist:
-* Transfers in CAD
-* Implement light client to avoid Infura dependency (contingent on Ethereum light clients)
-* Send push notifications when receiving transfer over the Ethereum network
-* Lower transfer costs after PoS implemented
