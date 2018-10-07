@@ -1,6 +1,6 @@
 BeamItUp
 ========
-Peer to peer ethereum transfers on Android.
+Safely and easily send Ethereum by tapping your phones together.
 
 **NOTE: If you have Android security(PIN, fingerprint, etc.) and remove it your wallets will become unaccessible. Backup your private keys to a safe location.**
 
