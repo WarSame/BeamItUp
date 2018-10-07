@@ -1,21 +1,21 @@
-# BeamItUp
+BeamItUp
+========
 Peer to peer ethereum transfers on Android.
 
-Completed:
-* Login/create app account
-* Create ethereum account
-* Retrieve associated ethereum account for app account
-* Create transfer
-* Ready transfer for sending with NFC
-* Receiving transfer with NFC and preparing reply
-* Receiving reply
-* Sending transfer through Ethereum network to peer's account
-* Basic encryption for security
-* Account session
-* Determine transfer fees when preparing transfer
-* Switch to a request-based flow
-* Make handling ethereum credentials easier with wallet files
-* Allow users to modify ethereum accounts more
-* Abstraction of components
-* Separation into MVP
-* Testing
+**NOTE: If you have Android security(PIN, fingerprint, etc.) and remove it your wallets will become unaccessible. Backup your private keys to a safe location.**
+
+## Usage Instructions ##
+### Create a wallet ###
+Generate a secure wallet in BeamItUp.
+
+### Fill your wallet ###
+Transfer ETH over from your main storage wallet.
+
+### Back up private key ###
+Copy your private key to a safe location in case you lose your phone, delete the app, or reset your phone's lock security.
+
+### Request ETH ###
+Create a request for your friend to pay you back. Tap your phones together for them to receive the request.
+
+### Transfer ETH ###
+Tap your phones together to receive a request. Accept it to send your friend ETH.
