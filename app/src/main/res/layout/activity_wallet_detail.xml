@@ -26,7 +26,7 @@
 
         <EditText
             android:id="@+id/et_wallet_nickname"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:inputType="text"
             android:text="@string/et_wallet_nickname"
