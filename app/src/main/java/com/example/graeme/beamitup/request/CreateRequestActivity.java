@@ -18,6 +18,9 @@ import com.example.graeme.beamitup.wallet.Wallet;
 import com.example.graeme.beamitup.wallet.WalletPickerFragment;
 
 import org.web3j.protocol.Web3j;
+
+import java.math.BigInteger;
+
 import rx.schedulers.Schedulers;
 
 import static org.web3j.tx.Transfer.GAS_LIMIT;
@@ -49,15 +52,20 @@ public class CreateRequestActivity extends Activity implements WalletPickerFragm
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.from( runnable -> new Handler( Looper.getMainLooper() ).post(runnable) ))//Observe on main thread
                 .subscribe(
-                    price -> setGasPrice(price.getGasPrice().multiply(GAS_LIMIT).toString()),
+                    price -> {
+                        BigInteger gasPrice = price.getGasPrice();
+                        Log.i(TAG, "gasPrice = " + gasPrice);
+                        Log.i(TAG, "GAS_LIMIT = " + GAS_LIMIT);
+                        setTransactionCost(gasPrice.multiply(GAS_LIMIT).toString());
+                    },
                     Throwable::printStackTrace
                 );
     }
 
-    private void setGasPrice(String gasPrice){
-        Log.i(TAG, "Setting gas price to " + gasPrice);
+    private void setTransactionCost(String transactionCost){
+        Log.i(TAG, "Setting gas price to " + transactionCost);
         TextView tv_gas_cost = findViewById(R.id.tv_gas_cost_value);
-        tv_gas_cost.setText(gasPrice);
+        tv_gas_cost.setText(transactionCost);
     }
 
     private void readyRequestMessage(Wallet wallet, String amount) {

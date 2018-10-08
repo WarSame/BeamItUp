@@ -32,7 +32,7 @@
     <string name="gas_used_label">Gas Used:</string>
     <string name="to_address_label">To address:</string>
     <string name="tv_wallet_nickname">Wallet Nickname</string>
-    <string name="tv_gas_cost_label">Gas cost:</string>
+    <string name="tv_gas_cost_label">Transaction cost:</string>
     <string name="tv_wallet_wallet_name">Wallet name</string>
     <string name="tv_request_ready">Request Ready!</string>
 
