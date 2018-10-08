@@ -13,12 +13,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.graeme.beamitup.AddressListener;
 import com.example.graeme.beamitup.AuthenticatorFragment;
-import com.example.graeme.beamitup.CopyableAddressFragment;
 import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
-import com.example.graeme.beamitup.qr.CopyableQRImageFragment;
 
 public class WalletDetailActivity extends Activity {
     private static final String TAG = "WalletDetailActivity";
@@ -40,19 +39,14 @@ public class WalletDetailActivity extends Activity {
                 .onUserAuthenticatedListener(onUserAuthenticatedListener)
                 .build();
 
-        Fragment qrCodeDisplayFragment = CopyableQRImageFragment.newInstance(
-                wallet.getAddress()
-        );
+        if (savedInstanceState == null) {
+            Log.i(TAG, "savedInstanceState is null");
 
-        Fragment addressCopyableTextDisplayFragment = CopyableAddressFragment.newInstance(
-                wallet.getAddress()
-        );
-        getFragmentManager()
-                .beginTransaction()
-                .add(qrCodeDisplayFragment, "CopyableQRImageFragment")
-                .add(addressCopyableTextDisplayFragment, "CopyableAddressFragment")
-                .add(authenticatorFragment, "AuthenticatorFragment")
-                .commit();
+            getFragmentManager()
+                    .beginTransaction()
+                    .add(authenticatorFragment, "AuthenticatorFragment")
+                    .commit();
+        }
 
         Button btn_save_wallet = findViewById(R.id.btn_save_wallet);
 
@@ -66,7 +60,8 @@ public class WalletDetailActivity extends Activity {
         btn_export_wallet.setOnClickListener((v)-> authenticatorFragment.authenticateMobileUser());
     }
 
-    AuthenticatorFragment.OnUserAuthenticatedListener onUserAuthenticatedListener = new AuthenticatorFragment.OnUserAuthenticatedListener() {
+    AuthenticatorFragment.OnUserAuthenticatedListener onUserAuthenticatedListener =
+            new AuthenticatorFragment.OnUserAuthenticatedListener() {
         @Override
         public void onUserAuthenticated() {
             Log.i(TAG, "onUserAuthenticated");
@@ -103,5 +98,4 @@ public class WalletDetailActivity extends Activity {
         Intent walletListIntent = new Intent(this, LandingPageActivity.class);
         startActivity(walletListIntent);
     }
-
 }
