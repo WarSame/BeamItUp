@@ -21,18 +21,18 @@ import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.qr.CopyableQRImageFragment;
 
-public class WalletDetailActivity extends Activity {
+public class WalletDetailActivity extends Activity implements AddressListener {
     private static final String TAG = "WalletDetailActivity";
     private Wallet wallet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        wallet = (Wallet) getIntent().getSerializableExtra("wallet");
         setContentView(R.layout.activity_wallet_detail);
 
         EditText et_wallet_nickname = findViewById(R.id.et_wallet_nickname);
 
-        wallet = (Wallet) getIntent().getSerializableExtra("wallet");
         et_wallet_nickname.setText(wallet.getNickname());
 
         KeyguardManager kgm = (KeyguardManager) getApplication().getSystemService(Context.KEYGUARD_SERVICE);
@@ -46,13 +46,6 @@ public class WalletDetailActivity extends Activity {
                     .beginTransaction()
                     .add(authenticatorFragment, "AuthenticatorFragment")
                     .commit();
-
-            CopyableQRImageFragment qrFrag = (CopyableQRImageFragment) getFragmentManager()
-                    .findFragmentById(R.id.frag_qr_code_display);
-            qrFrag.setAddress(wallet.getAddress());
-            CopyableAddressFragment addressFrag = (CopyableAddressFragment) getFragmentManager()
-                    .findFragmentById(R.id.frag_copyable_text_display);
-            addressFrag.setAddress(wallet.getAddress());
         }
 
         Button btn_save_wallet = findViewById(R.id.btn_save_wallet);
@@ -104,5 +97,10 @@ public class WalletDetailActivity extends Activity {
 
         Intent walletListIntent = new Intent(this, LandingPageActivity.class);
         startActivity(walletListIntent);
+    }
+
+    @Override
+    public String getAddress() {
+        return wallet.getAddress();
     }
 }

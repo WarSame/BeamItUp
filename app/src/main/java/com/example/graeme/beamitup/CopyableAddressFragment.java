@@ -5,16 +5,20 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.graeme.beamitup.wallet.WalletDetailActivity;
 
-public class CopyableAddressFragment extends Fragment implements AddressListener {
+
+public class CopyableAddressFragment extends Fragment {
     private static final String TAG = "CopyableAddressFragment";
-    private static final int ADDRESS_DISPLAY_LENGTH = 8;
+    private String address = "";
+    private static final String TAG_ADDRESS = "TAG_ADDRESS";
 
     public CopyableAddressFragment() {
         // Required empty public constructor
@@ -23,7 +27,10 @@ public class CopyableAddressFragment extends Fragment implements AddressListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if (savedInstanceState != null){
+            this.address = savedInstanceState.getString(TAG_ADDRESS);
+            Log.i(TAG, "Saved address is " + address);
+        }
     }
 
     @Override
@@ -34,9 +41,9 @@ public class CopyableAddressFragment extends Fragment implements AddressListener
     }
 
     @Override
-    public void setAddress(String address) {
-        TextView tv_wallet_address = getActivity().findViewById(R.id.tv_wallet_address);
-        String formattedAddress = address.substring(0, ADDRESS_DISPLAY_LENGTH) + "…";
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
+        address = ((WalletDetailActivity)getActivity()).getAddress();
+        TextView tv_wallet_address = view.findViewById(R.id.tv_wallet_address);
         tv_wallet_address.setText(address);
 
         tv_wallet_address.setOnClickListener((v)->{
@@ -47,5 +54,11 @@ public class CopyableAddressFragment extends Fragment implements AddressListener
             }
             clipboard.setPrimaryClip(clip);
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString(TAG_ADDRESS, address);
     }
 }
