@@ -16,8 +16,10 @@ import android.widget.Toast;
 import com.example.graeme.beamitup.AddressListener;
 import com.example.graeme.beamitup.AuthenticatorFragment;
 import com.example.graeme.beamitup.BeamItUp;
+import com.example.graeme.beamitup.CopyableAddressFragment;
 import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
+import com.example.graeme.beamitup.qr.CopyableQRImageFragment;
 
 public class WalletDetailActivity extends Activity {
     private static final String TAG = "WalletDetailActivity";
@@ -40,12 +42,17 @@ public class WalletDetailActivity extends Activity {
                 .build();
 
         if (savedInstanceState == null) {
-            Log.i(TAG, "savedInstanceState is null");
-
             getFragmentManager()
                     .beginTransaction()
                     .add(authenticatorFragment, "AuthenticatorFragment")
                     .commit();
+
+            CopyableQRImageFragment qrFrag = (CopyableQRImageFragment) getFragmentManager()
+                    .findFragmentById(R.id.frag_qr_code_display);
+            qrFrag.setAddress(wallet.getAddress());
+            CopyableAddressFragment addressFrag = (CopyableAddressFragment) getFragmentManager()
+                    .findFragmentById(R.id.frag_copyable_text_display);
+            addressFrag.setAddress(wallet.getAddress());
         }
 
         Button btn_save_wallet = findViewById(R.id.btn_save_wallet);

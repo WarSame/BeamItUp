@@ -18,9 +18,7 @@ import com.example.graeme.beamitup.R;
 import com.google.zxing.WriterException;
 
 public class CopyableQRImageFragment extends Fragment implements Copyable, AddressListener {
-    private static final String ARG_WALLET_ADDRESS = "wallet_address";
     private static final String TAG = "CopyableQRImageFragment";
-    private String address;
 
     public CopyableQRImageFragment() {
         // Required empty public constructor
@@ -29,13 +27,6 @@ public class CopyableQRImageFragment extends Fragment implements Copyable, Addre
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState){
-        Log.i(TAG, "Storing address of " + address);
-        savedInstanceState.putString(ARG_WALLET_ADDRESS, address);
-        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
