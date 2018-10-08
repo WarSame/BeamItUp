@@ -1,4 +1,4 @@
-package com.example.graeme.beamitup.qr;
+package com.example.graeme.beamitup.copyable;
 
 import android.app.Fragment;
 import android.content.ClipData;
@@ -13,9 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.example.graeme.beamitup.AddressListener;
-import com.example.graeme.beamitup.Copyable;
+import com.example.graeme.beamitup.copyable.Copyable;
 import com.example.graeme.beamitup.R;
+import com.example.graeme.beamitup.qr.QRImage;
 import com.example.graeme.beamitup.wallet.WalletDetailActivity;
 import com.google.zxing.WriterException;
 

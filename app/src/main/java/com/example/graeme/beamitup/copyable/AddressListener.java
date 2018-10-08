@@ -1,4 +1,4 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.copyable;
 
 public interface AddressListener {
     String getAddress();

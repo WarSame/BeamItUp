@@ -1,4 +1,4 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.copyable;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.wallet.WalletDetailActivity;
 
 
