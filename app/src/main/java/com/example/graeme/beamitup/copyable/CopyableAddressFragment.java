@@ -18,8 +18,6 @@ import com.example.graeme.beamitup.wallet.WalletDetailActivity;
 
 public class CopyableAddressFragment extends Fragment {
     private static final String TAG = "CopyableAddressFragment";
-    private String address = "";
-    private static final String TAG_ADDRESS = "TAG_ADDRESS";
 
     public CopyableAddressFragment() {
         // Required empty public constructor
@@ -28,10 +26,6 @@ public class CopyableAddressFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null){
-            this.address = savedInstanceState.getString(TAG_ADDRESS);
-            Log.i(TAG, "Saved address is " + address);
-        }
     }
 
     @Override
@@ -43,7 +37,7 @@ public class CopyableAddressFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
-        address = ((WalletDetailActivity)getActivity()).getAddress();
+        String address = ((WalletDetailActivity)getActivity()).getAddress();
         TextView tv_wallet_address = view.findViewById(R.id.tv_wallet_address);
         tv_wallet_address.setText(address);
 
@@ -55,11 +49,5 @@ public class CopyableAddressFragment extends Fragment {
             }
             clipboard.setPrimaryClip(clip);
         });
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState){
-        super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putString(TAG_ADDRESS, address);
     }
 }
