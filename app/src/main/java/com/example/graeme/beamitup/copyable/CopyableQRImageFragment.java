@@ -1,4 +1,4 @@
-package com.example.graeme.beamitup.qr;
+package com.example.graeme.beamitup.copyable;
 
 import android.app.Fragment;
 import android.content.ClipData;
@@ -13,16 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.example.graeme.beamitup.AddressListener;
-import com.example.graeme.beamitup.Copyable;
+import com.example.graeme.beamitup.copyable.Copyable;
 import com.example.graeme.beamitup.R;
+import com.example.graeme.beamitup.qr.QRImage;
 import com.example.graeme.beamitup.wallet.WalletDetailActivity;
 import com.google.zxing.WriterException;
 
 public class CopyableQRImageFragment extends Fragment implements Copyable {
     private static final String TAG = "CopyableQRImageFragment";
-    private String TAG_ADDRESS = "TAG_ADDRESS";
-    private String address = "";
 
     public CopyableQRImageFragment() {
         // Required empty public constructor
@@ -31,11 +29,6 @@ public class CopyableQRImageFragment extends Fragment implements Copyable {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (savedInstanceState !=null){
-            address = savedInstanceState.getString(TAG_ADDRESS);
-            Log.i(TAG, "Saved address is " + address);
-        }
     }
 
     @Override
@@ -47,7 +40,7 @@ public class CopyableQRImageFragment extends Fragment implements Copyable {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
-        address = ((WalletDetailActivity)getActivity()).getAddress();
+        String address = ((WalletDetailActivity)getActivity()).getAddress();
         ImageView iv_qr = view.findViewById(R.id.iv_qr_code);
         QRImage qrImage = new QRImage(address);
         try {
@@ -60,12 +53,6 @@ public class CopyableQRImageFragment extends Fragment implements Copyable {
         iv_qr.setOnClickListener(
             v -> copy("Wallet Address", qrImage.getAddress())
         );
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstance){
-        super.onSaveInstanceState(savedInstance);
-        savedInstance.putString(TAG_ADDRESS, address);
     }
 
     @Override

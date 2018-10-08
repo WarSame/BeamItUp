@@ -1,6 +1,5 @@
 package com.example.graeme.beamitup.wallet;
 
-import android.app.Fragment;
 import android.app.KeyguardManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -13,13 +12,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.graeme.beamitup.AddressListener;
+import com.example.graeme.beamitup.copyable.AddressListener;
 import com.example.graeme.beamitup.AuthenticatorFragment;
 import com.example.graeme.beamitup.BeamItUp;
-import com.example.graeme.beamitup.CopyableAddressFragment;
 import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
-import com.example.graeme.beamitup.qr.CopyableQRImageFragment;
 
 public class WalletDetailActivity extends Activity implements AddressListener {
     private static final String TAG = "WalletDetailActivity";
