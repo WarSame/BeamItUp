@@ -4,60 +4,38 @@ import android.app.Fragment;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.graeme.beamitup.AddressListener;
 import com.example.graeme.beamitup.Copyable;
 import com.example.graeme.beamitup.R;
+import com.example.graeme.beamitup.wallet.WalletDetailActivity;
 import com.google.zxing.WriterException;
 
 public class CopyableQRImageFragment extends Fragment implements Copyable {
-    private static final String ARG_WALLET_ADDRESS = "wallet_address";
+    private static final String TAG = "CopyableQRImageFragment";
+    private String TAG_ADDRESS = "TAG_ADDRESS";
+    private String address = "";
 
     public CopyableQRImageFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param walletAddress - string to copy
-     * @return A new instance of fragment CopyableQRImageFragment.
-     */
-    public static CopyableQRImageFragment newInstance(String walletAddress) {
-        CopyableQRImageFragment fragment = new CopyableQRImageFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_WALLET_ADDRESS, walletAddress);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
 
-        if (args == null) {
-            return;
+        if (savedInstanceState !=null){
+            address = savedInstanceState.getString(TAG_ADDRESS);
+            Log.i(TAG, "Saved address is " + address);
         }
-
-        String address = getArguments().getString(ARG_WALLET_ADDRESS);
-
-        ImageView qr = getActivity().findViewById(R.id.iv_qr_code);
-        QRImage qrImage = new QRImage(address);
-        try {
-            qr.setImageBitmap(qrImage.generateQRImage());
-        } catch (WriterException e) {
-            e.printStackTrace();
-        }
-
-        qr.setOnClickListener(
-                v -> copy("Wallet Address", qrImage.getAddress())
-        );
     }
 
     @Override
@@ -65,6 +43,29 @@ public class CopyableQRImageFragment extends Fragment implements Copyable {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.frag_copyable_qrcode, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
+        address = ((WalletDetailActivity)getActivity()).getAddress();
+        ImageView iv_qr = view.findViewById(R.id.iv_qr_code);
+        QRImage qrImage = new QRImage(address);
+        try {
+            Bitmap bitmap = qrImage.generateQRImage();
+            iv_qr.setImageBitmap(bitmap);
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
+
+        iv_qr.setOnClickListener(
+            v -> copy("Wallet Address", qrImage.getAddress())
+        );
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstance){
+        super.onSaveInstanceState(savedInstance);
+        savedInstance.putString(TAG_ADDRESS, address);
     }
 
     @Override

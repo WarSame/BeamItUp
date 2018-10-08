@@ -13,25 +13,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.graeme.beamitup.AddressListener;
 import com.example.graeme.beamitup.AuthenticatorFragment;
-import com.example.graeme.beamitup.CopyableAddressFragment;
 import com.example.graeme.beamitup.BeamItUp;
+import com.example.graeme.beamitup.CopyableAddressFragment;
 import com.example.graeme.beamitup.LandingPageActivity;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.qr.CopyableQRImageFragment;
 
-public class WalletDetailActivity extends Activity {
+public class WalletDetailActivity extends Activity implements AddressListener {
     private static final String TAG = "WalletDetailActivity";
     private Wallet wallet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        wallet = (Wallet) getIntent().getSerializableExtra("wallet");
         setContentView(R.layout.activity_wallet_detail);
 
         EditText et_wallet_nickname = findViewById(R.id.et_wallet_nickname);
 
-        wallet = (Wallet) getIntent().getSerializableExtra("wallet");
         et_wallet_nickname.setText(wallet.getNickname());
 
         KeyguardManager kgm = (KeyguardManager) getApplication().getSystemService(Context.KEYGUARD_SERVICE);
@@ -40,19 +41,12 @@ public class WalletDetailActivity extends Activity {
                 .onUserAuthenticatedListener(onUserAuthenticatedListener)
                 .build();
 
-        Fragment qrCodeDisplayFragment = CopyableQRImageFragment.newInstance(
-                wallet.getAddress()
-        );
-
-        Fragment addressCopyableTextDisplayFragment = CopyableAddressFragment.newInstance(
-                wallet.getAddress()
-        );
-        getFragmentManager()
-                .beginTransaction()
-                .add(qrCodeDisplayFragment, "CopyableQRImageFragment")
-                .add(addressCopyableTextDisplayFragment, "CopyableAddressFragment")
-                .add(authenticatorFragment, "AuthenticatorFragment")
-                .commit();
+        if (savedInstanceState == null) {
+            getFragmentManager()
+                    .beginTransaction()
+                    .add(authenticatorFragment, "AuthenticatorFragment")
+                    .commit();
+        }
 
         Button btn_save_wallet = findViewById(R.id.btn_save_wallet);
 
@@ -66,7 +60,8 @@ public class WalletDetailActivity extends Activity {
         btn_export_wallet.setOnClickListener((v)-> authenticatorFragment.authenticateMobileUser());
     }
 
-    AuthenticatorFragment.OnUserAuthenticatedListener onUserAuthenticatedListener = new AuthenticatorFragment.OnUserAuthenticatedListener() {
+    AuthenticatorFragment.OnUserAuthenticatedListener onUserAuthenticatedListener =
+            new AuthenticatorFragment.OnUserAuthenticatedListener() {
         @Override
         public void onUserAuthenticated() {
             Log.i(TAG, "onUserAuthenticated");
@@ -104,4 +99,8 @@ public class WalletDetailActivity extends Activity {
         startActivity(walletListIntent);
     }
 
+    @Override
+    public String getAddress() {
+        return wallet.getAddress();
+    }
 }

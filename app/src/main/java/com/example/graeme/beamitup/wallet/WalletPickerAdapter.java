@@ -48,17 +48,14 @@ public class WalletPickerAdapter extends ArrayAdapter {
                     false
             );
         }
-        TextView tv_id = (TextView)convertView.findViewById(R.id.tv_wallet_id);
-        TextView tv_nickname = (TextView)convertView.findViewById(R.id.tv_wallet_nickname);
-        TextView tv_address = (TextView)convertView.findViewById(R.id.tv_wallet_address);
+        TextView tv_nickname = convertView.findViewById(R.id.tv_wallet_nickname);
+        TextView tv_address = convertView.findViewById(R.id.tv_wallet_address);
 
         if (wallet == null){
-            tv_id.setText( String.format( Locale.CANADA, "%d", 0 ) );
             tv_nickname.setText( "" );
             tv_address.setText( "" );
         }
         else {
-            tv_id.setText( String.format( Locale.CANADA, "%d", wallet.getId() ) );
             tv_nickname.setText( wallet.getNickname() );
             tv_address.setText( wallet.getAddress() );
         }
