@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.example.graeme.beamitup"
         minSdkVersion 23
@@ -41,7 +41,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation 'com.android.support:design:26.1.0'
     testImplementation 'junit:junit:4.12'
-    implementation 'org.web3j:core:3.3.1-android'
+    implementation 'org.web3j:core:4.1.0-android'
     implementation 'org.apache.commons:commons-lang3:3.5'
     androidTestImplementation 'org.mockito:mockito-core:2.18.3'
     implementation 'org.greenrobot:greendao:3.2.2'

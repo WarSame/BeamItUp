@@ -10,7 +10,6 @@ import com.example.graeme.beamitup.wallet.DaoSession;
 
 import org.greenrobot.greendao.database.Database;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.http.HttpService;
 
 public class BeamItUp extends Application {
@@ -29,7 +28,7 @@ public class BeamItUp extends Application {
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "wallet-db", null);
         Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
-        web3j = Web3jFactory.build(new HttpService(INFURA_URL));
+        web3j = Web3j.build(new HttpService(INFURA_URL));
         createNotificationChannel();
     }
 

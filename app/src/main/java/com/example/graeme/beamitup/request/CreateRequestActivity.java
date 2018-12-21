@@ -21,7 +21,7 @@ import org.web3j.protocol.Web3j;
 
 import java.math.BigInteger;
 
-import rx.schedulers.Schedulers;
+import io.reactivex.schedulers.Schedulers;
 
 import static org.web3j.tx.Transfer.GAS_LIMIT;
 
@@ -48,17 +48,17 @@ public class CreateRequestActivity extends Activity implements WalletPickerFragm
         });
 
         Web3j web3j = ((BeamItUp)getApplication()).getWeb3j();
-        web3j.ethGasPrice().observable()
+        web3j.ethGasPrice().flowable()
+                .doOnError(throwable -> Log.e(TAG, throwable.getMessage()))
                 .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.from( runnable -> new Handler( Looper.getMainLooper() ).post(runnable) ))//Observe on main thread
+                .observeOn(Schedulers.from( runnable -> new Handler( Looper.getMainLooper() ).post(runnable) ))
                 .subscribe(
-                    price -> {
-                        BigInteger gasPrice = price.getGasPrice();
+                    ethGasPrice -> {
+                        BigInteger gasPrice = ethGasPrice.getGasPrice();
                         Log.i(TAG, "gasPrice = " + gasPrice);
                         Log.i(TAG, "GAS_LIMIT = " + GAS_LIMIT);
                         setTransactionCost(gasPrice.multiply(GAS_LIMIT).toString());
-                    },
-                    Throwable::printStackTrace
+                    }
                 );
     }
 
