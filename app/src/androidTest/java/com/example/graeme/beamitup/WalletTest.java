@@ -11,6 +11,8 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
 public class WalletTest {
@@ -33,23 +35,23 @@ public class WalletTest {
                 .build();
 
         Log.d(TAG, "Wallet nickname: " + wallet.getNickname());
-        assertTrue(wallet.getNickname().equals(nickname));
+        assertEquals(wallet.getNickname(), nickname);
 
         Log.d(TAG, "Wallet address: " + wallet.getAddress());
-        assertTrue(wallet.getAddress() != null);
+        assertNotNull(wallet.getAddress());
 
         Log.d(TAG, "Wallet name: " + wallet.getFileName());
-        assertTrue(wallet.getFileName() != null);
+        assertNotNull(wallet.getFileName());
 
         Log.d(TAG, "Wallet location: " + wallet.getLocation());
-        assertTrue(wallet.getLocation() != null);
+        assertNotNull(wallet.getLocation());
         assertTrue(wallet.getLocation().contains(Wallet.WALLET_DIR_RELATIVE_PATH));
 
         Log.d(TAG, "Wallet encrypted long password: " + Arrays.toString(wallet.getEncryptedLongPassword()));
-        assertTrue(wallet.getEncryptedLongPassword() != null);
+        assertNotNull(wallet.getEncryptedLongPassword());
 
         Log.d(TAG, "Wallet IV: " + Arrays.toString(wallet.getIV()));
-        assertTrue(wallet.getIV() != null);
+        assertNotNull(wallet.getIV());
     }
 
 }

@@ -10,12 +10,15 @@ import com.example.graeme.beamitup.wallet.DaoSession;
 
 import org.greenrobot.greendao.database.Database;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.http.HttpService;
+import org.web3j.protocol.websocket.WebSocketService;
+
+import java.net.ConnectException;
 
 public class BeamItUp extends Application {
 
+    private static final boolean INCLUDE_RAW_RESPONSES = false;
     private DaoSession daoSession;
-    static public final String INFURA_URL = "https://rinkeby.infura.io/SxLC8uFzMPfzwnlXHqx9";//TODO switch to websockets
+    static public final String INFURA_URL = "wss://rinkeby.infura.io/ws";
     private Web3j web3j;
 
     public static final long[] SUCCESS_VIBRATE_PATTERN = new long[]{0, 200, 100, 200};
@@ -28,7 +31,13 @@ public class BeamItUp extends Application {
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "wallet-db", null);
         Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
-        web3j = Web3j.build(new HttpService(INFURA_URL));
+        WebSocketService webSocketService = new WebSocketService(INFURA_URL, INCLUDE_RAW_RESPONSES);
+        try {
+            webSocketService.connect();
+        } catch (ConnectException e) {
+            e.printStackTrace();
+        }
+        web3j = Web3j.build(webSocketService);
         createNotificationChannel();
     }
 

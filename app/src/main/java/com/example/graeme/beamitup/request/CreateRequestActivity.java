@@ -49,7 +49,6 @@ public class CreateRequestActivity extends Activity implements WalletPickerFragm
 
         Web3j web3j = ((BeamItUp)getApplication()).getWeb3j();
         web3j.ethGasPrice().flowable()
-                .doOnError(throwable -> Log.e(TAG, throwable.getMessage()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.from( runnable -> new Handler( Looper.getMainLooper() ).post(runnable) ))
                 .subscribe(
@@ -58,7 +57,7 @@ public class CreateRequestActivity extends Activity implements WalletPickerFragm
                         Log.i(TAG, "gasPrice = " + gasPrice);
                         Log.i(TAG, "GAS_LIMIT = " + GAS_LIMIT);
                         setTransactionCost(gasPrice.multiply(GAS_LIMIT).toString());
-                    }
+                    }, Throwable::printStackTrace
                 );
     }
 

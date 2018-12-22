@@ -17,7 +17,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.http.HttpService;
@@ -29,7 +28,8 @@ import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeoutException;
 
-import static junit.framework.TestCase.assertTrue;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static org.web3j.tx.Transfer.sendFunds;
 
 public class SendTransactionServiceTest {
@@ -47,7 +47,7 @@ public class SendTransactionServiceTest {
     public static void setUpOneTime() throws TimeoutException {
         appContext = InstrumentationRegistry.getTargetContext();
 
-        web3j = Web3jFactory.build(new HttpService(BeamItUp.INFURA_URL));
+        web3j = Web3j.build(new HttpService(BeamItUp.INFURA_URL));
 
         Intent intent = new Intent(appContext, SendTransactionService.class);
         service = ((
@@ -89,7 +89,7 @@ public class SendTransactionServiceTest {
             else {
                 Log.i(TAG, "Receipt is not null");
             }
-            assertTrue(receipt == null);
+            assertNull(receipt);
             countDownLatch.countDown();
         });
         countDownLatch.await();
@@ -126,7 +126,7 @@ public class SendTransactionServiceTest {
             else {
                 Log.i(TAG, "Receipt is not null");
             }
-            assertTrue(receipt != null);
+            assertNotNull(receipt);
             countDownLatch.countDown();
         });
         countDownLatch.await();

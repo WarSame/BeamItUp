@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import com.example.graeme.beamitup.encryption.Decryptor;
 
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
 public class EncryptionTest {
@@ -29,7 +30,7 @@ public class EncryptionTest {
                 .context(appContext)
                 .isUserAuthenticationRequired(false)
                 .build();
-        assertTrue(wallet.getEncryptedLongPassword() != null);
+        assertNotNull(wallet.getEncryptedLongPassword());
     }
 
     @Test(expected = UserNotAuthenticatedException.class)
@@ -38,7 +39,7 @@ public class EncryptionTest {
                 .nickname("somewallet")
                 .context(appContext)
                 .build();
-        assertTrue(wallet.getEncryptedLongPassword() != null);
+        assertNotNull(wallet.getEncryptedLongPassword());
     }
 
     @Test
@@ -56,7 +57,7 @@ public class EncryptionTest {
                 .build()
                 .decryptWalletPassword();
 
-        assertTrue(unencryptedLongPassword != null);
+        assertNotNull(unencryptedLongPassword);
     }
 
     @Test(expected = UserNotAuthenticatedException.class)
@@ -73,7 +74,7 @@ public class EncryptionTest {
                 .build()
                 .decryptWalletPassword();
 
-        assertTrue(unencryptedLongPassword != null);
+        assertNotNull(unencryptedLongPassword);
     }
 
 }
