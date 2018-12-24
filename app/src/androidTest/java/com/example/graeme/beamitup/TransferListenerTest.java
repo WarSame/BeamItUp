@@ -2,6 +2,7 @@ package com.example.graeme.beamitup;
 
 import android.content.Context;
 
+import com.example.graeme.beamitup.listener.TransferClient;
 import com.example.graeme.beamitup.listener.TransferListener;
 
 import org.junit.BeforeClass;
@@ -27,8 +28,9 @@ public class TransferListenerTest {
 
     @Test
     public void listenForTransfer_ShouldBeTransfer() throws Exception {
-        TransferListener transferListener = new TransferClient(web3j);
-        transferListener.subscribe(RECEIVING_ACCOUNT_ADDRESS);
+        TransferClient transferClient = new TransferClient(web3j, message -> {
+
+        });
     }
 
     @Test

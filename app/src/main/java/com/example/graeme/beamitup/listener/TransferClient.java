@@ -1,22 +1,21 @@
 package com.example.graeme.beamitup.listener;
 
-import org.reactivestreams.Subscription;
-import org.web3j.protocol.Web3j;
-import org.web3j.protocol.websocket.WebSocketListener;
+import android.util.Log;
 
-import java.io.IOException;
+import org.web3j.protocol.Web3j;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class TransferClient {
+    private static final String TAG = "TransferClient";
     private List<String> addresses;
     private Web3j web3j;
-    private TransferListener listener = null;
+    private TransferListener listener;
 
-    public TransferClient(Web3j web3j){
+    public TransferClient(Web3j web3j, TransferListener listener){
         this.addresses = new ArrayList<>();
         this.web3j = web3j;
+        this.listener = listener;
     }
 
     public void addAddress(String address){
@@ -24,21 +23,28 @@ public class TransferClient {
     }
 
     public void setListener(TransferListener listener) {
-        setPendingListener(listener);
-        setTransactionListener(listener);
+        setPendingListener();
+        setTransactionListener();
     }
 
     //Listen for pending transactions before they get added to a block
-    private void setPendingListener(TransferListener listener) {
-        web3j.transactionFlowable().subscribe(tx -> {
+    private void setPendingListener() {
+        web3j.pendingTransactionFlowable().subscribe(tx -> {
             if (addresses.contains( tx.getTo() ) ) {
-
+                Log.d(TAG, "Received transfer to " + tx.getTo() + "  from " + tx.getFrom() + " " +
+                        "for amount " + tx.getValue());
+                listener.onMessage("somemessage");
             }
         }).dispose();
     }
 
     //Listen for transaction as they are added to a block
-    private void setTransactionListener(TransferListener listener){
-        this.listener = listener;
+    private void setTransactionListener(){
+        web3j.transactionFlowable().subscribe(tx -> {
+            if (addresses.contains( tx.getTo() ) ) {
+                Log.d(TAG, "Hello");
+                listener.onMessage("someothermessage");
+            }
+        }).dispose();
     }
 }
