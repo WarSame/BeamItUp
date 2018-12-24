@@ -30,7 +30,7 @@ public class WebSocketTest {
     }
 
     @Test
-    public void getGasPrice_ShouldBeBigInt() throws Exception{
+    public void getGasPrice_ShouldBeBigInt() throws Exception {
         web3j
             .ethGasPrice()
             .flowable()
