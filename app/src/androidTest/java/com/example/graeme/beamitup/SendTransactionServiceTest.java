@@ -37,7 +37,6 @@ public class SendTransactionServiceTest {
     private static Context appContext;
     private static final String TO_ADDRESS = "0x31B98D14007bDEe637298086988A0bBd31184523";
     private static final String TRANSACTION_VALUE = "0.01";
-    private static final String SECRETS_FILE = "eth.secrets";
     private static Web3j web3j;
     @ClassRule
     public static final ServiceTestRule serviceTestRule = new ServiceTestRule();
@@ -55,17 +54,6 @@ public class SendTransactionServiceTest {
                 serviceTestRule.bindService(intent)
         ).getService();
 
-    }
-
-    private static Credentials retrieveMasterCredentials() throws  Exception {
-        return Credentials.create(retrieveMasterPrivateKey());
-    }
-
-    private static String retrieveMasterPrivateKey() throws Exception {
-        Context testContext = InstrumentationRegistry.getInstrumentation().getContext();
-        InputStream testInput = testContext.getAssets().open(SECRETS_FILE);
-        Scanner in = new Scanner(testInput);
-        return in.next();
     }
 
     @Test
@@ -111,7 +99,7 @@ public class SendTransactionServiceTest {
 
         Log.d(TAG, "Funds in wallet " + ethGetBalance.getBalance() );
 
-        fillWallet(filledWallet.getAddress());
+        FillWallet.fillWallet(filledWallet.getAddress(), web3j);
 
         Request request = new Request(TO_ADDRESS, TRANSACTION_VALUE);
         Transaction transaction = new Transaction(filledWallet, request);
@@ -132,16 +120,4 @@ public class SendTransactionServiceTest {
         countDownLatch.await();
     }
 
-    private static void fillWallet(String toAddress) throws Exception {
-        Credentials credentials = retrieveMasterCredentials();
-
-        Log.d(TAG, "Master address: " + credentials.getAddress());
-        sendFunds(
-                web3j,
-                credentials,
-                toAddress,
-                BigDecimal.ONE,
-                Convert.Unit.ETHER
-        ).send();
-    }
 }
