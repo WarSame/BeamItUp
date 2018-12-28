@@ -5,14 +5,14 @@ import android.security.keystore.KeyProperties;
 import java.security.SecureRandom;
 
 public class Encryption {
-    public static final String KEYSTORE_PROVIDER = "AndroidKeyStore";
+    static final String KEYSTORE_PROVIDER = "AndroidKeyStore";
 
-    public static final String AES_CIPHER = KeyProperties.KEY_ALGORITHM_AES + "/" +
+    static final String AES_CIPHER = KeyProperties.KEY_ALGORITHM_AES + "/" +
             KeyProperties.BLOCK_MODE_GCM + "/" +
             KeyProperties.ENCRYPTION_PADDING_NONE;
-    public static final int GCM_TAG_LENGTH = 128;
+    static final int GCM_TAG_LENGTH = 128;
 
-    public static final int USER_VALIDATION_DURATION_SECONDS = 300;
+    static final int USER_VALIDATION_DURATION_SECONDS = 300;
 
     private static final int RANDOM_STRING_LENGTH = 128;
     private static final char[] RANDOM_STRING_CHARACTERS = "abcdefghijklmnopqrstuvwxyz0123456789".toCharArray();

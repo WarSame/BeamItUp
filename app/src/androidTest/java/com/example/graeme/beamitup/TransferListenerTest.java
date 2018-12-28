@@ -7,15 +7,12 @@ import org.junit.Test;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.protocol.websocket.WebSocketService;
-import org.web3j.protocol.websocket.events.NewHeadsNotification;
-import org.web3j.utils.Convert;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
 
 public class TransferListenerTest {

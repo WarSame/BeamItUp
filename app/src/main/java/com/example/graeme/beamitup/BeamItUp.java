@@ -3,18 +3,27 @@ package com.example.graeme.beamitup;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.graphics.Color;
 import android.os.Build;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import android.util.Log;
 
+import com.example.graeme.beamitup.listener.TransferClient;
 import com.example.graeme.beamitup.wallet.DaoMaster;
 import com.example.graeme.beamitup.wallet.DaoSession;
+import com.example.graeme.beamitup.wallet.Wallet;
 
 import org.greenrobot.greendao.database.Database;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.protocol.websocket.WebSocketService;
 
 import java.net.ConnectException;
+import java.util.List;
 
 public class BeamItUp extends Application {
+    private static final String TAG = "BeamItUp";
 
     private static final boolean INCLUDE_RAW_RESPONSES = false;
     private DaoSession daoSession;
@@ -24,6 +33,12 @@ public class BeamItUp extends Application {
     public static final long[] SUCCESS_VIBRATE_PATTERN = new long[]{0, 200, 100, 200};
     public static final long[] FAILURE_VIBRATE_PATTERN = new long[]{0, 50, 25, 50};
     public static final long[] START_VIBRATE_PATTERN = new long[]{0, 100};
+
+    public static final long[] PENDING_TRANSACTION_PATTERN = new long[]{0, 100, 100};
+    public static final long[] TRANSACTION_PATTERN = new long[]{0, 200, 200};
+
+    public final int PENDING_TRANSACTION_COLOR = Color.YELLOW;
+    public final int TRANSACTION_COLOR = Color.GREEN;
 
     @Override
     public void onCreate(){
@@ -39,6 +54,74 @@ public class BeamItUp extends Application {
         }
         web3j = Web3j.build(webSocketService);
         createNotificationChannel();
+        setListeners();
+    }
+
+    private void setListeners() {
+        TransferClient transferClient = new TransferClient(
+                web3j,
+                this::createPendingNotification,
+                this::createTransactionNotification
+        );
+        List<Wallet> wallets = daoSession.getWalletDao().loadAll();
+        for (Wallet wallet: wallets){
+            transferClient.addAddress(wallet.getAddress());
+        }
+    }
+
+    private void createTransactionNotification(Transaction tx) {
+        String title = "Incoming transaction";
+        String text = tx.getValue() + " WEI "
+                + " from " + tx.getFrom();
+        createTransferNotification(
+                tx,
+                title,
+                text,
+                TRANSACTION_PATTERN,
+                TRANSACTION_COLOR
+        );
+    }
+
+    private void createPendingNotification(Transaction pend_tx) {
+        String title = "Incoming pending transaction";
+        String text = pend_tx.getValue() + " WEI "
+                + "from " + pend_tx.getFrom();
+        createTransferNotification(
+                pend_tx,
+                title,
+                text,
+                PENDING_TRANSACTION_PATTERN,
+                PENDING_TRANSACTION_COLOR
+        );
+    }
+
+    private void createTransferNotification(
+            Transaction tx,
+            String title,
+            String text,
+            long[] pattern,
+            int argb_color
+    ){
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(
+                getApplicationContext(),
+                "BeamItUp"
+        )
+                .setContentTitle(title)
+                .setContentText(text)
+                .setColor(argb_color)
+                .setSmallIcon(R.drawable.ic_beamitup)
+                .setVibrate(pattern);
+
+        NotificationManagerCompat notificationManagerCompat =
+                NotificationManagerCompat.from(
+                        getApplicationContext()
+                );
+
+        String hash = tx.getHash();
+        Log.d(TAG, "Hash: " + hash);
+
+        notificationManagerCompat.notify(hash, 1, builder.build());
     }
 
     public Web3j getWeb3j() {
