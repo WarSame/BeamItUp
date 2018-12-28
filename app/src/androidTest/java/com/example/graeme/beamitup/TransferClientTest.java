@@ -35,6 +35,7 @@ public class TransferClientTest {
         web3j = Web3j.build(webSocketService);
     }
 
+    //Note: pending can come after transaction
     @Test
     public void listenForPendingTransfer_ShouldCountDown() throws Exception {
         CountDownLatch countDownLatch = new CountDownLatch(1);

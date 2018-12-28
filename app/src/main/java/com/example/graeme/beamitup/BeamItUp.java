@@ -9,6 +9,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
+import com.example.graeme.beamitup.listener.TransactionNotification;
 import com.example.graeme.beamitup.listener.TransferClient;
 import com.example.graeme.beamitup.wallet.DaoMaster;
 import com.example.graeme.beamitup.wallet.DaoSession;
@@ -60,68 +61,23 @@ public class BeamItUp extends Application {
     private void setListeners() {
         TransferClient transferClient = new TransferClient(
                 web3j,
-                this::createPendingNotification,
-                this::createTransactionNotification
+                pend_tx -> new TransactionNotification(
+                        getApplicationContext(),
+                        PENDING_TRANSACTION_PATTERN,
+                        PENDING_TRANSACTION_COLOR,
+                        pend_tx
+                ).send(),
+                tx -> new TransactionNotification(
+                    getApplicationContext(),
+                    TRANSACTION_PATTERN,
+                    TRANSACTION_COLOR,
+                    tx
+                ).send()
         );
         List<Wallet> wallets = daoSession.getWalletDao().loadAll();
         for (Wallet wallet: wallets){
             transferClient.addAddress(wallet.getAddress());
         }
-    }
-
-    private void createTransactionNotification(Transaction tx) {
-        String title = "Incoming transaction";
-        String text = tx.getValue() + " WEI "
-                + " from " + tx.getFrom();
-        createTransferNotification(
-                tx,
-                title,
-                text,
-                TRANSACTION_PATTERN,
-                TRANSACTION_COLOR
-        );
-    }
-
-    private void createPendingNotification(Transaction pend_tx) {
-        String title = "Incoming pending transaction";
-        String text = pend_tx.getValue() + " WEI "
-                + "from " + pend_tx.getFrom();
-        createTransferNotification(
-                pend_tx,
-                title,
-                text,
-                PENDING_TRANSACTION_PATTERN,
-                PENDING_TRANSACTION_COLOR
-        );
-    }
-
-    private void createTransferNotification(
-            Transaction tx,
-            String title,
-            String text,
-            long[] pattern,
-            int argb_color
-    ){
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(
-                getApplicationContext(),
-                "BeamItUp"
-        )
-                .setContentTitle(title)
-                .setContentText(text)
-                .setColor(argb_color)
-                .setSmallIcon(R.drawable.ic_beamitup)
-                .setVibrate(pattern);
-
-        NotificationManagerCompat notificationManagerCompat =
-                NotificationManagerCompat.from(
-                        getApplicationContext()
-                );
-
-        String hash = tx.getHash();
-        Log.d(TAG, "Hash: " + hash);
-
-        notificationManagerCompat.notify(hash, 1, builder.build());
     }
 
     public Web3j getWeb3j() {
