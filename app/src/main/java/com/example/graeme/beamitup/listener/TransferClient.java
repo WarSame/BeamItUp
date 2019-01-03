@@ -4,7 +4,9 @@ import android.util.Log;
 
 import org.web3j.protocol.Web3j;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import io.reactivex.disposables.Disposable;
@@ -15,6 +17,7 @@ public class TransferClient {
     private Web3j web3j;
     private PendingListener pendingListener;
     private TransactionListener transactionListener;
+    private Map<String, TransactionNotification> notifications;
 
     public TransferClient(
             Web3j web3j,
@@ -26,6 +29,7 @@ public class TransferClient {
         setPendingListener(pendingListener);
         setTransactionListener(transactionListener);
         this.addAddress("0x31B98D14007bDEe637298086988A0bBd31184523");//TODO:Remove after testing
+        this.notifications = new HashMap<>();
     }
 
     public void addAddress(String address){

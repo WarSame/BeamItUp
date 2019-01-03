@@ -10,6 +10,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.example.graeme.beamitup.listener.TransactionNotification;
+import com.example.graeme.beamitup.listener.TransactionNotificationManager;
 import com.example.graeme.beamitup.listener.TransferClient;
 import com.example.graeme.beamitup.wallet.DaoMaster;
 import com.example.graeme.beamitup.wallet.DaoSession;
@@ -21,7 +22,9 @@ import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.protocol.websocket.WebSocketService;
 
 import java.net.ConnectException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BeamItUp extends Application {
     private static final String TAG = "BeamItUp";
@@ -31,15 +34,7 @@ public class BeamItUp extends Application {
     static public final String INFURA_URL = "wss://rinkeby.infura.io/ws";
     private Web3j web3j;
 
-    public static final long[] SUCCESS_VIBRATE_PATTERN = new long[]{0, 200, 100, 200};
-    public static final long[] FAILURE_VIBRATE_PATTERN = new long[]{0, 50, 25, 50};
-    public static final long[] START_VIBRATE_PATTERN = new long[]{0, 100};
-
-    public static final long[] PENDING_TRANSACTION_PATTERN = new long[]{0, 100, 100};
-    public static final long[] TRANSACTION_PATTERN = new long[]{0, 200, 200};
-
-    public final int PENDING_TRANSACTION_COLOR = Color.YELLOW;
-    public final int TRANSACTION_COLOR = Color.GREEN;
+    private Map<String, TransactionNotification> notifications;
 
     @Override
     public void onCreate(){
@@ -55,29 +50,12 @@ public class BeamItUp extends Application {
         }
         web3j = Web3j.build(webSocketService);
         createNotificationChannel();
-        setListeners();
-    }
 
-    private void setListeners() {
-        TransferClient transferClient = new TransferClient(
+        new TransactionNotificationManager(
+                daoSession.getWalletDao().loadAll(),
                 web3j,
-                pend_tx -> new TransactionNotification(
-                        getApplicationContext(),
-                        PENDING_TRANSACTION_PATTERN,
-                        PENDING_TRANSACTION_COLOR,
-                        pend_tx
-                ).send(),
-                tx -> new TransactionNotification(
-                    getApplicationContext(),
-                    TRANSACTION_PATTERN,
-                    TRANSACTION_COLOR,
-                    tx
-                ).send()
+                getApplicationContext()
         );
-        List<Wallet> wallets = daoSession.getWalletDao().loadAll();
-        for (Wallet wallet: wallets){
-            transferClient.addAddress(wallet.getAddress());
-        }
     }
 
     public Web3j getWeb3j() {
@@ -106,6 +84,4 @@ public class BeamItUp extends Application {
             }
         }
     }
-
-
 }
