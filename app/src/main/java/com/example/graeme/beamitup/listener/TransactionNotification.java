@@ -18,10 +18,6 @@ public class TransactionNotification {
     private String hash;
     private State state;
 
-    private static final long[] SUCCESS_VIBRATE_PATTERN = new long[]{0, 200, 100, 200};
-    private static final long[] FAILURE_VIBRATE_PATTERN = new long[]{0, 50, 25, 50};
-    private static final long[] START_VIBRATE_PATTERN = new long[]{0, 100};
-
     private static final long[] PENDING_TRANSACTION_PATTERN = new long[]{0, 100, 100};
     private static final long[] BLOCK_TRANSACTION_PATTERN = new long[]{0, 200, 200};
 

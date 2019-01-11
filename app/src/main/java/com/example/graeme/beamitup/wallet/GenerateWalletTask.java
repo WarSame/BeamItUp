@@ -74,6 +74,7 @@ public class GenerateWalletTask extends AsyncTask<String, Void, Wallet> {
                 .build();
 
         insertWallet(wallet);
+        ((BeamItUp)weakContext.get().getApplicationContext()).addAddress(wallet.getAddress());
 
         onCreateWalletSuccess(wallet);
         return wallet;

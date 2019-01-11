@@ -23,14 +23,18 @@ public class TransactionNotificationManager {
     ){
         this.notifications = new HashMap<>();
         this.context = context;
-        for (Wallet wallet: wallets) {
-            transferClient.addAddress(wallet.getAddress());
-        }
-        transferClient = new TransferClient(
+        this.transferClient = new TransferClient(
                 web3j,
                 this::onPendingTx,
                 this::onBlockTx
         );
+        for (Wallet wallet: wallets) {
+            transferClient.addAddress(wallet.getAddress());
+        }
+    }
+
+    public void addAddress(String address){
+        this.transferClient.addAddress(address);
     }
 
     private void onPendingTx(Transaction pend_tx){
