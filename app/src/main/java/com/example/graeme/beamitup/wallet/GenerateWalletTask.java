@@ -13,6 +13,9 @@ import android.util.Log;
 import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.R;
 import com.example.graeme.beamitup.wallet.GenerateWalletService.OnGenerateWallet;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.lang.ref.WeakReference;
 
 public class GenerateWalletTask extends AsyncTask<String, Void, Wallet> {
@@ -74,7 +77,7 @@ public class GenerateWalletTask extends AsyncTask<String, Void, Wallet> {
                 .build();
 
         insertWallet(wallet);
-        ((BeamItUp)weakContext.get().getApplicationContext()).addAddress(wallet.getAddress());
+        EventBus.getDefault().post(new WalletEvent(wallet));
 
         onCreateWalletSuccess(wallet);
         return wallet;

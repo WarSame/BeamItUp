@@ -11,8 +11,10 @@ import android.widget.ListView;
 
 import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.R;
-import com.example.graeme.beamitup.wallet.DaoSession;
-import com.example.graeme.beamitup.wallet.WalletDao;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -22,6 +24,7 @@ public class WalletPickerFragment extends ListFragment {
 
     List<Wallet> wallets;
     onWalletSelectedListener walletListener;
+    WalletPickerAdapter adapter;
 
     @Override
     public void onListItemClick(ListView lv, View v, int position, long id){
@@ -38,7 +41,7 @@ public class WalletPickerFragment extends ListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
-        WalletPickerAdapter adapter = new WalletPickerAdapter(getActivity(), wallets);
+        adapter = new WalletPickerAdapter(getActivity(), wallets);
         setListAdapter(adapter);
         ListView lv_walletPicker = getListView();
         lv_walletPicker.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
@@ -64,6 +67,25 @@ public class WalletPickerFragment extends ListFragment {
 
     public interface onWalletSelectedListener {
         void onWalletSelected(Wallet wallet);
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void handleWalletEvent(WalletEvent walletEvent){
+        Wallet wallet = walletEvent.getWallet();
+        wallets.add(wallet);
+        adapter.notifyDataSetChanged();
     }
 
 }

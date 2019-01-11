@@ -35,8 +35,6 @@ public class BeamItUp extends Application {
     public static final long[] FAILURE_VIBRATE_PATTERN = new long[]{0, 50, 25, 50};
     public static final long[] START_VIBRATE_PATTERN = new long[]{0, 100};
 
-    private TransactionNotificationManager transactionNotificationManager;
-
     @Override
     public void onCreate(){
         super.onCreate();
@@ -52,17 +50,13 @@ public class BeamItUp extends Application {
         web3j = Web3j.build(webSocketService);
         createNotificationChannel();
 
-        transactionNotificationManager = new TransactionNotificationManager(
+        new TransactionNotificationManager(
                 daoSession.getWalletDao().loadAll(),
                 web3j,
                 getApplicationContext()
         );
 
         setupBouncyCastle();
-    }
-
-    public void addAddress(String address){
-        this.transactionNotificationManager.addAddress(address);
     }
 
     //Avoid BC problems on certain API levels
