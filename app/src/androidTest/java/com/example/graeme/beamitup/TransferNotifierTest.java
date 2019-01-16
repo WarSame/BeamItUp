@@ -15,8 +15,8 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.disposables.Disposable;
 
-public class TransferListenerTest {
-    private static final String TAG = "TransferListenerTest";
+public class TransferNotifierTest {
+    private static final String TAG = "TransferNotifierTest";
     private static final String INFURA_URL = "wss://rinkeby.infura.io/ws";
     private static Web3j web3j;
 
