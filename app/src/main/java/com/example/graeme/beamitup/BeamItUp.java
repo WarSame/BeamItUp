@@ -3,16 +3,12 @@ package com.example.graeme.beamitup;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.graphics.Color;
 import android.os.Build;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.util.Log;
 
-import com.example.graeme.beamitup.listener.TransactionNotification;
-import com.example.graeme.beamitup.listener.TransactionNotificationManager;
+import com.example.graeme.beamitup.listener.TransferClient;
 import com.example.graeme.beamitup.wallet.DaoMaster;
 import com.example.graeme.beamitup.wallet.DaoSession;
+import com.example.graeme.beamitup.wallet.Wallet;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.greenrobot.greendao.database.Database;
@@ -22,7 +18,9 @@ import org.web3j.protocol.websocket.WebSocketService;
 import java.net.ConnectException;
 import java.security.Provider;
 import java.security.Security;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class BeamItUp extends Application {
     private static final String TAG = "BeamItUp";
@@ -38,25 +36,42 @@ public class BeamItUp extends Application {
     @Override
     public void onCreate(){
         super.onCreate();
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "wallet-db", null);
-        Database db = helper.getWritableDb();
-        daoSession = new DaoMaster(db).newSession();
+        createNotificationChannel();
+        this.web3j = createWeb3j();
+        this.daoSession = createDaoSession();
+        createTransferClient();
+        setupBouncyCastle();
+    }
+
+    private Web3j createWeb3j(){
         WebSocketService webSocketService = new WebSocketService(INFURA_URL, INCLUDE_RAW_RESPONSES);
         try {
             webSocketService.connect();
         } catch (ConnectException e) {
             e.printStackTrace();
         }
-        web3j = Web3j.build(webSocketService);
-        createNotificationChannel();
+        return Web3j.build(webSocketService);
+    }
 
-        new TransactionNotificationManager(
-                daoSession.getWalletDao().loadAll(),
-                web3j,
-                getApplicationContext()
-        );
+    private DaoSession createDaoSession(){
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "wallet-db", null);
+        Database db = helper.getWritableDb();
+        return new DaoMaster(db).newSession();
+    }
 
-        setupBouncyCastle();
+    private TransferClient createTransferClient(){
+        List<Wallet> wallets = daoSession.getWalletDao().loadAll();
+        Set<String> addresses = new HashSet<>();
+        for (Wallet wallet: wallets){
+            addresses.add(wallet.getAddress());
+        }
+
+        return new TransferClient.TransferClientBuilder()
+                .addresses(addresses)
+                .web3j(web3j)
+                .pendingListener((tx)->{})
+                .blockListener((tx)->{})
+                .build();
     }
 
     //Avoid BC problems on certain API levels

@@ -10,7 +10,9 @@ import com.example.graeme.beamitup.R;
 
 import org.web3j.protocol.core.methods.response.Transaction;
 
-public class TransactionNotification {
+import java.util.Map;
+
+class TransactionNotification {
     private static final String TAG = "TransactionNotification";
 
     private Context context;
@@ -40,7 +42,7 @@ public class TransactionNotification {
         this.hash = tx.getHash();
     }
 
-    public void notify_pend_tx(){
+    void notify_pend_tx(Map<String, TransactionNotification> notifications){
         if (this.state != State.PENDING){
             return;
         }
@@ -52,7 +54,7 @@ public class TransactionNotification {
         );
     }
 
-    public void notify_block_tx(){
+    void notify_block_tx(Map<String, TransactionNotification> notifications){
         notify(
                 "Incoming transaction in block",
                 this.tx.getValue() + " WEI from " + tx.getFrom(),
