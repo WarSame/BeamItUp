@@ -66,7 +66,11 @@ public class BeamItUp extends Application {
             addresses.add(wallet.getAddress());
         }
 
-        return new TransferClient(web3j, addresses);
+        return new TransferClient(
+                web3j,
+                addresses,
+                getApplicationContext()
+        );
     }
 
     //Avoid BC problems on certain API levels

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.example.graeme.beamitup.notifier.BlockNotifier;
 import com.example.graeme.beamitup.notifier.PendingNotifier;
+import com.example.graeme.beamitup.notifier.TransferNotifier.PostTransfer;
 
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.Transaction;
@@ -21,17 +22,32 @@ public class TransferClient {
     private Web3j web3j;
     private Map<String, TransferState> notifications;
     private Context context;
+    private PostTransfer postPendingTransfer;
+    private PostTransfer postBlockTransfer;
 
     public TransferClient(
             Web3j web3j,
-            Set<String> addresses
+            Set<String> addresses,
+            Context context
+    ){
+        this(web3j, addresses, context, ()->{}, ()->{});
+    }
+
+    public TransferClient(
+            Web3j web3j,
+            Set<String> addresses,
+            Context context,
+            PostTransfer postPendingTransfer,
+            PostTransfer postBlockTransfer
     ) {
         this.addresses = addresses;
         this.web3j = web3j;
+        this.context = context;
         setPendingListener();
         setBlockListener();
-        //this.addAddress("0x31B98D14007bDEe637298086988A0bBd31184523");//TODO:Remove after testing
         this.notifications = new HashMap<>();
+        this.postPendingTransfer = postPendingTransfer;
+        this.postBlockTransfer = postBlockTransfer;
     }
 
     public void addAddress(String address) {
@@ -57,7 +73,7 @@ public class TransferClient {
 
     private void createPendingNotification(Transaction tx) {
         Log.i(TAG, "Receiving pending transaction for address being listened to: " + tx.getTo());
-        new PendingNotifier(context, tx, notifications).on_transaction();
+        new PendingNotifier(context, tx, notifications).on_transfer(postPendingTransfer);
     }
 
     //Listen for transaction as they are added to a block
@@ -79,7 +95,7 @@ public class TransferClient {
 
     private void createBlockNotification(Transaction tx) {
         Log.i(TAG, "Receiving transaction for address being listened to: " + tx.getTo());
-        new BlockNotifier(context, tx, notifications).on_transaction();
+        new BlockNotifier(context, tx, notifications).on_transfer(postBlockTransfer);
     }
 
 }

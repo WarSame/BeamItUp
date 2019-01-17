@@ -23,9 +23,10 @@ public class BlockNotifier extends TransferNotifier {
     }
 
     @Override
-    public void on_transaction() {
+    public void on_transfer(PostTransfer postTransfer) {
         this.notifications.put(tx.getHash(), TransferState.IN_BLOCK);
         send_notification();
+        postTransfer.post_transfer();
     }
 
     @Override

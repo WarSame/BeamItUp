@@ -12,7 +12,7 @@ import org.web3j.protocol.core.methods.response.Transaction;
 
 import java.util.Map;
 
-abstract class TransferNotifier {
+public abstract class TransferNotifier {
     private Context context;
     Transaction tx;
     private static final String TAG = "TransferNotifier";
@@ -28,7 +28,7 @@ abstract class TransferNotifier {
         this.notifications = notifications;
     }
 
-    public abstract void on_transaction();
+    public abstract void on_transfer(PostTransfer postTransfer);
 
     void send_notification(){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(
@@ -58,4 +58,8 @@ abstract class TransferNotifier {
     }
     abstract int getColor();
     abstract long[] getPattern();
+
+    public interface PostTransfer{
+        void post_transfer();
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.graeme.beamitup;
 
 import android.content.Context;
+import android.support.test.InstrumentationRegistry;
 import android.util.Log;
 
 import com.example.graeme.beamitup.listener.TransferClient;
@@ -12,6 +13,7 @@ import org.web3j.protocol.websocket.WebSocketService;
 import org.web3j.utils.Convert;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -30,6 +32,7 @@ public class TransferClientTest {
 
     @BeforeClass
     public static void setUpOneTime() throws Exception {
+        appContext = InstrumentationRegistry.getTargetContext();
         WebSocketService webSocketService = new WebSocketService(INFURA_URL, false);
         webSocketService.connect();
         web3j = Web3j.build(webSocketService);
@@ -41,11 +44,10 @@ public class TransferClientTest {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         TransferClient transferClient = new TransferClient(
                 web3j,
-                pending_tx -> {
-                    Log.d(TAG, "Received pending transaction");
-                    countDownLatch.countDown();
-                },
-                tx -> Log.d(TAG, "Received transaction")
+                new HashSet<>(),
+                appContext,
+                countDownLatch::countDown,
+                ()->{}
         );
         transferClient.addAddress(RECEIVING_ACCOUNT_ADDRESS);
         sendFunds(
@@ -63,11 +65,10 @@ public class TransferClientTest {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         TransferClient transferClient = new TransferClient(
                 web3j,
-                pending_tx -> Log.d(TAG, "Received pending transaction"),
-                tx -> {
-                    Log.d(TAG, "Received transaction");
-                    countDownLatch.countDown();
-                }
+                new HashSet<>(),
+                appContext,
+                ()->{},
+                countDownLatch::countDown
         );
         transferClient.addAddress(RECEIVING_ACCOUNT_ADDRESS);
         sendFunds(
