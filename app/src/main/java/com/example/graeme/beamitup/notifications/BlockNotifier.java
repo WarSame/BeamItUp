@@ -1,4 +1,4 @@
-package com.example.graeme.beamitup.notifier;
+package com.example.graeme.beamitup.notifications;
 
 import android.content.Context;
 import android.graphics.Color;

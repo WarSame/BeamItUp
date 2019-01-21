@@ -3,9 +3,9 @@ package com.example.graeme.beamitup.listener;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.graeme.beamitup.notifier.BlockNotifier;
-import com.example.graeme.beamitup.notifier.PendingNotifier;
-import com.example.graeme.beamitup.notifier.TransferNotifier.PostTransfer;
+import com.example.graeme.beamitup.notifications.BlockNotifier;
+import com.example.graeme.beamitup.notifications.PendingNotifier;
+import com.example.graeme.beamitup.notifications.TransferNotifier.PostTransfer;
 
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.Transaction;
