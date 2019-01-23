@@ -1,4 +1,4 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.integration;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,6 +6,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ServiceTestRule;
 import android.util.Log;
 
+import com.example.graeme.beamitup.BeamItUp;
 import com.example.graeme.beamitup.request.Request;
 import com.example.graeme.beamitup.transaction.SendTransactionService;
 import com.example.graeme.beamitup.transaction.Transaction;
@@ -13,24 +14,17 @@ import com.example.graeme.beamitup.wallet.Wallet;
 
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
-import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.utils.Convert;
 
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeoutException;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
-import static org.web3j.tx.Transfer.sendFunds;
 
 public class SendTransactionServiceTest {
     private static final String TAG = "SendTransactionsTaskTest";

@@ -1,4 +1,4 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.unit;
 
 import android.app.NotificationManager;
 import android.graphics.Color;
@@ -18,11 +18,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class NotificationsTest {
-    @Mock
     private NotificationCompat.Builder notificationBuilder;
-    @Mock
     private NotificationWrapper notificationWrapper;
-    @Mock
     private NotificationManager notificationManager;
 
     @Before
@@ -63,6 +60,6 @@ public class NotificationsTest {
                 .setVibrate(pattern);
 
         //verify(notificationManager)
-        //        .notify(tag, 1, null);
+         //       .notify();
     }
 }

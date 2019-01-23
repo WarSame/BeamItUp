@@ -1,4 +1,4 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.integration;
 
 import android.util.Log;
 

@@ -1,7 +1,5 @@
-package com.example.graeme.beamitup;
+package com.example.graeme.beamitup.integration;
 
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
 import android.util.Log;
 
 import org.junit.BeforeClass;
@@ -10,20 +8,21 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.websocket.WebSocketService;
 
 import java.net.URI;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.disposables.Disposable;
 
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 
 public class WebSocketTest {
-    private static final String TAG = "WebSocketTest";
     static private final String INFURA_URL = "wss://rinkeby.infura.io/ws";
     static private final boolean INCLUDE_RAW_RESPONSES = false;
     static private Web3j web3j;
 
-    private static Context appContext;
-
     @BeforeClass
     public static void setUpOneTime() throws Exception {
-        appContext = InstrumentationRegistry.getTargetContext();
         WebSocketService webSocketService = new WebSocketService(INFURA_URL, INCLUDE_RAW_RESPONSES);
         webSocketService.connect();
         web3j = Web3j.build(webSocketService);
@@ -31,15 +30,18 @@ public class WebSocketTest {
 
     @Test
     public void getGasPrice_ShouldBeBigInt() throws Exception {
-        web3j
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        Disposable disposable = web3j
             .ethGasPrice()
             .flowable()
             .subscribe(
                     ethGasPrice -> {
                         assertNotNull(ethGasPrice);
-                        Log.i(TAG, ethGasPrice.getGasPrice().toString());
+                        countDownLatch.countDown();
                     }
             );
+        assertTrue(countDownLatch.await(10, TimeUnit.SECONDS));
+        disposable.dispose();
     }
 
 }
